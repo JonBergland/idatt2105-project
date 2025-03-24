@@ -1,0 +1,22 @@
+networks:
+  app-network:
+    driver: bridge
+
+services:
+  frontend:
+    ports: 
+      - "5173:5173"
+    networks:
+      - app-network
+    volumes:
+      - # Path to frontend
+    
+  backend:
+    ports:
+      - "8080:8080"
+    networks:
+      - app-network
+    environment:
+      # Add environment variables
+    volumes:
+      - # Path to backend
