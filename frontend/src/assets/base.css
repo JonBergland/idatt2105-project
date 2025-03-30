@@ -50,6 +50,15 @@
   }
 }
 
+:root {
+  --size-button-min: 70px;
+  --size-button-radius: 8px;
+  --size-button-padding: 8px;
+
+  --size-input-radius: 15px;
+  --size-input-padding: 8px;
+}
+
 *,
 *::before,
 *::after {

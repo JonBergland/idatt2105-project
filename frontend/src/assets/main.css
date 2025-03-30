@@ -7,6 +7,17 @@
   font-weight: normal;
 }
 
+button {
+  border-radius: var(--size-button-radius);
+  padding: var(--size-button-padding);
+  min-width: var(--size-button-min);
+}
+
+.input {
+  border-radius: var(--size-input-radius);
+  padding: var(--size-input-padding);
+}
+
 a,
 .green {
   text-decoration: none;
