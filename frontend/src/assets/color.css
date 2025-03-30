@@ -1,6 +1,12 @@
 :root {
   --color-primary: #0D5E01;
+  --color-primary-hover: #0F6A02;
+
   --color-secondary: #86AF2C;
+  --color-secondary-hover: #9BCF3A;
+
   --color-vipps: #FF5B24;
+  --color-vipps-hover: #FF7040;
+
   --color-border: #D9D9D9;
 }
