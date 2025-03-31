@@ -1,63 +1,81 @@
-<script lang="ts">
-import { ref, computed, defineComponent } from 'vue'
+<script setup lang="ts">
+import { ref, computed } from 'vue'
 import "@/assets/color.css"
 import "@/assets/base.css"
 
-export default defineComponent({
-  name: 'LogInForm',
-  setup() {
-    const email = ref("")
-    const password = ref("")
-    const errorLabelEl = ref<HTMLElement | null>(null)
+const email = ref("")
+const password = ref("")
+const errorLabelEl = ref<HTMLElement | null>(null)
 
-    function verifyEmail() {
-      const regex = /^[A-Za-z@.æøåÆØÅ]+$/;
-      return regex.test(email.value.trim())
-    }
+/**
+ * Verifies the user's email during the login process.
+ *
+ * @returns {boolean}
+ */
+function verifyEmail() {
+  const regex = /^[A-Za-z@.æøåÆØÅ]+$/;
+  return regex.test(email.value.trim())
+}
 
-    function verifyPassword() {
-      return password.value.trim() !== ''
-    }
+/**
+ * Verifies the user's password during the login process.
+ *
+ * @returns {boolean}
+ */
+function verifyPassword() {
+  return (password.value.trim() !== '')
+}
 
-    function setErrorLabel(errorMsg: string) {
-      if (errorLabelEl.value) {
-        errorLabelEl.value.textContent = "Log in failed: " + errorMsg
-      }
-      console.log("Log in failed: ", errorMsg);
-    }
+/**
+ * Sets the error label with the parameter errormessage
+ *
+ * @param errorMsg
+ * @returns {void}
+ */
+function setErrorLabel(errorMsg: string) {
+  if (errorLabelEl.value) {
+    errorLabelEl.value.textContent = "Log in failed: " + errorMsg
+  }
+  console.log("Log in failed: ", errorMsg);
+}
 
-    const validEmail = computed(() => verifyEmail())
-    const validPassword = computed(() => verifyPassword())
-    const validForm = computed(() => validEmail.value && validPassword.value)
+const validEmail = computed(() => verifyEmail())
+const validPassword = computed(() => verifyPassword())
+const validForm = computed(() => validEmail.value && validPassword.value)
 
-    async function handleLogin(event: Event) {
-      if (!validForm.value) {
-        event.preventDefault()
-        setErrorLabel("Log in failed: Form invalid")
-        return
-      }
+/**
+ * Handles the login process when the login form is submitted.
+ *
+ * @param {Event} event - The event object triggered by the form submission.
+ * @returns {Promise<void>} A promise that resolves when the login process is complete.
+ */
+async function handleLogin(event: Event) {
+  if (!validForm.value) {
+    event.preventDefault()
+    setErrorLabel("Log in failed: Form invalid")
+    return
+  }
 
-      const formData = {
-        email: email.value,
-        password: password.value
-      }
+  const formData = {
+    email: email.value,
+    password: password.value
+  }
 
-      try {
-        console.log(formData);
-        // TODO: Add form submission logic
-      } catch (error) {
-        setErrorLabel(String(error))
-      }
-    }
+  try {
+    console.log(formData);
+    // TODO: Add form submission logic
+  } catch (error) {
+    setErrorLabel(String(error))
+  }
+}
 
-    return {
-      email,
-      password,
-      validForm,
-      handleLogin,
-      errorLabelEl,
-    }
-  },
+// Expose properties for testing
+defineExpose({
+  email,
+  password,
+  validForm,
+  handleLogin,
+  errorLabelEl
 })
 </script>
 
