@@ -14,10 +14,10 @@ const isLoginPage = computed(() => pageName.value === "login")
 const isSignupPage = computed(() => pageName.value === "signup")
 
 //TODO: implement logic for notifications
-const hasNotifications = ref(false)
+const hasNotifications = ref(true)
 
 //TODO: implement logic for token
-const hasToken = ref(true)
+const hasToken = ref(false)
 
 </script>
 
@@ -122,26 +122,6 @@ const hasToken = ref(true)
     </div>
 
     <div v-else-if="!isLoginPage && !isSignupPage" class="buttonWrapper">
-      <router-link
-        to="/listing"
-        class="routerLink"
-        :class="{ active: isListingPage }"
-      >
-        <img
-          v-if="isListingPage"
-          src="@/assets/icons/tag-selected.svg"
-          alt="Tag"
-          class="icon"
-        />
-        <img
-          v-else
-          src="@/assets/icons/tag.svg"
-          alt="Tag"
-          class="icon"
-        />
-        <p>New listing</p>
-      </router-link>
-
       <router-link
        to="/login"
        class="routerButton loginButton"
