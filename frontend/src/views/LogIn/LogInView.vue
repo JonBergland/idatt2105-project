@@ -1,8 +1,5 @@
 <script setup lang="ts">
 import LogIn from "../../components/LogIn/LogInForm.vue";
-import { useRouter } from 'vue-router'
-
-const router = useRouter()
 
 /**
  * Navigates the user to the "sign-up" route when the sign-up button is clicked.

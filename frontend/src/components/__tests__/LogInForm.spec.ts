@@ -30,7 +30,7 @@ describe('LogInForm', () => {
     it("should have the submit button disabled when fields are empty", async () => {
       render(LogInForm);
       const submitButton = screen.getByRole("button", { name: /log in/i });
-      expect(submitButton.disabled).toBe(true);
+      expect((submitButton as HTMLButtonElement).disabled).toBe(true);
     });
 
     it("should have the submit button disabled when only one field is filled", async () => {
@@ -40,11 +40,11 @@ describe('LogInForm', () => {
       const submitButton = getByRole("button", { name: /log in/i });
 
       await fireEvent.update(emailInput, "test@example.com");
-      expect(submitButton.disabled).toBe(true);
+      expect((submitButton as HTMLButtonElement).disabled).toBe(true);
 
       await fireEvent.update(emailInput, "");
       await fireEvent.update(passwordInput, "password123");
-      expect(submitButton.disabled).toBe(true);
+      expect((submitButton as HTMLButtonElement).disabled).toBe(true);
     });
 
     // TODO: Fix tests to better fit backend functionality
@@ -71,8 +71,6 @@ describe('LogInForm', () => {
 
     it('displays error message on login failure', async () => {
         const wrapper = mount(LogInForm)
-
-        const errorLabel = wrapper.find('#login-status-label')
 
         const mockErrorEl = document.createElement('label')
         wrapper.vm.errorLabelEl = mockErrorEl

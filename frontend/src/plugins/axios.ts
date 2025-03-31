@@ -30,18 +30,6 @@ const axiosInstance = axios.create({
   withCredentials: true,
 })
 
-let refreshTimeout
-
-function scheduleTokenRefresh(expiresInMinutes = 5) {
-  if (refreshTimeout) clearTimeout(refreshTimeout)
-
-  const refreshTime = (expiresInMinutes * 60 - 30) * 1000
-
-  refreshTimeout = setTimeout(async () => {
-    // Add logic to generate new token
-  }, refreshTime)
-}
-
 // Catches Unauthorized Access
 axiosInstance.interceptors.response.use(
   (response) => response,
