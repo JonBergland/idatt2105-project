@@ -72,8 +72,6 @@ describe('LogInForm', () => {
     it('displays error message on login failure', async () => {
         const wrapper = mount(LogInForm)
 
-        const errorLabel = wrapper.find('#login-status-label')
-
         const mockErrorEl = document.createElement('label')
         wrapper.vm.errorLabelEl = mockErrorEl
 
