@@ -6,26 +6,26 @@ const route = useRoute();
 
 const pageName = computed(() => route.name);
 
-const isListingPage = computed(() => pageName.value === "hello");
+const isListingPage = computed(() => pageName.value === "home");
 const isFavoritesPage = computed(() => pageName.value === "favorites");
 const isMessagePage = computed(() => pageName.value === "messages");
 const isProfilePage = computed(() => pageName.value === "profile");
-const isLoginPage = computed(() => pageName.value === "home")
+const isLoginPage = computed(() => pageName.value === "login")
 const isSignupPage = computed(() => pageName.value === "signup")
 
 //TODO: implement logic for notifications
 const hasNotifications = ref(false)
 
 //TODO: implement logic for token
-const hasToken = ref(false)
+const hasToken = ref(true)
 
 </script>
 
 <template>
   <header>
     <router-link to="/">
-     <img src="@/assets/logo.svg" alt="Yard logo" id="desktopLogo" />
-     <img src="@/assets/logo3.svg" alt="Yard logo mobile" id="mobileLogo" />
+     <img src="@/assets/logos/logo.svg" alt="Yard logo" id="desktopLogo" />
+     <img src="@/assets/logos/logo3.svg" alt="Yard logo mobile" id="mobileLogo" />
     </router-link>
     <div class="buttonWrapper" v-if="!isLoginPage && !isSignupPage && hasToken">
       <router-link
