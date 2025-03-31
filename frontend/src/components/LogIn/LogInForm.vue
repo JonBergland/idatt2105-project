@@ -1,28 +1,64 @@
-<script setup lang="ts">
-import { ref } from 'vue'
+<script lang="ts">
+import { ref, computed, defineComponent } from 'vue'
 import "@/assets/color.css"
 import "@/assets/base.css"
 
-const email = ref("")
-const password = ref("")
+export default defineComponent({
+  name: 'LogInForm',
+  setup() {
+    const email = ref("")
+    const password = ref("")
+    const errorLabelEl = ref<HTMLElement | null>(null)
 
-async function handleLogin() {
-  const formData = {
-    email: email.value,
-    password: password.value
-  }
+    function verifyEmail() {
+      const regex = /^[A-Za-z@.æøåÆØÅ]+$/;
+      return regex.test(email.value.trim())
+    }
 
-  try {
-    // TODO: Add form submission logic
-    console.log(formData);
+    function verifyPassword() {
+      return password.value.trim() !== ''
+    }
 
-  } catch (error) {
-    const errorLabel = document.querySelector('label[id=login-status-label]')
-    if (errorLabel != null) errorLabel.textContent = "Log in failed"
-    console.log("Error when logging in: ", error);
-  }
-}
+    function setErrorLabel(errorMsg: string) {
+      if (errorLabelEl.value) {
+        errorLabelEl.value.textContent = "Log in failed: " + errorMsg
+      }
+      console.log("Log in failed: ", errorMsg);
+    }
 
+    const validEmail = computed(() => verifyEmail())
+    const validPassword = computed(() => verifyPassword())
+    const validForm = computed(() => validEmail.value && validPassword.value)
+
+    async function handleLogin(event: Event) {
+      if (!validForm.value) {
+        event.preventDefault()
+        setErrorLabel("Log in failed: Form invalid")
+        return
+      }
+
+      const formData = {
+        email: email.value,
+        password: password.value
+      }
+
+      try {
+        console.log(formData);
+        // TODO: Add form submission logic
+      } catch (error) {
+        setErrorLabel(String(error))
+      }
+    }
+
+    return {
+      email,
+      password,
+      validForm,
+      handleLogin,
+      errorLabelEl,
+    }
+  },
+})
 </script>
 
 <template>
@@ -31,8 +67,8 @@ async function handleLogin() {
       <label for="login">Please enter email and password:</label>
       <input class="input" type="text" id="email" name="email" placeholder="Email" v-model="email" required />
       <input class="input" type="text" id="password" name="password" placeholder="Password" v-model="password" required/>
-      <input type="submit" value="Log in" id="login-button">
-      <label for="error" id="login-status-label"></label>
+      <input type="submit" :disabled="!validForm" value="Log in" id="login-button">
+      <label for="error" id="login-status-label" ref="errorLabelEl"></label>
     </form>
   </div>
 </template>
@@ -66,6 +102,10 @@ async function handleLogin() {
 
 #login-button:hover {
   background-color: var(--color-primary-hover);
+}
+
+#login-button:disabled {
+  background-color: var(--color-background-mute);
 }
 
 </style>
