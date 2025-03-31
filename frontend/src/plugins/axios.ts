@@ -30,7 +30,7 @@ const axiosInstance = axios.create({
   withCredentials: true,
 })
 
-let refreshTimeout
+let refreshTimeout: NodeJS.Timeout | null = null;
 
 function scheduleTokenRefresh(expiresInMinutes = 5) {
   if (refreshTimeout) clearTimeout(refreshTimeout)
