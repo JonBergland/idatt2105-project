@@ -43,13 +43,10 @@ const validForm = computed(() => {
 })
 
 function verifyLandCode() {
-  console.log(landCode.value);
-
   landCode.value = landCode.value.trim()
   if (landCode.value.charAt(0) !== '+') {
     landCode.value = '+' + landCode.value
   }
-  console.log(landCode.value.split('+')[1]);
 
   return stringVerificationUtils.verifyStringForNumbers(landCode.value.split('+')[1])
 }
