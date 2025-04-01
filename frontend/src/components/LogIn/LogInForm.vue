@@ -1,30 +1,12 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import * as stringVerificationUtils from '@/utils/stringVerificationUtils'
 import "@/assets/color.css"
 import "@/assets/base.css"
 
 const email = ref("")
 const password = ref("")
 const errorLabelEl = ref<HTMLElement | null>(null)
-
-/**
- * Verifies the user's email during the login process.
- *
- * @returns {boolean}
- */
- function verifyEmail() {
-  const regex = /^[\p{L}@.]+$/u;
-  return regex.test(email.value.trim());
-}
-
-/**
- * Verifies the user's password during the login process.
- *
- * @returns {boolean}
- */
-function verifyPassword() {
-  return (password.value.trim() !== '')
-}
 
 /**
  * Sets the error label with the parameter errormessage
@@ -39,8 +21,8 @@ function setErrorLabel(errorMsg: string) {
   console.log("Log in failed: ", errorMsg);
 }
 
-const validEmail = computed(() => verifyEmail())
-const validPassword = computed(() => verifyPassword())
+const validEmail = computed(() => stringVerificationUtils.verifyStringForEmail(email.value))
+const validPassword = computed(() => stringVerificationUtils.verifyStringNotEmpty(password.value))
 const validForm = computed(() => validEmail.value && validPassword.value)
 
 /**
