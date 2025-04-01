@@ -1,30 +1,12 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import * as stringVerificationUtils from '@/utils/stringVerificationUtils'
 import "@/assets/color.css"
 import "@/assets/base.css"
 
 const email = ref("")
 const password = ref("")
 const errorLabelEl = ref<HTMLElement | null>(null)
-
-/**
- * Verifies the user's email during the login process.
- *
- * @returns {boolean}
- */
-function verifyEmail() {
-  const regex = /^[A-Za-z@.æøåÆØÅ]+$/;
-  return regex.test(email.value.trim())
-}
-
-/**
- * Verifies the user's password during the login process.
- *
- * @returns {boolean}
- */
-function verifyPassword() {
-  return (password.value.trim() !== '')
-}
 
 /**
  * Sets the error label with the parameter errormessage
@@ -39,8 +21,8 @@ function setErrorLabel(errorMsg: string) {
   console.log("Log in failed: ", errorMsg);
 }
 
-const validEmail = computed(() => verifyEmail())
-const validPassword = computed(() => verifyPassword())
+const validEmail = computed(() => stringVerificationUtils.verifyStringForEmail(email.value))
+const validPassword = computed(() => stringVerificationUtils.verifyStringNotEmpty(password.value))
 const validForm = computed(() => validEmail.value && validPassword.value)
 
 /**
@@ -95,7 +77,7 @@ defineExpose({
 
 .login-form {
   display: grid;
-  grid-template-columns: auto;
+  grid-template-rows: 1fr;
   place-items: center;
   border: 1px solid var(--color-border);
   padding: 10px;
@@ -104,10 +86,14 @@ defineExpose({
 }
 
 .login-form form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  display: grid;
+  grid-template-rows: auto;
+  place-items: center;
   gap: 15px;
+}
+
+.input {
+  width: 80%;
 }
 
 #login-button {
@@ -124,6 +110,7 @@ defineExpose({
 
 #login-button:disabled {
   background-color: var(--color-background-mute);
+  color: var(--color-button-disabled);
 }
 
 </style>
