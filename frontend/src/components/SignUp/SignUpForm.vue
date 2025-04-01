@@ -46,6 +46,8 @@ function verifyLandCode() {
   landCode.value = landCode.value.trim()
   if (landCode.value.charAt(0) !== '+') {
     landCode.value = '+' + landCode.value
+  } else {
+    landCode.value = '+' + landCode.value.split('+').join('');
   }
 
   return stringVerificationUtils.verifyStringForNumbers(landCode.value.split('+')[1])
