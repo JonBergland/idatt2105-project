@@ -12,9 +12,9 @@ const errorLabelEl = ref<HTMLElement | null>(null)
  *
  * @returns {boolean}
  */
-function verifyEmail() {
-  const regex = /^[A-Za-z@.æøåÆØÅ]+$/;
-  return regex.test(email.value.trim())
+ function verifyEmail() {
+  const regex = /^[\p{L}@.]+$/u;
+  return regex.test(email.value.trim());
 }
 
 /**
