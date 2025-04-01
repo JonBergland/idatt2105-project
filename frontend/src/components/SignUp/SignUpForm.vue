@@ -30,6 +30,11 @@ const validPhoneNumber = computed(() => stringVerificationUtils.verifyStringForN
 const validPassword = computed(() => stringVerificationUtils.verifyStringNotEmpty(password.value))
 const validRepeatPassword = computed(() => stringVerificationUtils.verifyStringNotEmpty(repeatPassword.value))
 
+/**
+ * A computed property that determines if the sign-up form is valid.
+ * This property evaluates the current state of the form fields and
+ * returns a boolean indicating whether all validation criteria are met.
+ */
 const validForm = computed(() => {
   return validEmail.value &&
     validFirstName.value &&
@@ -41,6 +46,13 @@ const validForm = computed(() => {
     (password.value === repeatPassword.value)
 })
 
+/**
+ * Verifies the validity of a land code.
+ * This function checks if the provided land code meets the required format
+ * or criteria for validation.
+ *
+ * @returns {boolean} - Returns true if the land code is valid, otherwise false.
+ */
 function verifyLandCode() {
   landCode.value = landCode.value.trim()
   if (landCode.value.charAt(0) !== '+') {
@@ -52,6 +64,12 @@ function verifyLandCode() {
   return stringVerificationUtils.verifyStringForNumbers(landCode.value.split('+')[1])
 }
 
+
+/**
+ * Sets an error message to be displayed on the error label.
+ *
+ * @param {string} errorMsg - The error message to display.
+ */
 function setErrorLabel(errorMsg: string) {
   if (errorLabelEl.value) {
     errorLabelEl.value.textContent = "Registration failed: " + errorMsg
@@ -59,6 +77,12 @@ function setErrorLabel(errorMsg: string) {
   console.log("Registration failed: ", errorMsg);
 }
 
+/**
+ * Handles the user registration process when the form is submitted.
+ *
+ * @param {Event} event - The event object triggered by the form submission.
+ * @returns {Promise<void>} A promise that resolves when the registration process is complete.
+ */
 async function handleRegistration(event: Event) {
   // When handleRegistration is called, set all touched flag to true
   emailTouched.value = true
