@@ -176,6 +176,16 @@ describe('SignUpForm', () => {
       expect(wrapper.vm.verifyLandCode()).toBe(true)
       expect(wrapper.vm.landCode).toContain('+')
     })
+
+    it('removes one + when multiple are in input', async () => {
+      const wrapper = mount(SignUpForm)
+
+      const landCodeInput = wrapper.find('input#landCode')
+      await landCodeInput.setValue('++32')
+
+      expect(wrapper.vm.verifyLandCode()).toBe(true)
+      expect(wrapper.vm.landCode).toEqual('+32')
+    })
   })
 
   describe('SignUpForm setErrorlable', () => {
