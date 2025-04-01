@@ -24,7 +24,7 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
   private final Logger logger = LoggerFactory.getLogger(JWTAuthorizationFilter.class);
 
-  private final JWTUtils jwtUtils;
+  JWTUtils jwtUtils;
 
 
   @Override
