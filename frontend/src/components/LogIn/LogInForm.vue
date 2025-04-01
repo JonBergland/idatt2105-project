@@ -77,7 +77,7 @@ defineExpose({
 
 .login-form {
   display: grid;
-  grid-template-columns: auto;
+  grid-template-rows: 1fr;
   place-items: center;
   border: 1px solid var(--color-border);
   padding: 10px;
@@ -86,10 +86,14 @@ defineExpose({
 }
 
 .login-form form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  display: grid;
+  grid-template-rows: auto;
+  place-items: center;
   gap: 15px;
+}
+
+.input {
+  width: 80%;
 }
 
 #login-button {
@@ -106,6 +110,7 @@ defineExpose({
 
 #login-button:disabled {
   background-color: var(--color-background-mute);
+  color: var(--color-button-disabled);
 }
 
 </style>
