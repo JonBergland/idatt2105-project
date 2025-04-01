@@ -33,6 +33,8 @@
   --color-heading: var(--vt-c-text-light-1);
   --color-text: var(--vt-c-text-light-1);
 
+  --color-button-disabled: var(--vt-c-black);
+
   --section-gap: 160px;
 }
 
@@ -47,11 +49,15 @@
 
     --color-heading: var(--vt-c-text-dark-1);
     --color-text: var(--vt-c-text-dark-2);
+
+    --color-button-disabled: var(--vt-c-white);
   }
 }
 
+/* Button and input specifications */
 :root {
   --size-button-min: 70px;
+  --size-button-max: 100px;
   --size-button-radius: 8px;
   --size-button-padding: 8px;
 
