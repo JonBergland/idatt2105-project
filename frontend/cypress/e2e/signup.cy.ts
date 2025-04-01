@@ -44,11 +44,13 @@ describe('Signup Form', () => {
   })
 
   it('validates email format', () => {
-    cy.get('input#email').clear().type('invalid-email')
+    cy.get('input#email').clear()
+    cy.get('input#email').type('invalid-email')
     cy.get('input#email').blur()
     cy.contains('Please enter a valid email.').should('exist')
 
-    cy.get('input#email').clear().type('valid@example.com')
+    cy.get('input#email').clear()
+    cy.get('input#email').type('valid@example.com')
     cy.get('input#email').blur()
     cy.contains('Please enter a valid email.').should('not.exist')
   })
@@ -58,7 +60,8 @@ describe('Signup Form', () => {
     cy.get('input#firstName').blur()
     cy.contains('Only letters allowed.').should('exist')
 
-    cy.get('input#firstName').clear().type('John')
+    cy.get('input#firstName').clear()
+    cy.get('input#firstName').type('John')
     cy.get('input#firstName').blur()
     cy.contains('Only letters allowed.').should('not.exist')
 
@@ -66,25 +69,31 @@ describe('Signup Form', () => {
     cy.get('input#lastName').blur()
     cy.contains('Only letters allowed.').should('exist')
 
-    cy.get('input#lastName').clear().type('Doe')
+    cy.get('input#lastName').clear()
+    cy.get('input#lastName').type('Doe')
     cy.get('input#lastName').blur()
     cy.contains('Only letters allowed.').should('not.exist')
   })
 
   it('validates phone fields', () => {
-    cy.get('input#landCode').clear().type('abc')
+    cy.get('input#landCode').clear()
+    cy.get('input#landCode').type('abc')
     cy.get('input#landCode').blur()
     cy.get('input#phoneNr').type('123456')
     cy.get('input#phoneNr').blur()
     cy.contains('Please enter a valid phone number.').should('exist')
 
-    cy.get('input#landCode').clear().type('+1')
+    cy.get('input#landCode').clear()
+    cy.get('input#landCode').type('+1')
     cy.get('input#landCode').blur()
-    cy.get('input#phoneNr').clear().type('1234567890')
+
+    cy.get('input#phoneNr').clear()
+    cy.get('input#phoneNr').type('1234567890')
     cy.get('input#phoneNr').blur()
     cy.contains('Please enter a valid phone number.').should('not.exist')
 
-    cy.get('input#landCode').clear().type('47')
+    cy.get('input#landCode').clear()
+    cy.get('input#landCode').type('47')
     cy.get('input#landCode').blur()
     cy.get('input#landCode').should('have.value', '+47')
   })
@@ -96,7 +105,8 @@ describe('Signup Form', () => {
     cy.get('input#repeatPassword').blur()
     cy.contains('Passwords do not match').should('exist')
 
-    cy.get('input#repeatPassword').clear().type('password123')
+    cy.get('input#repeatPassword').clear()
+    cy.get('input#repeatPassword').type('password123')
     cy.get('input#repeatPassword').blur()
     cy.contains('Passwords do not match').should('not.exist')
   })
@@ -108,7 +118,8 @@ describe('Signup Form', () => {
     cy.get('input#firstName').blur()
     cy.get('input#lastName').type('Doe')
     cy.get('input#lastName').blur()
-    cy.get('input#landCode').clear().type('+1')
+    cy.get('input#landCode').clear()
+    cy.get('input#landCode').type('+1')
     cy.get('input#landCode').blur()
     cy.get('input#phoneNr').type('1234567890')
     cy.get('input#phoneNr').blur()
