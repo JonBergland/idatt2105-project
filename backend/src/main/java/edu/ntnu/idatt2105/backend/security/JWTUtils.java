@@ -10,6 +10,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+/**
+ * Utils class for JWT based tasks.
+ */
 @Service
 public class JWTUtils {
 
@@ -18,6 +21,13 @@ public class JWTUtils {
 
   private final Logger logger = LoggerFactory.getLogger(JWTAuthorizationFilter.class);
 
+  /**
+   * validates a given token.
+   *
+   * @param token the jwt to be validated
+   * @return the decoded jwt
+   * @throws JWTVerificationException if the verification failed
+   */
   private DecodedJWT validateToken(final String token) throws JWTVerificationException {
     try {
       final Algorithm hmac512 = Algorithm.HMAC512(KEY_SECRET);;
@@ -29,6 +39,13 @@ public class JWTUtils {
     }
   }
 
+  /**
+   * validates and retrieves the user id from the given token.
+   *
+   * @param token the jwt to get user id from
+   * @return the user id
+   * @throws IllegalArgumentException if token doesn't contain a subject
+   */
   public String validateTokenAndGetUserId(final String token) throws IllegalArgumentException {
     String subject = validateToken(token).getSubject();
     if (subject == null) {
@@ -38,6 +55,13 @@ public class JWTUtils {
     return subject;
   }
 
+  /**
+   * validates and retrieves the role from the given token.
+   *
+   * @param token the jwt to get role from
+   * @return the role
+   * @throws IllegalArgumentException if token doesn't contain a role
+   */
   public String validateTokenAndGetRole(final String token) throws IllegalArgumentException {
     String role = validateToken(token).getClaim("role").asString();
     if (role == null) {
