@@ -7,14 +7,13 @@ import SignUpForm from '@/components/SignUp/SignUpForm.vue';
 <div class="signup-wrapper">
   <h1>Welcome to the Yard!</h1>
   <SignUpForm />
- </div>
-
+</div>
 </template>
 
 <style>
-.login-wrapper {
+.signup-wrapper {
   display: grid;
-  grid-template-columns: auto;
+  grid-template-rows: auto 1fr;
   place-items: center;
   color: var(--color-heading);
   gap: 5px;
