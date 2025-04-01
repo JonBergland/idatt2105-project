@@ -18,6 +18,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+/**
+ * The JWT filter for authenticating a JWT authenticated request.
+ */
 @Component
 @RequiredArgsConstructor
 public class JWTAuthorizationFilter extends OncePerRequestFilter {
