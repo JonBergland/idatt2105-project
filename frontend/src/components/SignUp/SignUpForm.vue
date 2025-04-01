@@ -3,7 +3,6 @@ import { ref, computed } from 'vue'
 import * as stringVerificationUtils from '@/utils/stringVerificationUtils'
 import "@/assets/color.css"
 import "@/assets/base.css"
-import type { RefSymbol } from '@vue/reactivity'
 
 const email = ref("")
 const firstName = ref("")
