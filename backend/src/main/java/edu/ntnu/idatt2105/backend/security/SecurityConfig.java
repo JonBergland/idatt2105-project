@@ -7,9 +7,20 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+/**
+ * Configuration class for setting up authentication and authorization configurations.
+ */
 @Configuration
 public class SecurityConfig {
 
+  /**
+   * Configuration for the filter chain, allowing for configuring endpoint authentication
+   * and authorization requirements.
+   *
+   * @param http the HttpSecurity to modify
+   * @return the configured SecurityChainFilter
+   * @throws Exception if any error occurs while configuring the filter chain
+   */
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
