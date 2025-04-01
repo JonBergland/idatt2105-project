@@ -148,6 +148,7 @@ header {
   flex-direction: row;
   padding: 32px;
   height: 98px;
+  border-bottom: 1px solid #D9D9D9;
 }
 
 .routerLink {
@@ -209,6 +210,10 @@ header {
   background-color: #e0e0e0;
 }
 
+.loginButton:hover {
+  background-color: #d4d4d4;
+}
+
 .signupButton {
   color: white;
   border-color: #000000;
@@ -216,7 +221,7 @@ header {
 }
 
 .signupButton:hover {
-  background-color: #0D5E01;
+  background-color: #0c5101;
 }
 
 .routerLink p {
