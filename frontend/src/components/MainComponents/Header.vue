@@ -6,7 +6,7 @@ const route = useRoute();
 
 const pageName = computed(() => route.name);
 
-const isListingPage = computed(() => pageName.value === "home");
+const isListingPage = computed(() => pageName.value === "listing");
 const isFavoritesPage = computed(() => pageName.value === "favorites");
 const isMessagePage = computed(() => pageName.value === "messages");
 const isProfilePage = computed(() => pageName.value === "profile");
@@ -49,7 +49,7 @@ const hasToken = ref(false)
       </router-link>
 
       <router-link
-        to="/home"
+        to="/favorites"
         class="routerLink"
         :class="{ active: isFavoritesPage }"
       >
@@ -130,7 +130,7 @@ const hasToken = ref(false)
       </router-link>
 
       <router-link
-       to="/singup"
+       to="/signup"
        class="routerButton signupButton"
       >
       <p>Sign up</p>
