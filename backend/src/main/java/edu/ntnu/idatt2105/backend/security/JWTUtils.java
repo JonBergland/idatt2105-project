@@ -6,6 +6,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import java.time.Duration;
+import java.time.Instant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,22 @@ public class JWTUtils {
 
   private final Logger logger = LoggerFactory.getLogger(JWTAuthorizationFilter.class);
 
+  public String generateToken(final String userID, final String role)
+      throws IllegalArgumentException {
+    if (userID == null || userID.isBlank() || role == null || role.isBlank()) {
+      throw new IllegalArgumentException("Token generation call must include UserID and Role");
+    }
+    final Instant now = Instant.now();
+    final Algorithm hmac512 = Algorithm.HMAC512(KEY_SECRET);
+    return JWT.create()
+        .withSubject(userID)
+        .withIssuer("yard")
+        .withIssuedAt(now)
+        .withExpiresAt(now.plusMillis(JWT_VALIDITY.toMillis()))
+        .withClaim("role", role)
+        .sign(hmac512);
+  }
+
   /**
    * validates a given token.
    *
@@ -30,7 +47,7 @@ public class JWTUtils {
    */
   private DecodedJWT validateToken(final String token) throws JWTVerificationException {
     try {
-      final Algorithm hmac512 = Algorithm.HMAC512(KEY_SECRET);;
+      final Algorithm hmac512 = Algorithm.HMAC512(KEY_SECRET);
       final JWTVerifier verifier = JWT.require(hmac512).build();
       return verifier.verify(token);
     } catch (final JWTVerificationException e) {
