@@ -3,6 +3,7 @@ import { ref, computed } from 'vue'
 import * as stringVerificationUtils from '@/utils/stringVerificationUtils'
 import "@/assets/color.css"
 import "@/assets/base.css"
+import type { RefSymbol } from '@vue/reactivity'
 
 const email = ref("")
 const firstName = ref("")
@@ -25,7 +26,7 @@ const errorLabelEl = ref<HTMLElement | null>(null)
 const validEmail = computed(() => stringVerificationUtils.verifyStringForEmail(email.value))
 const validFirstName = computed(() => stringVerificationUtils.verifyStringForLetters(firstName.value))
 const validLastName = computed(() => stringVerificationUtils.verifyStringForLetters(lastName.value))
-const validLandCode = computed(() => stringVerificationUtils.verifyStringForNumbers(landCode.value))
+const validLandCode = computed(() => verifyLandCode())
 const validPhoneNumber = computed(() => stringVerificationUtils.verifyStringForNumbers(phoneNr.value))
 const validPassword = computed(() => stringVerificationUtils.verifyStringNotEmpty(password.value))
 const validRepeatPassword = computed(() => stringVerificationUtils.verifyStringNotEmpty(repeatPassword.value))
@@ -40,6 +41,18 @@ const validForm = computed(() => {
     validRepeatPassword.value &&
     (password.value === repeatPassword.value)
 })
+
+function verifyLandCode() {
+  console.log(landCode.value);
+
+  landCode.value = landCode.value.trim()
+  if (landCode.value.charAt(0) !== '+') {
+    landCode.value = '+' + landCode.value
+  }
+  console.log(landCode.value.split('+')[1]);
+
+  return stringVerificationUtils.verifyStringForNumbers(landCode.value.split('+')[1])
+}
 
 function setErrorLabel(errorMsg: string) {
   if (errorLabelEl.value) {
@@ -92,6 +105,7 @@ defineExpose({
   password,
   repeatPassword,
   validForm,
+  verifyLandCode,
   handleRegistration,
   errorLabelEl,
   emailTouched,
