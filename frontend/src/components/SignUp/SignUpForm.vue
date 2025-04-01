@@ -88,11 +88,13 @@ defineExpose({
       <input class="input" type="text" id="email" name="email" placeholder="Email" v-model="email" required />
       <input class="input" type="text" id="firstName" name="firstName" placeholder="First Name" v-model="firstName" required />
       <input class="input" type="text" id="lastName" name="lastName" placeholder="Last Name" v-model="lastName" required />
-      <input class="input" type="text" id="landCode" name="landCode" placeholder="Land Code" v-model="landCode" required />
-      <input class="input" type="text" id="phoneNr" name="phoneNr" placeholder="Phone Number" v-model="phoneNr" required />
+      <div class="phone-input-div">
+        <input class="input" type="text" id="landCode" name="landCode" placeholder="+47" v-model="landCode" required />
+        <input class="input" type="text" id="phoneNr" name="phoneNr" placeholder="Phone Number" v-model="phoneNr" required />
+      </div>
       <input class="input" type="password" id="password" name="password" placeholder="Password" v-model="password" required />
       <input class="input" type="password" id="repeatPassword" name="repeatPassword" placeholder="Repeat Password" v-model="repeatPassword" required />
-      <input type="submit" :disabled="!validForm" value="Sign up" id="singup-button">
+      <input type="submit" :disabled="!validForm" value="Sign up" id="signup-button">
       <label for="error" id="registration-status-label" ref="errorLabelEl"></label>
     </form>
   </div>
@@ -102,19 +104,32 @@ defineExpose({
 
 .registration-form {
   display: grid;
-  grid-template-columns: auto;
+  grid-template-rows: 1fr;
   place-items: center;
   border: 1px solid var(--color-border);
   padding: 10px;
   border-radius: 8px;
   background-color: var(--color-background-soft);
+  width: 70%;
 }
 
 .registration-form form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  display: grid;
+  grid-template-rows: auto;
+  place-items: center;
   gap: 15px;
+  width: 80%;
+}
+
+.phone-input-div {
+  display: grid;
+  grid-template-columns: 1fr 4fr;
+  gap: 0;
+  width: 80%;
+}
+
+.phone-input-div .input {
+  width: 100%;
 }
 
 #signup-button {
@@ -123,6 +138,7 @@ defineExpose({
   border-radius: var(--size-button-radius);
   padding: var(--size-button-padding);
   min-width: var(--size-button-min);
+  align-self: center;
 }
 
 #signup-button:hover {
@@ -131,6 +147,7 @@ defineExpose({
 
 #signup-button:disabled {
   background-color: var(--color-background-mute);
+  color: var(--color-button-disabled);
 }
 
 </style>
