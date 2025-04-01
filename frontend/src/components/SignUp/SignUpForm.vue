@@ -4,28 +4,23 @@ import * as stringVerificationUtils from '@/utils/stringVerificationUtils'
 import "@/assets/color.css"
 import "@/assets/base.css"
 
-
 const email = ref("")
 const firstName = ref("")
 const lastName = ref("")
-const landCode = ref("")
+const landCode = ref("+47")
 const phoneNr = ref("")
 const password = ref("")
 const repeatPassword = ref("")
-const errorLabelEl = ref<HTMLElement | null>(null)
 
-/**
- * Sets the error label with the parameter errormessage
- *
- * @param errorMsg
- * @returns {void}
- */
-function setErrorLabel(errorMsg: string) {
-  if (errorLabelEl.value) {
-    errorLabelEl.value.textContent = "Log in failed: " + errorMsg
-  }
-  console.log("Log in failed: ", errorMsg);
-}
+const emailTouched = ref(false)
+const firstNameTouched = ref(false)
+const lastNameTouched = ref(false)
+const landCodeTouched = ref(false)
+const phoneNrTouched = ref(false)
+const passwordTouched = ref(false)
+const repeatPasswordTouched = ref(false)
+
+const errorLabelEl = ref<HTMLElement | null>(null)
 
 const validEmail = computed(() => stringVerificationUtils.verifyStringForEmail(email.value))
 const validFirstName = computed(() => stringVerificationUtils.verifyStringForLetters(firstName.value))
@@ -36,20 +31,36 @@ const validPassword = computed(() => stringVerificationUtils.verifyStringNotEmpt
 const validRepeatPassword = computed(() => stringVerificationUtils.verifyStringNotEmpty(repeatPassword.value))
 
 const validForm = computed(() => {
-  validEmail.value && validFirstName.value && validLastName.value && validLandCode.value
-  && validPhoneNumber.value && validPassword.value && validRepeatPassword.value
+  return validEmail.value &&
+    validFirstName.value &&
+    validLastName.value &&
+    validLandCode.value &&
+    validPhoneNumber.value &&
+    validPassword.value &&
+    validRepeatPassword.value &&
+    (password.value === repeatPassword.value)
 })
 
-/**
- * Handles the registration process when the registration form is submitted.
- *
- * @param {Event} event - The event object triggered by the form submission.
- * @returns {Promise<void>} A promise that resolves when the registration process is complete.
- */
+function setErrorLabel(errorMsg: string) {
+  if (errorLabelEl.value) {
+    errorLabelEl.value.textContent = "Registration failed: " + errorMsg
+  }
+  console.log("Registration failed: ", errorMsg);
+}
+
 async function handleRegistration(event: Event) {
+  // When handleRegistration is called, set all touched flag to true
+  emailTouched.value = true
+  firstNameTouched.value = true
+  lastNameTouched.value = true
+  landCodeTouched.value = true
+  phoneNrTouched.value = true
+  passwordTouched.value = true
+  repeatPasswordTouched.value = true
+
   if (!validForm.value) {
     event.preventDefault()
-    setErrorLabel("Log in failed: Form invalid")
+    setErrorLabel("Form invalid")
     return
   }
 
@@ -59,25 +70,37 @@ async function handleRegistration(event: Event) {
     lastName: lastName.value,
     landCode: landCode.value,
     phoneNr: phoneNr.value,
-    repeatPassword: repeatPassword.value,
-    password: password.value
+    password: password.value,
+    repeatPassword: repeatPassword.value
   }
 
   try {
-    console.log(formData);
+    console.log(formData)
     // TODO: Add form submission logic
   } catch (error) {
     setErrorLabel(String(error))
   }
 }
 
-// Expose properties for testing
+// Expose for testing
 defineExpose({
   email,
+  firstName,
+  lastName,
+  landCode,
+  phoneNr,
   password,
+  repeatPassword,
   validForm,
   handleRegistration,
-  errorLabelEl
+  errorLabelEl,
+  emailTouched,
+  firstNameTouched,
+  lastNameTouched,
+  landCodeTouched,
+  phoneNrTouched,
+  passwordTouched,
+  repeatPasswordTouched
 })
 </script>
 
@@ -85,15 +108,95 @@ defineExpose({
   <div class="registration-form" id="registration-form">
     <form @submit.prevent="handleRegistration">
       <label for="registration">Please fill out the fields below:</label>
-      <input class="input" type="text" id="email" name="email" placeholder="Email" v-model="email" required />
-      <input class="input" type="text" id="firstName" name="firstName" placeholder="First Name" v-model="firstName" required />
-      <input class="input" type="text" id="lastName" name="lastName" placeholder="Last Name" v-model="lastName" required />
+
+      <input
+        class="input"
+        type="text"
+        id="email"
+        name="email"
+        placeholder="Email"
+        v-model="email"
+        @blur="emailTouched = true"
+        required
+      />
+      <p v-if="emailTouched && !validEmail" class="error-msg">Please enter a valid email.</p>
+
+      <input
+        class="input"
+        type="text"
+        id="firstName"
+        name="firstName"
+        placeholder="First Name"
+        v-model="firstName"
+        @blur="firstNameTouched = true"
+        required
+      />
+      <p v-if="firstNameTouched && !validFirstName" class="error-msg">Only letters allowed.</p>
+
+      <input
+        class="input"
+        type="text"
+        id="lastName"
+        name="lastName"
+        placeholder="Last Name"
+        v-model="lastName"
+        @blur="lastNameTouched = true"
+        required
+      />
+      <p v-if="lastNameTouched && !validLastName" class="error-msg">Only letters allowed.</p>
+
       <div class="phone-input-div">
-        <input class="input" type="text" id="landCode" name="landCode" placeholder="+47" v-model="landCode" required />
-        <input class="input" type="text" id="phoneNr" name="phoneNr" placeholder="Phone Number" v-model="phoneNr" required />
+        <input
+          class="input"
+          type="text"
+          id="landCode"
+          name="landCode"
+          placeholder="+47"
+          v-model="landCode"
+          @blur="landCodeTouched = true"
+          required
+        />
+        <input
+          class="input"
+          type="text"
+          id="phoneNr"
+          name="phoneNr"
+          placeholder="Phone Number"
+          v-model="phoneNr"
+          @blur="phoneNrTouched = true"
+          required
+        />
       </div>
-      <input class="input" type="password" id="password" name="password" placeholder="Password" v-model="password" required />
-      <input class="input" type="password" id="repeatPassword" name="repeatPassword" placeholder="Repeat Password" v-model="repeatPassword" required />
+      <p v-if="(landCodeTouched && !validLandCode) || (phoneNrTouched && !validPhoneNumber)" class="error-msg">
+        Please enter a valid phone number.
+      </p>
+
+      <input
+        class="input"
+        type="password"
+        id="password"
+        name="password"
+        placeholder="Password"
+        v-model="password"
+        @blur="passwordTouched = true"
+        required
+      />
+      <p v-if="passwordTouched && !validPassword" class="error-msg">Password cannot be empty.</p>
+
+      <input
+        class="input"
+        type="password"
+        id="repeatPassword"
+        name="repeatPassword"
+        placeholder="Repeat Password"
+        v-model="repeatPassword"
+        @blur="repeatPasswordTouched = true"
+        required
+      />
+      <p v-if="repeatPasswordTouched && (!validRepeatPassword || password !== repeatPassword)" class="error-msg">
+        Passwords do not match.
+      </p>
+
       <input type="submit" :disabled="!validForm" value="Sign up" id="signup-button">
       <label for="error" id="registration-status-label" ref="errorLabelEl"></label>
     </form>
@@ -101,7 +204,6 @@ defineExpose({
 </template>
 
 <style>
-
 .registration-form {
   display: grid;
   grid-template-rows: 1fr;
@@ -117,7 +219,7 @@ defineExpose({
   display: grid;
   grid-template-rows: auto;
   place-items: center;
-  gap: 15px;
+  gap: 10px;
   width: 80%;
 }
 
@@ -150,4 +252,9 @@ defineExpose({
   color: var(--color-button-disabled);
 }
 
+.error-msg {
+  color: red;
+  font-size: 0.9em;
+  margin: 0;
+}
 </style>
