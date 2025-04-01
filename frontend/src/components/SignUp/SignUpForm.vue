@@ -237,7 +237,7 @@ defineExpose({
 
 .phone-input-div {
   display: grid;
-  grid-template-columns: 1fr 4fr;
+  grid-template-columns: 1fr 3fr;
   gap: 0;
   width: 80%;
 }
