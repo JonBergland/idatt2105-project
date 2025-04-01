@@ -18,7 +18,7 @@ export function verifyStringForLetters(str: string) {
  * @returns {boolean} A boolean representing the status of the verification
  */
 export function verifyStringForNumbers(str: string) {
-  const regex = /^[\p{L}]+$/u;
+  const regex = /^[0-9]+$/u;
   return regex.test(str.trim());
 }
 
@@ -30,7 +30,7 @@ export function verifyStringForNumbers(str: string) {
  * @returns {boolean} A boolean representing the status of the verification
  */
 export function verifyStringForEmail(str: string) {
-  const regex = /^[\p{L}@.]+$/u;
+  const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   return regex.test(str.trim());
 }
 
