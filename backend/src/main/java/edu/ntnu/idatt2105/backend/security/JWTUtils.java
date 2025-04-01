@@ -28,4 +28,22 @@ public class JWTUtils {
       throw e;
     }
   }
+
+  public String validateTokenAndGetUserId(final String token) throws IllegalArgumentException {
+    String subject = validateToken(token).getSubject();
+    if (subject == null) {
+      logger.error("Token does not contain a subject");
+      throw new IllegalArgumentException("Token does not contain a subject");
+    }
+    return subject;
+  }
+
+  public String validateTokenAndGetRole(final String token) throws IllegalArgumentException {
+    String role = validateToken(token).getClaim("role").asString();
+    if (role == null) {
+      logger.error("Token does not contain a role");
+      throw new IllegalArgumentException("Token does not contain a role");
+    }
+    return role;
+  }
 }
