@@ -216,7 +216,8 @@ defineExpose({
 </template>
 
 <style>
-.registration-form {
+@media ( min-width: 500px) {
+  .registration-form {
   display: grid;
   grid-template-rows: 1fr;
   place-items: center;
@@ -224,7 +225,9 @@ defineExpose({
   padding: 10px;
   border-radius: 8px;
   background-color: var(--color-background-soft);
-  width: 70%;
+  width: 25%;
+  min-width: 300px;
+  }
 }
 
 .registration-form form {
@@ -233,7 +236,9 @@ defineExpose({
   place-items: center;
   gap: 10px;
   width: 80%;
+  min-width: 250px;
 }
+
 
 .phone-input-div {
   display: grid;
@@ -253,6 +258,7 @@ defineExpose({
   padding: var(--size-button-padding);
   min-width: var(--size-button-min);
   align-self: center;
+  width: auto;
 }
 
 #signup-button:hover {
@@ -262,6 +268,10 @@ defineExpose({
 #signup-button:disabled {
   background-color: var(--color-background-mute);
   color: var(--color-button-disabled);
+}
+
+.input {
+  width: 80%;
 }
 
 .error-msg {
