@@ -23,8 +23,8 @@ const router = createRouter({
       component: SignUpView,
     },
     {
-      path: '/productpage/:productId',
-      name: 'productpage',
+      path: '/product/:productId',
+      name: 'product',
       component: ProductPageView,
       props: true
     },
