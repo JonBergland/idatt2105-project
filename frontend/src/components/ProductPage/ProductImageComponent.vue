@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
 import leftArrow from '@/assets/icons/image-arrow-left.svg'
 import rightArrow from '@/assets/icons/image-arrow-right.svg'
 import heartIcon from '@/assets/icons/heart.svg'
@@ -11,7 +11,6 @@ const props = defineProps<{
 
 const imageNr = ref(0)
 const isFavorited = ref(false)
-const showArrows = ref(true)
 
 /**
  * Navigate to the previous image
@@ -38,25 +37,16 @@ function toggleFavorite() {
   isFavorited.value = !isFavorited.value
 }
 
-onMounted(() => {
-  if (props.images.length <= 1) {
-    showArrows.value = false
-  }
-})
-
 </script>
 
 <template>
   <div class="product-image-container">
-    <!-- Favorite Button -->
     <button class="favorite-button" @click="toggleFavorite">
       <img :src="isFavorited ? heartSelectedIcon : heartIcon" alt="Favorite" />
     </button>
 
-    <!-- Image Display -->
     <div class="product-image" :style="{ backgroundImage: `url(${images[imageNr]})` }"></div>
 
-    <!-- Navigation Buttons -->
     <button class="nav-button left" @click="prevImage">
       <img :src="leftArrow" alt="Previous" />
     </button>
