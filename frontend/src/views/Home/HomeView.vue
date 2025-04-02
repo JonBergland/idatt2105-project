@@ -3,10 +3,10 @@ import CategoryGrid from '@/components/Home/CategoryGrid.vue';
 import RecommendationGrid from '@/components/Home/RecommendationGrid.vue';
 import SearchBar from '@/components/Home/SearchBar.vue';
 import { onMounted, ref } from 'vue';
-import { useRouter } from 'vue-router';
+//import { useRouter } from 'vue-router';
 import placeholderImage from '@/assets/placeholder-image.png'
 
-const router = useRouter();
+//const router = useRouter();
 
 const items = ref([
   {id: 1, name: 'Playstation 5', location: 'oslo', price: 400, img: placeholderImage},
