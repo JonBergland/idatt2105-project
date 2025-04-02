@@ -12,6 +12,8 @@ const props = defineProps<{
 const imageNr = ref(0)
 const isFavorited = ref(false)
 
+const emit = defineEmits(['favorite'])
+
 /**
  * Navigate to the previous image
  */
@@ -35,6 +37,7 @@ function nextImage() {
  */
 function toggleFavorite() {
   isFavorited.value = !isFavorited.value
+  emit('favorite', isFavorited.value)
 }
 
 </script>

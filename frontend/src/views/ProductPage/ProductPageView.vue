@@ -41,6 +41,12 @@ function handleBackClick() {
   router.push({ name:'home'}) // Adjust as needed
 }
 
+function handleFavorite(isFavorited: boolean) {
+  console.log("Favorite clicked:", isFavorited);
+
+  // TODO: Add functionality for favorite to backend
+}
+
 onMounted(() => {
   loadProduct(props.productId)
 })
@@ -58,6 +64,7 @@ onMounted(() => {
         <ProductImageComponent
         id="product-image-component"
         :images="[baseImage, baseImage]"
+        @favorite="handleFavorite"
         />
      </div>
      <div class="product-info-component-wrapper">
