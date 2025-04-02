@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import { mount } from '@vue/test-utils'
+import { mount, shallowMount } from '@vue/test-utils'
 import ProductImageComponent from '@/components/ProductPage/ProductImageComponent.vue'
 
 // Mock SVG imports
@@ -88,4 +88,16 @@ describe('ProductImageComponent', () => {
     await favoriteButton.trigger('click')
     expect(favoriteIcon().attributes('src')).toContain('heart.svg')
   })
+
+  it('emits favorite event when the favorite button is clicked', async () => {
+      const wrapper = shallowMount(ProductImageComponent, {
+        props: { images: mockImages }
+      })
+
+      const favoriteButton = wrapper.find('.favorite-button img')
+      await favoriteButton.trigger('click')
+
+      expect(wrapper.emitted()).toHaveProperty('favorite')
+      expect(wrapper.emitted('favorite')?.length).toBe(1)
+    })
 })
