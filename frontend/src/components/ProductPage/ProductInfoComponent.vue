@@ -53,7 +53,7 @@ onMounted(() => {
   margin: 0;
   text-align: center;
   position: relative;
-  transform: translateX(-27%);
+  transform: translateX(-33%);
 }
 
 .product-buttons {
