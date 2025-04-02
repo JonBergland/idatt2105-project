@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+/**
+ * A controller for getting and modifying categories.
+ */
 @RestController
 @RequestMapping(value = "/api/store/category")
 @CrossOrigin
@@ -23,6 +26,11 @@ public class CategoryController {
 
   private final CategoryService categoryService;
 
+  /**
+   * Endpoint for getting categories.
+   *
+   * @return the categories
+   */
   @GetMapping()
   public CategoryResponse getCategories() {
     try {
