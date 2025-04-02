@@ -22,15 +22,15 @@ public class JWTUtils {
 
   private final Logger logger = LoggerFactory.getLogger(JWTAuthorizationFilter.class);
 
-  public String generateToken(final String userID, final String role)
+  public String generateToken(final int userID, final String role)
       throws IllegalArgumentException {
-    if (userID == null || userID.isBlank() || role == null || role.isBlank()) {
+    if (role == null || role.isBlank()) {
       throw new IllegalArgumentException("Token generation call must include UserID and Role");
     }
     final Instant now = Instant.now();
     final Algorithm hmac512 = Algorithm.HMAC512(KEY_SECRET);
     return JWT.create()
-        .withSubject(userID)
+        .withSubject(String.valueOf(userID))
         .withIssuer("yard")
         .withIssuedAt(now)
         .withExpiresAt(now.plusMillis(JWT_VALIDITY.toMillis()))
