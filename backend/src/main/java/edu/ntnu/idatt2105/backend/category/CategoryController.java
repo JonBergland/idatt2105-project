@@ -1,6 +1,7 @@
 package edu.ntnu.idatt2105.backend.category;
 
 import edu.ntnu.idatt2105.backend.category.dto.CategoryResponse;
+import edu.ntnu.idatt2105.backend.category.model.Category;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,9 +18,11 @@ public class CategoryController {
 
   private final Logger logger = LoggerFactory.getLogger(CategoryController.class);
 
+  private final CategoryService categoryService;
+
   @GetMapping()
   public CategoryResponse getCategories() {
-    String[] test = {"mat", "elektronikk", "klær"};
-    return new CategoryResponse(test);
+    Category category = categoryService.getCategories();
+    return new CategoryResponse(category.getCategories());
   }
 }
