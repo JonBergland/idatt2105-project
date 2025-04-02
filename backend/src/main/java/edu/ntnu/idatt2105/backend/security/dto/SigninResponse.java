@@ -4,6 +4,9 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+/**
+ * A DTO for responding to sign in request.
+ */
 @Getter
 @AllArgsConstructor
 public class SigninResponse {

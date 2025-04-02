@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * A DTO for user sign in request.
+ */
 @Getter
 @Setter
 @NoArgsConstructor
