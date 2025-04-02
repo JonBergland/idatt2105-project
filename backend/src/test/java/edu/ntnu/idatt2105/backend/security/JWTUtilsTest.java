@@ -12,7 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class JWTUtilsTest {
 
-  private static final String TEST_USER_ID = "123";
+  private static final int TEST_USER_ID = 123;
   private static final String TEST_ROLE = "ROLE_USER";
   private static final String INVALID_TOKEN = "invalid.token.value";
 
@@ -33,11 +33,6 @@ class JWTUtilsTest {
   }
 
   @Test
-  void generateToken_ShouldThrowException_WhenUserIdIsNull() {
-    assertThrows(IllegalArgumentException.class, () -> jwtUtils.generateToken(null, TEST_ROLE));
-  }
-
-  @Test
   void generateToken_ShouldThrowException_WhenRoleIsNull() {
     assertThrows(IllegalArgumentException.class, () -> jwtUtils.generateToken(TEST_USER_ID, null));
   }
@@ -45,7 +40,7 @@ class JWTUtilsTest {
   @Test
   void validateTokenAndGetUserId_ShouldReturnUserId_WhenTokenIsValid() {
     String userId = jwtUtils.validateTokenAndGetUserId(validToken);
-    assertEquals(TEST_USER_ID, userId);
+    assertEquals(Integer.toString(TEST_USER_ID), userId);
   }
 
   @Test
