@@ -3,7 +3,7 @@ import { ref, onMounted } from 'vue'
 import backArrowWhite from '@/assets/icons/back-arrow-white.svg'
 import backArrowBlack from '@/assets/icons/back-arrow-black.svg'
 
-const props = defineProps<{
+defineProps<{
   productName: string
 }>()
 
@@ -23,6 +23,10 @@ onMounted(() => {
   updateBackArrow()
   const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
   mediaQuery.addEventListener('change', updateBackArrow)
+})
+
+defineExpose({
+  backArrow
 })
 
 </script>
