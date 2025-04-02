@@ -6,7 +6,7 @@ import "@/assets/main.css"
 
 const props = defineProps<{
   isAvailable: boolean
-  price: Number
+  price: number
   state: string
   comment: string
   location: string
