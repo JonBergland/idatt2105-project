@@ -76,25 +76,33 @@ onMounted(() => {
 </template>
 
 <style scoped>
+
+.product-page-wrapper {
+  margin: 10px;
+}
+
 .product-info-wrapper {
   display: flex;
   gap: 20px;
   align-items: flex-start;
   width: 100%;
-}
-
-.product-info-wrapper > * {
-  flex: 1;
+  margin-top: 20px;
 }
 
 .product-image-wrapper {
-  flex: 2;
+  flex: 1;
   display: flex;
   justify-content: center;
-  max-width: 600px;
+  align-items: center;
+  max-width: 50%;
+}
+
+.product-image-wrapper > * {
+  width: 60%;
 }
 
 .product-info-component-wrapper {
   flex: 1;
+  max-width: 50%;
 }
 </style>
