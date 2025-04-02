@@ -30,10 +30,10 @@ onMounted(() => {
       <button class="vipps-button">Pay with vipps</button>
     </div>
     <div class="product-information-box">
-      <h2><strong>Product information:</strong></h2>
+      <h3><strong>Product information:</strong></h3>
       <p><strong>State:</strong> {{ props.state }}</p>
       <p><strong>Comment from seller:</strong> {{ props.comment }}</p>
-      <h2><strong>Seller information:</strong></h2>
+      <h3><strong>Seller information:</strong></h3>
       <p><strong>Location:</strong> {{ props.location }}</p>
       <p><strong>Name of seller:</strong> {{ props.sellerName }}</p>
     </div>
@@ -53,7 +53,7 @@ onMounted(() => {
   margin: 0;
   text-align: center;
   position: relative;
-  transform: translateX(-33%);
+  transform: translateX(-27%);
 }
 
 .product-buttons {
@@ -91,9 +91,12 @@ onMounted(() => {
 }
 
 .product-information-box {
+  display: flex;
+  flex-direction: column;
   text-align: left;
   width: 100%;
   max-width: 400px;
+  gap: 10px;
 }
 
 .product-information-box h2 {
