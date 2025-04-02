@@ -22,6 +22,14 @@ public class JWTUtils {
 
   private final Logger logger = LoggerFactory.getLogger(JWTAuthorizationFilter.class);
 
+  /**
+   * generates a json web token based on the userID and role parameters.
+   *
+   * @param userID the subject of the token
+   * @param role the authority of the token
+   * @return a jwt for the user
+   * @throws IllegalArgumentException if parameters are invalid
+   */
   public String generateToken(final int userID, final String role)
       throws IllegalArgumentException {
     if (role == null || role.isBlank()) {
