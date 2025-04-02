@@ -19,6 +19,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+/**
+ * A controller for password authentication and token generation.
+ */
 @RestController
 @RequestMapping(value = "/api/token")
 @CrossOrigin
@@ -31,6 +34,13 @@ public class TokenController {
 
   private final Logger logger = LoggerFactory.getLogger(TokenController.class);
 
+  /**
+   * Endpoint for signing in, creates and returns a token after user authentication.
+   *
+   * @param signinRequest contains signin information
+   * @return a jwt for the user
+   * @throws ResponseStatusException if wrong credentials were passed in
+   */
   @PostMapping("/signin")
   @ResponseStatus(value = HttpStatus.CREATED)
   public SigninResponse signIn(final @Valid @RequestBody SigninRequest signinRequest)
@@ -51,6 +61,13 @@ public class TokenController {
     throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
   }
 
+  /**
+   * Endpoint for signing up, creates a user and returns a token for user authentication.
+   *
+   * @param signupRequest contains signup information
+   * @return a jwt for the user
+   * @throws ResponseStatusException if wrong credentials were passed in
+   */
   @PostMapping("/signup")
   @ResponseStatus(value = HttpStatus.CREATED)
   public SigninResponse registerAccount(final @Valid @RequestBody SignupRequest signupRequest) {
