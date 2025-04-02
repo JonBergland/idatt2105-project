@@ -21,6 +21,8 @@ const sellerName = ref("")
 const sellerLocation = ref("")
 
 async function loadProduct(productId:string) {
+  console.log("Product ID: ", productId);
+
   // Retrive information from API-call
   // TODO: Fix api-call, use service
 
