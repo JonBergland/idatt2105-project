@@ -4,6 +4,7 @@ import ProductNameComponent from '@/components/ProductPage/ProductNameComponent.
 import baseImage from '@/assets/images/base-product-image.png'
 import { onMounted, ref,  } from 'vue';
 import { useRouter } from 'vue-router'
+import ProductInfoComponent from '@/components/ProductPage/ProductInfoComponent.vue';
 
 const props = defineProps<{
   productId: string
@@ -12,6 +13,8 @@ const props = defineProps<{
 const router = useRouter()
 
 const productName = ref("")
+const productAvailability = ref(true)
+const productPrice = ref(0)
 const productState = ref("")
 const productComment = ref("")
 const sellerName = ref("")
@@ -23,6 +26,8 @@ async function loadProduct(productId:string) {
 
   // Imitate API-call
   productName.value = "Product name"
+  productAvailability.value = true
+  productPrice.value = 300
   productState.value = "Good"
   productComment.value = "In a good condition. Hardly used"
   sellerName.value = "Ola Nordman"
@@ -48,9 +53,48 @@ onMounted(() => {
     :product-name="productName"
     @back-click="handleBackClick"
     />
-    <ProductImageComponent
-    :images="[baseImage, baseImage]"
-    />
+    <div class="product-info-wrapper">
+      <div class="product-image-wrapper">
+        <ProductImageComponent
+        id="product-image-component"
+        :images="[baseImage, baseImage]"
+        />
+     </div>
+     <div class="product-info-component-wrapper">
+        <ProductInfoComponent
+        :is-available="productAvailability"
+        :price="productPrice"
+        :state="productState"
+        :comment="productComment"
+        :location="sellerLocation"
+        :seller-name="sellerName"
+        />
+      </div>
+    </div>
   </div>
 
 </template>
+
+<style scoped>
+.product-info-wrapper {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.product-info-wrapper > * {
+  flex: 1;
+}
+
+.product-image-wrapper {
+  flex: 2;
+  display: flex;
+  justify-content: center;
+  max-width: 600px;
+}
+
+.product-info-component-wrapper {
+  flex: 1;
+}
+</style>
