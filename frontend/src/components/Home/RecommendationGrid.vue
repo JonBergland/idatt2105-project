@@ -1,11 +1,19 @@
 <script setup lang="ts">
 import ItemCard from '@/components/Home/ItemCard.vue';
 
+interface RecommendationItem {
+  id: number;
+  name: string;
+  location: string;
+  price: number;
+  img: string;
+}
+
 const emit = defineEmits(['item-clicked']);
 
 const props = defineProps({
   items: {
-    type: Array as () => Record<string, any>[],
+    type: Array as () => RecommendationItem[],
     required: false,
   },
 });
