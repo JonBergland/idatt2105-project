@@ -38,6 +38,7 @@ public class SecurityConfig {
                 SessionCreationPolicy.STATELESS)
     );
     http.csrf(csrf -> csrf.ignoringRequestMatchers("/api/token/**"));
+    http.csrf(csrf -> csrf.ignoringRequestMatchers("/api/store/**"));
     http.addFilterBefore(new JWTAuthorizationFilter(),
         UsernamePasswordAuthenticationFilter.class);
 
