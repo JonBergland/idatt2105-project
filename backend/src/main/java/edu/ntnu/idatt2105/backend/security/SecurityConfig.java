@@ -44,6 +44,11 @@ public class SecurityConfig {
     return http.build();
   }
 
+  /**
+   * Bean for password encoder using bcrypt encoding.
+   *
+   * @return the bcrypt passwordEncoder
+   */
   @Bean
   public PasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder();
