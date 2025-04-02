@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import ProductImageComponent from '@/components/ProductPage/ProductImageComponent.vue';
 import ProductNameComponent from '@/components/ProductPage/ProductNameComponent.vue'
-import baseImage from '@/assets/images/base-product-image.png'
+import placeholderImage from '@/assets/images/placeholder-image.png'
 import { onMounted, ref,  } from 'vue';
 import { useRouter } from 'vue-router'
 import ProductInfoComponent from '@/components/ProductPage/ProductInfoComponent.vue';
@@ -65,7 +65,7 @@ onMounted(() => {
       <div class="product-image-wrapper">
         <ProductImageComponent
         id="product-image-component"
-        :images="[baseImage, baseImage]"
+        :images="[placeholderImage, placeholderImage]"
         @favorite="handleFavorite"
         />
      </div>
