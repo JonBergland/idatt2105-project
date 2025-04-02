@@ -59,14 +59,11 @@ function toggleFavorite() {
 <style scoped>
 .product-image-container {
   position: relative;
-  width: 300px;
-  height: 300px;
+  width: 100%;
+  aspect-ratio: 1 / 1;
   background-color: #f5f5f5;
   border-radius: 8px;
   overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .product-image {
@@ -78,33 +75,45 @@ function toggleFavorite() {
 
 .favorite-button {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 3%;
+  right: 3%;
+  width: max(30px, min(60px, 6vw));
+  height: max(30px, min(60px, 6vw));
   background: none;
   border: none;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .nav-button {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
+  width: max(30px, min(60px, 6vw));
+  height: max(30px, min(60px, 6vw));
   background: none;
   border: none;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .nav-button.left {
-  left: 10px;
+  left: 3%;
 }
 
 .nav-button.right {
-  right: 10px;
+  right: 3%;
 }
 
 .nav-button img,
 .favorite-button img {
-  width: 24px;
-  height: 24px;
+  width: 100%;
+  height: 100%;
+  /* min-width: 20px; */
+  object-fit: contain;
 }
 </style>
