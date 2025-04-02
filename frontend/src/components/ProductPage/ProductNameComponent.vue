@@ -55,6 +55,7 @@ defineExpose({
 
 .product-name-header img.icon {
   position: absolute;
+  cursor: pointer;
   left: 0;
 }
 
