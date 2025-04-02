@@ -7,12 +7,22 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+/**
+ * Repository for updating, deleting and inserting to the User table.
+ */
 @RequiredArgsConstructor
 @Repository
 public class UserRepository {
 
   private final JdbcTemplate jdbcTemplate;
 
+  /**
+   * gets the password from user based on email from the database.
+   *
+   * @param email the email of the user
+   * @return the password
+   * @throws DataAccessException if something goes wrong
+   */
   public String getPasswordByEmail(String email) throws DataAccessException {
     return jdbcTemplate.queryForObject(
         "SELECT password FROM User WHERE email = ?",
@@ -21,6 +31,13 @@ public class UserRepository {
     );
   }
 
+  /**
+   * gets user information from user based on email from database.
+   *
+   * @param email the email of the user
+   * @return the user object
+   * @throws DataAccessException if something goes wrong
+   */
   public User getUserByEmail(String email) throws DataAccessException {
     try {
       return jdbcTemplate.queryForObject(
@@ -39,6 +56,12 @@ public class UserRepository {
     }
   }
 
+  /**
+   * creates a user in the database based on a user object.
+   *
+   * @param user the user to store
+   * @throws DataAccessException if something goes wrong
+   */
   public void createUser(User user) throws DataAccessException {
     jdbcTemplate.update(
         "INSERT INTO User (email, password, role, name, surname, phone_number)"
