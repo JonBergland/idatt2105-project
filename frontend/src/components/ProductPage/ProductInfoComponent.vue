@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
+import "@/assets/color.css"
+import "@/assets/main.css"
 
 
 const props = defineProps<{
@@ -57,34 +59,35 @@ onMounted(() => {
 .product-buttons {
   display: flex;
   gap: 20px;
+  margin-top: 10px;
+}
+
+.give-bid-button,
+.vipps-button {
+  display: flex;
+  width: 120px;
+  height: 40px;
+  justify-content: center;
+  align-items: center;
+  border: none;
 }
 
 .give-bid-button {
-  background-color: #008000;
+  background-color: var(--color-primary);
   color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 10px 20px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
 }
 
 .give-bid-button:hover {
-  background-color: #006400;
+  background-color: var(--color-primary-hover);
 }
 
 .vipps-button {
-  background-color: #ff5b24;
+  background-color: var(--color-vipps);
   color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 10px 20px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
 }
 
 .vipps-button:hover {
-  background-color: #e04e20;
+  background-color: var(--color-vipps-hover);
 }
 
 .product-information-box {
