@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * A model representing a user.
+ */
 @Getter
 @Setter
 @NoArgsConstructor
