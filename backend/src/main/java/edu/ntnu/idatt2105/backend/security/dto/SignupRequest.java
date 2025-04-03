@@ -28,7 +28,7 @@ public class SignupRequest {
   private String surname;
   @NotNull
   @Min(value = 1, message = "Land code must be greater than 0")
-  private int landCode;
+  private int countryCode;
   @NotNull
   @Min(value = 1, message = "Phone number must be greater than 0")
   private int phoneNumber;
