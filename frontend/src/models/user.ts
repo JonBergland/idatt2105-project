@@ -4,10 +4,10 @@
 export interface User {
   id?: number;
   email: string;
-  firstName: string;
-  lastName: string;
-  landCode: string;
-  phoneNr: string;
+  name: string;
+  surname: string;
+  countryCode: number;
+  phoneNumber: number;
   password?: string;
   createdAt?: string;
   updatedAt?: string;
@@ -18,11 +18,11 @@ export interface User {
  */
 export interface UserRegistrationDTO {
   email: string;
-  firstName: string;
-  lastName: string;
-  landCode: string;
-  phoneNr: string;
   password: string;
+  name: string;
+  surname: string;
+  countryCode: number;
+  phoneNumber: number;
 }
 
 /**
@@ -41,10 +41,10 @@ export interface UserLoginDTO {
 export function createRegistrationDTO(formData: any): UserRegistrationDTO {
   return {
     email: formData.email,
-    firstName: formData.firstName,
-    lastName: formData.lastName,
-    landCode: formData.landCode,
-    phoneNr: formData.phoneNr,
+    name: formData.firstName,
+    surname: formData.lastName,
+    countryCode: formData.countryCode,
+    phoneNumber: formData.phoneNumber,
     password: formData.password
   };
 }
