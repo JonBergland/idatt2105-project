@@ -100,6 +100,10 @@ public class UserRepository {
         new Object[]{userID},
         new BeanPropertyRowMapper<>(User.class)
     );
+    } catch (DataAccessException e) {
+      logger.error("Error inserting user into database: ", e);
+      throw e;
+    }
   }
 
   public void updateUser(User user) {
