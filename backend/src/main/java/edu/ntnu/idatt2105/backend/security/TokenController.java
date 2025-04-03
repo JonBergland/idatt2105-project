@@ -44,7 +44,7 @@ public class TokenController {
    */
   @PostMapping("/signin")
   @ResponseStatus(value = HttpStatus.CREATED)
-  public SigninResponse signIn(final @Valid @RequestBody SigninRequest signinRequest, HttpServletResponse response)
+  public boolean signIn(final @Valid @RequestBody SigninRequest signinRequest, HttpServletResponse response)
       throws ResponseStatusException {
     logger.info("token request for user: {}", signinRequest.getEmail());
     try {
@@ -54,13 +54,14 @@ public class TokenController {
         String token = jwtUtils.generateToken(user.getUserID(), user.getRole());
         logger.info("token: {}", token);
         jwtUtils.setJWTCookie(token, response);
-        return new SigninResponse(token);
+        return true;
       }
       logger.info("Access denied, wrong credentials for user {}", signinRequest.getEmail());
+      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials");
     } catch (DataAccessException e) {
       logger.warn("could not sign in user, {}", e.getMessage());
+      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
     }
-    throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
   }
 
   /**

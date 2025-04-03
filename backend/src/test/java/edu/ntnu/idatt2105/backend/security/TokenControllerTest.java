@@ -65,10 +65,12 @@ class TokenControllerTest {
     when(userService.getUserByEmail(EMAIL)).thenReturn(user);
     when(jwtUtils.generateToken(USER_ID, ROLE)).thenReturn(TOKEN);
 
-    SigninResponse response = tokenController.signIn(signinRequest, this.response);
+    boolean result = tokenController.signIn(signinRequest, this.response);
 
-    assertNotNull(response);
-    assertEquals(TOKEN, response.getToken());
+    assertTrue(result);
+    verify(userService).getUserByEmail(EMAIL);
+    verify(jwtUtils).generateToken(USER_ID, ROLE);
+    verify(jwtUtils).setJWTCookie(TOKEN, response);
   }
 
   @Test
