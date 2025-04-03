@@ -1,5 +1,7 @@
 package edu.ntnu.idatt2105.backend.item;
 
+import edu.ntnu.idatt2105.backend.item.dto.ItemRequest;
+import edu.ntnu.idatt2105.backend.item.dto.ItemResponse;
 import edu.ntnu.idatt2105.backend.item.dto.ItemsRequest;
 import edu.ntnu.idatt2105.backend.item.model.Item;
 import lombok.RequiredArgsConstructor;
@@ -13,5 +15,10 @@ public class ItemService {
 
   public Item[] getItems(ItemsRequest itemsRequest) {
     return itemRepository.getItems(itemsRequest);
+  }
+
+  public ItemResponse getItem(ItemRequest itemRequest) {
+    Item item = itemRepository.getItem(itemRequest.getItemID());
+    return ItemMapper.INSTANCE.itemToItemResponse(item);
   }
 }
