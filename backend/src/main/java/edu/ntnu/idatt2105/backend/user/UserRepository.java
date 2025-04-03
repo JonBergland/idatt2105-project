@@ -2,6 +2,8 @@ package edu.ntnu.idatt2105.backend.user;
 
 import edu.ntnu.idatt2105.backend.user.model.User;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -14,6 +16,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class UserRepository {
 
+  private final Logger logger = LoggerFactory.getLogger(UserRepository.class);
+
   private final JdbcTemplate jdbcTemplate;
 
   /**
@@ -25,7 +29,7 @@ public class UserRepository {
    */
   public String getPasswordByEmail(String email) throws DataAccessException {
     return jdbcTemplate.queryForObject(
-        "SELECT password FROM User WHERE email = ?",
+        "SELECT password FROM `User` WHERE email = ?",
         new Object[] {email},
         String.class
     );
@@ -41,7 +45,7 @@ public class UserRepository {
   public User getUserByEmail(String email) throws DataAccessException {
     try {
       return jdbcTemplate.queryForObject(
-          "SELECT id, email, role FROM User WHERE email = ?",
+          "SELECT id, email, role FROM `User` WHERE email = ?",
           new Object[] {email},
           (rs, rowNum) -> {
             User user = new User();
@@ -63,12 +67,17 @@ public class UserRepository {
    * @throws DataAccessException if something goes wrong
    */
   public void createUser(User user) throws DataAccessException {
-    jdbcTemplate.update(
-        "INSERT INTO User (email, password, role, name, surname, land_code, phone_number)"
-            + " VALUES (?, ?, ?, ?, ?, ?)",
+    try {
+      jdbcTemplate.update(
+        "INSERT INTO `User` (email, password, role, name, surname, country_code, phone_number)"
+            + " VALUES (?, ?, ?, ?, ?, ?, ?)",
         user.getEmail(), user.getPassword(), user.getRole(), user.getName(),
-        user.getSurname(), user.getLandCode(), user.getPhoneNumber()
+        user.getSurname(), user.getCountryCode(), user.getPhoneNumber()
     );
+    } catch (DataAccessException e) {
+      logger.error("Error inserting user into database: ", e);
+      throw e;
+    }
   }
 }
 
