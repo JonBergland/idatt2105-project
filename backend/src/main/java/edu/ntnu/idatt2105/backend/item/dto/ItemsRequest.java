@@ -5,6 +5,9 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * a DTO for getting items with filter request.
+ */
 @Setter
 @Getter
 public class ItemsRequest {
