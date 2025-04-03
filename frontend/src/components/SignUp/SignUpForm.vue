@@ -103,10 +103,10 @@ async function handleRegistration(event: Event) {
   try {
     const formData: UserRegistrationDTO = {
     email: email.value,
-    firstName: firstName.value,
-    lastName: lastName.value,
-    phoneNr: parseInt(phoneNr.value),
-    landCode: parseInt(landCode.value.split('+')[1]),
+    name: firstName.value,
+    surname: lastName.value,
+    phoneNumber: parseInt(phoneNr.value),
+    countryCode: parseInt(landCode.value.split('+')[1]),
     password: password.value
     }
 
