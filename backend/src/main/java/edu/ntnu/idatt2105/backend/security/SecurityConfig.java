@@ -8,6 +8,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 /**
  * Configuration class for setting up authentication and authorization configurations.
@@ -25,23 +29,26 @@ public class SecurityConfig {
    */
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    CorsConfiguration corsConfiguration = new CorsConfiguration();
+    corsConfiguration.setAllowedOrigins(List.of("http://localhost:5173"));
+    corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+    corsConfiguration.setAllowedHeaders(List.of("*"));
+    corsConfiguration.setAllowCredentials(true);
+    corsConfiguration.setMaxAge(3600L);
 
-    http.authorizeHttpRequests(authorizeRequests ->
-        authorizeRequests.requestMatchers("/api/store/**").permitAll()
-            .requestMatchers("/api/token/**").permitAll()
-            .requestMatchers("/api/user/**").hasAnyRole("USER", "ADMIN")
-            .requestMatchers("/api/admin/**").hasRole("ADMIN")
-            .anyRequest().authenticated());
-    http.sessionManagement(
-        session ->
-            session.sessionCreationPolicy(
-                SessionCreationPolicy.STATELESS)
-    );
-    http.csrf(csrf -> csrf.ignoringRequestMatchers("/api/token/**"));
-    http.csrf(csrf -> csrf.ignoringRequestMatchers("/api/store/**"));
-    http.addFilterBefore(new JWTAuthorizationFilter(),
-        UsernamePasswordAuthenticationFilter.class);
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", corsConfiguration);
 
+    http.cors(cors -> cors.configurationSource(source))
+        .csrf(csrf -> csrf.disable())
+        .authorizeHttpRequests(authorize -> authorize
+            .requestMatchers("/api/token/signup", "/api/token/signin", "api/store/**").permitAll()
+            .anyRequest().authenticated())
+        .sessionManagement(session -> session
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+            
+    http.addFilterBefore(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+    
     return http.build();
   }
 
