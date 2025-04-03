@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * a DTO for responding to get item.
+ */
 @Setter
 @Getter
 @NoArgsConstructor
