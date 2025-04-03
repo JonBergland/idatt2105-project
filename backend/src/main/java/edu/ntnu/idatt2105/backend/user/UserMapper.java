@@ -24,7 +24,7 @@ public interface UserMapper {
   @Mapping(source = "password", target = "password")
   @Mapping(source = "name", target = "name")
   @Mapping(source = "surname", target = "surname")
-  @Mapping(source = "landCode", target = "landCode")
+  @Mapping(source = "countryCode", target = "countryCode")
   @Mapping(source = "phoneNumber", target = "phoneNumber")
   User signupRequestToUser(SignupRequest signupRequest);
 
