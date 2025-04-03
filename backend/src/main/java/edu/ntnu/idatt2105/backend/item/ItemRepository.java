@@ -15,6 +15,14 @@ public class ItemRepository {
 
   private final JdbcTemplate jdbcTemplate;
 
+  public Item getItem(int id) {
+    return jdbcTemplate.queryForObject(
+        "SELECT *, id AS itemID FROM Item WHERE id = ?",
+        new Object[]{id},
+        new BeanPropertyRowMapper<>(Item.class)
+    );
+  }
+
   public Item[] getItems(ItemsRequest itemsRequest) {
     String sql = buildFilterSQL(itemsRequest);
     Object[] params = buildParams(itemsRequest);
