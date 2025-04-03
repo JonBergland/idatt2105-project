@@ -3,10 +3,13 @@ import { ref, computed } from 'vue'
 import * as stringVerificationUtils from '@/utils/stringVerificationUtils'
 import "@/assets/color.css"
 import "@/assets/base.css"
+import type { UserLoginDTO } from '@/models/user'
 
 const email = ref("")
 const password = ref("")
 const errorLabelEl = ref<HTMLElement | null>(null)
+
+const emit = defineEmits(["login"])
 
 /**
  * Sets the error label with the parameter errormessage
@@ -38,14 +41,13 @@ async function handleLogin(event: Event) {
     return
   }
 
-  const formData = {
+  try {
+    const formData: UserLoginDTO = {
     email: email.value,
     password: password.value
-  }
+    }
 
-  try {
-    console.log(formData);
-    // TODO: Add form submission logic
+    emit("login", formData)
   } catch (error) {
     setErrorLabel(String(error))
   }
