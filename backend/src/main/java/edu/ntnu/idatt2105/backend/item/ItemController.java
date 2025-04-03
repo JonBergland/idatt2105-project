@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+/**
+ * A controller for getting items.
+ */
 @RestController
 @RequestMapping(value = "/api/store/item")
 @CrossOrigin
@@ -26,12 +29,24 @@ public class ItemController {
 
   private final ItemService itemService;
 
+  /**
+   * Endpoint for getting items based on filters.
+   *
+   * @param itemsRequest the request with filters
+   * @return the filtered items
+   */
   @PostMapping("/filter")
   public ItemsResponse getItems(@RequestBody ItemsRequest itemsRequest) {
     ItemResponse[] itemResponses = ItemMapper.INSTANCE.itemsToItemResponses(itemService.getItems(itemsRequest));
     return new ItemsResponse(itemResponses);
   }
 
+  /**
+   * Endpoint for getting an item from id
+   *
+   * @param itemRequest the request with id
+   * @return the item
+   */
   @PostMapping("/get")
   public ItemResponse itemResponses(@RequestBody ItemRequest itemRequest) {
     try {
