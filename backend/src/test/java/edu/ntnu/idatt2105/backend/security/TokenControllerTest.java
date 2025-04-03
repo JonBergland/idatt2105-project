@@ -8,6 +8,8 @@ import edu.ntnu.idatt2105.backend.security.dto.SigninResponse;
 import edu.ntnu.idatt2105.backend.security.dto.SignupRequest;
 import edu.ntnu.idatt2105.backend.user.UserService;
 import edu.ntnu.idatt2105.backend.user.model.User;
+import jakarta.servlet.http.HttpServletResponse;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,6 +27,9 @@ class TokenControllerTest {
 
   @Mock
   private JWTUtils jwtUtils;
+
+  @Mock
+  private HttpServletResponse response;
 
   @InjectMocks
   private TokenController tokenController;
@@ -60,7 +65,7 @@ class TokenControllerTest {
     when(userService.getUserByEmail(EMAIL)).thenReturn(user);
     when(jwtUtils.generateToken(USER_ID, ROLE)).thenReturn(TOKEN);
 
-    SigninResponse response = tokenController.signIn(signinRequest);
+    SigninResponse response = tokenController.signIn(signinRequest, this.response);
 
     assertNotNull(response);
     assertEquals(TOKEN, response.getToken());
@@ -70,14 +75,14 @@ class TokenControllerTest {
   void signIn_ShouldThrowUnauthorized_WhenCredentialsAreInvalid() {
     when(userService.checkCredentials(signinRequest)).thenReturn(false);
 
-    assertThrows(ResponseStatusException.class, () -> tokenController.signIn(signinRequest));
+    assertThrows(ResponseStatusException.class, () -> tokenController.signIn(signinRequest, this.response));
   }
 
   @Test
   void signIn_ShouldThrowUnauthorized_WhenDatabaseErrorOccurs() {
     when(userService.checkCredentials(signinRequest)).thenThrow(new DataAccessException("DB Error") {});
 
-    assertThrows(ResponseStatusException.class, () -> tokenController.signIn(signinRequest));
+    assertThrows(ResponseStatusException.class, () -> tokenController.signIn(signinRequest, this.response));
   }
 
   @Test
