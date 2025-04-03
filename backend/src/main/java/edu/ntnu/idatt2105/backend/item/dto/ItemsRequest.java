@@ -11,6 +11,6 @@ public class ItemsRequest {
   String category;
   String searchWord;
   int[] priceMinMax;
-  int page;
-  int pageSize;
+  String sort;
+  int[] segmentOffset;
 }
