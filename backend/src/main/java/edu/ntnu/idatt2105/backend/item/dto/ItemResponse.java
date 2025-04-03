@@ -15,6 +15,7 @@ import lombok.Setter;
 public class ItemResponse {
   int itemID;
   String name;
+  String category;
   String seller;
   String description;
   String published;

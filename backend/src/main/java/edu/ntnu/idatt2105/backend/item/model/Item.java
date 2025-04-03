@@ -11,6 +11,7 @@ import lombok.Setter;
 public class Item {
   private String name;
   private int itemID;
+  private String category;
   private String seller;
   private String description;
   private String published;
