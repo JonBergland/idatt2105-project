@@ -3,6 +3,9 @@ import { ref, computed } from 'vue'
 import * as stringVerificationUtils from '@/utils/stringVerificationUtils'
 import "@/assets/color.css"
 import "@/assets/base.css"
+import type { UserRegistrationDTO } from '@/models/user';
+
+const emit = defineEmits(["signup"])
 
 const email = ref("")
 const firstName = ref("")
@@ -28,7 +31,6 @@ const validLastName = computed(() => stringVerificationUtils.verifyStringForLett
 const validLandCode = computed(() => verifyLandCode())
 const validPhoneNumber = computed(() => stringVerificationUtils.verifyStringForNumbers(phoneNr.value))
 const validPassword = computed(() => stringVerificationUtils.verifyStringNotEmpty(password.value))
-const validRepeatPassword = computed(() => stringVerificationUtils.verifyStringNotEmpty(repeatPassword.value))
 
 /**
  * A computed property that determines if the sign-up form is valid.
@@ -42,7 +44,6 @@ const validForm = computed(() => {
     validLandCode.value &&
     validPhoneNumber.value &&
     validPassword.value &&
-    validRepeatPassword.value &&
     (password.value === repeatPassword.value)
 })
 
@@ -99,19 +100,17 @@ async function handleRegistration(event: Event) {
     return
   }
 
-  const formData = {
+  try {
+    const formData: UserRegistrationDTO = {
     email: email.value,
     firstName: firstName.value,
     lastName: lastName.value,
-    landCode: landCode.value,
-    phoneNr: phoneNr.value,
-    password: password.value,
-    repeatPassword: repeatPassword.value
-  }
+    phoneNr: parseInt(phoneNr.value),
+    landCode: parseInt(landCode.value.split('+')[1]),
+    password: password.value
+    }
 
-  try {
-    console.log(formData)
-    // TODO: Add form submission logic
+    emit("signup", formData)
   } catch (error) {
     setErrorLabel(String(error))
   }
@@ -229,7 +228,7 @@ defineExpose({
         @blur="repeatPasswordTouched = true"
         required
       />
-      <p v-if="repeatPasswordTouched && (!validRepeatPassword || password !== repeatPassword)" class="error-msg">
+      <p v-if="repeatPasswordTouched && (password !== repeatPassword)" class="error-msg">
         Passwords do not match.
       </p>
 
