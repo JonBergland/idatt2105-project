@@ -28,20 +28,19 @@ export const useAuthStore = defineStore('auth', {
 
     async login(user: UserLoginDTO) {
       try {
-        const resp = await axiosInstance.post<UserLoginDTO>('/token/signin', {
-          user
-        })
+        const resp = await axiosInstance.post<UserLoginDTO>('/token/signin', user)
         console.log(resp);
 
         // Test to see if the user is authenticated
-        this.checkIfAuth()
-
-        if (this.userData) {
-          return true
+        if (resp) {
+          this.checkIfAuth()
+          if (this.userData) {
+            return true
+          }
         }
 
         return false
-
+        
       } catch (error) {
 
 
