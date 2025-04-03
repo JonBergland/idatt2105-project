@@ -4,6 +4,8 @@ button {
   border-radius: var(--size-button-radius);
   padding: var(--size-button-padding);
   min-width: var(--size-button-min);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .input {

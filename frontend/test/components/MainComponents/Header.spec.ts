@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { mount } from '@vue/test-utils';
-import Header from '../MainComponents/AppHeader.vue';
+import Header from '@/components/MainComponents/AppHeader.vue';
 import { createRouter, createWebHistory } from 'vue-router';
 
 const routes = [
