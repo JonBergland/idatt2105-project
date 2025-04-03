@@ -4,6 +4,8 @@ import edu.ntnu.idatt2105.backend.item.model.Item;
 import edu.ntnu.idatt2105.backend.user.dto.UpdateUserInfoRequest;
 import edu.ntnu.idatt2105.backend.user.model.User;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -18,6 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public class UserRepository {
 
+  private final Logger logger = LoggerFactory.getLogger(UserRepository.class);
+
   private final JdbcTemplate jdbcTemplate;
 
   /**
@@ -29,7 +33,7 @@ public class UserRepository {
    */
   public String getPasswordByEmail(String email) throws DataAccessException {
     return jdbcTemplate.queryForObject(
-        "SELECT password FROM User WHERE email = ?",
+        "SELECT password FROM `User` WHERE email = ?",
         new Object[] {email},
         String.class
     );
@@ -45,7 +49,7 @@ public class UserRepository {
   public User getUserByEmail(String email) throws DataAccessException {
     try {
       return jdbcTemplate.queryForObject(
-          "SELECT id, email, role FROM User WHERE email = ?",
+          "SELECT id, email, role FROM `User` WHERE email = ?",
           new Object[] {email},
           (rs, rowNum) -> {
             User user = new User();
