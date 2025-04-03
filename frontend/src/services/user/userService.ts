@@ -1,5 +1,5 @@
 import type { UserLoginDTO, UserRegistrationDTO } from "@/models/user";
-import axiosInstance from "../axiosService";
+import axiosInstance from "@/services/axiosService";
 
 
 class UserService {
@@ -8,11 +8,11 @@ class UserService {
     // TODO
   }
 
-  registerUser(user: UserRegistrationDTO) {
-    // TODO
+  async registerUser(user: UserRegistrationDTO) {
+    return await axiosInstance.post<UserRegistrationDTO>('/token/signup', user)
   }
 
-  loginUser(user: UserLoginDTO) {
-    // TODO
+  async loginUser(user: UserLoginDTO) {
+    return await axiosInstance.post<UserLoginDTO>('/token/signin', user)
   }
 }

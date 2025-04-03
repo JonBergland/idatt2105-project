@@ -1,8 +1,10 @@
 import type { UserLoginDTO, UserRegistrationDTO } from "@/models/user";
 import { defineStore } from "pinia";
 import { ref } from "vue";
+import { userService } from "@/services/user/userService"
 
 import axiosInstance from "@/services/axiosService";
+
 
 /**
  * Store for authenticating the user with login and singup
@@ -28,7 +30,7 @@ export const useAuthStore = defineStore('auth', {
 
     async login(user: UserLoginDTO) {
       try {
-        const resp = await axiosInstance.post<UserLoginDTO>('/token/signin', user)
+        const resp = await userService.loginUser(user)
         console.log(resp);
 
         // Test to see if the user is authenticated
@@ -40,7 +42,7 @@ export const useAuthStore = defineStore('auth', {
         }
 
         return false
-        
+
       } catch (error) {
 
 
@@ -50,7 +52,7 @@ export const useAuthStore = defineStore('auth', {
     async signup(user: UserRegistrationDTO) {
       try {
         console.log("Sending user-info to backend: ", user);
-        const resp = await axiosInstance.post<UserRegistrationDTO>('/token/signup', user)
+        const resp = await userService.registerUser(user)
         console.log("Response from backend: ", resp);
 
         if (resp) {
