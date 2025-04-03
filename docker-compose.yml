@@ -21,6 +21,7 @@ services:
     networks:
       - app-network
     environment:
-      DATABASE_URL: example
+      spring.datasource.username: ${SPRING_DATASOURCE_USERNAME}
+      spring.datasource.password: ${SPRING_DATASOURCE_PASSWORD}
     volumes:
       - ./backend:/src
