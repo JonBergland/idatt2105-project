@@ -90,16 +90,19 @@ class TokenControllerTest {
     when(userService.getUserByEmail(EMAIL)).thenReturn(user);
     when(jwtUtils.generateToken(USER_ID, ROLE)).thenReturn(TOKEN);
 
-    SigninResponse response = tokenController.registerAccount(signupRequest);
+    boolean result = tokenController.registerAccount(signupRequest, response);
 
-    assertNotNull(response);
-    assertEquals(TOKEN, response.getToken());
+    assertTrue(result);
+    verify(userService).createUser(signupRequest);
+    verify(userService).getUserByEmail(EMAIL);
+    verify(jwtUtils).generateToken(USER_ID, ROLE);
+    verify(jwtUtils).setJWTCookie(TOKEN, response);
   }
 
   @Test
   void registerAccount_ShouldThrowBadRequest_WhenDatabaseErrorOccurs() {
     doThrow(new DataAccessException("DB Error") {}).when(userService).createUser(signupRequest);
 
-    assertThrows(ResponseStatusException.class, () -> tokenController.registerAccount(signupRequest));
+    assertThrows(ResponseStatusException.class, () -> tokenController.registerAccount(signupRequest, response));
   }
 }
