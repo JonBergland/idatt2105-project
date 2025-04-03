@@ -22,35 +22,42 @@ class SignupRequestTest {
 
   @Test
   void validSignupRequest_ShouldPassValidation() {
-    SignupRequest request = new SignupRequest("test@example.com", "password123", "John", "Doe", "12345678");
+    SignupRequest request = new SignupRequest("test@example.com", "password123", "John", "Doe",47, 12345678);
     Set<ConstraintViolation<SignupRequest>> violations = validator.validate(request);
     assertTrue(violations.isEmpty(), "Valid request should have no validation errors");
   }
 
   @Test
   void invalidSignupRequest_ShouldFailValidation_WhenEmailIsInvalid() {
-    SignupRequest request = new SignupRequest("invalid-email", "password123", "John", "Doe", "12345678");
+    SignupRequest request = new SignupRequest("invalid-email", "password123", "John", "Doe", 47, 12345678);
     Set<ConstraintViolation<SignupRequest>> violations = validator.validate(request);
     assertFalse(violations.isEmpty(), "Invalid email should trigger validation error");
   }
 
   @Test
   void invalidSignupRequest_ShouldFailValidation_WhenFieldsAreBlank() {
-    SignupRequest request = new SignupRequest("", "", "", "", "");
+    SignupRequest request = new SignupRequest("", "", "", "", 0,0);
     Set<ConstraintViolation<SignupRequest>> violations = validator.validate(request);
     assertFalse(violations.isEmpty(), "Blank fields should trigger validation errors");
   }
 
   @Test
   void invalidSignupRequest_ShouldFailValidation_WhenEmailIsNull() {
-    SignupRequest request = new SignupRequest(null, "password123", "John", "Doe", "12345678");
+    SignupRequest request = new SignupRequest(null, "password123", "John", "Doe", 47, 12345678);
     Set<ConstraintViolation<SignupRequest>> violations = validator.validate(request);
     assertFalse(violations.isEmpty(), "Null email should trigger validation error");
   }
 
   @Test
-  void invalidSignupRequest_ShouldFailValidation_WhenPhoneNumberIsBlank() {
-    SignupRequest request = new SignupRequest("test@example.com", "password123", "John", "Doe", "");
+  void invalidSignupRequest_ShouldFailValidation_WhenPhoneNumberIsNull() {
+    SignupRequest request = new SignupRequest("test@example.com", "password123", "John", "Doe", 47, 0);
+    Set<ConstraintViolation<SignupRequest>> violations = validator.validate(request);
+    assertFalse(violations.isEmpty(), "Blank phone number should trigger validation error");
+  }
+
+  @Test
+  void invalidSignupRequest_ShouldFailValidation_WhenLandCodeIsNull() {
+    SignupRequest request = new SignupRequest("test@example.com", "password123", "John", "Doe", 0, 12345678);
     Set<ConstraintViolation<SignupRequest>> violations = validator.validate(request);
     assertFalse(violations.isEmpty(), "Blank phone number should trigger validation error");
   }
