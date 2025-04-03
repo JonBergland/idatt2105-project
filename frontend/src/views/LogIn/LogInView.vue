@@ -1,22 +1,40 @@
 <script setup lang="ts">
+import type { UserLoginDTO } from "@/models/user";
 import LogIn from "../../components/LogIn/LogInForm.vue";
 import { useRouter } from 'vue-router';
+import { useAuthStore } from "@/stores/authStore";
 
 const router = useRouter()
+const authStore = useAuthStore()
 
 /**
  * Navigates the user to the "sign-up" route when the sign-up button is clicked.
  */
-const handleSignUpButton = () => {
+function handleSignUpButton() {
   console.log("Push to route sign-up");
   router.push({ name: 'signup' });
 };
+
+async function handleLogin(user: UserLoginDTO) {
+  try {
+    console.log("Handling login");
+
+    const resp = await authStore.login(user)
+
+    //TODO: handle boolean response from signup
+    console.log(resp);
+
+  } catch (error) {
+    console.log("Error in handling login in LogInView: ", error);
+  }
+}
+
 </script>
 
 <template>
  <div class="login-wrapper">
   <h1>Log In</h1>
-  <LogIn />
+  <LogIn @login="handleLogin" />
   <h4>or</h4>
   <button class="signup-button" @click="handleSignUpButton">Sign up</button>
  </div>
