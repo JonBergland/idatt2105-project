@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import LogIn from "../../components/LogIn/LogInForm.vue";
+import { useRouter } from 'vue-router';
+
+const router = useRouter()
 
 /**
  * Navigates the user to the "sign-up" route when the sign-up button is clicked.
  */
 const handleSignUpButton = () => {
   console.log("Push to route sign-up");
-  // router.push({ name: 'sign-up' }); //NOT IMPLEMENTED
+  router.push({ name: 'signup' });
 };
 </script>
 
