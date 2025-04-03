@@ -7,7 +7,7 @@ class ItemResponseTest {
 
   @Test
   void testItemResponseConstructorAndGetters() {
-    ItemResponse itemResponse = new ItemResponse(1, "Laptop", "JohnDoe@eaxmple.com", "High-end gaming laptop", "2024-03-30", 1500);
+    ItemResponse itemResponse = new ItemResponse(1, "Laptop", "Electronics","JohnDoe@eaxmple.com", "High-end gaming laptop", "2024-03-30", 1500);
 
     assertEquals(1, itemResponse.getItemID());
     assertEquals("Laptop", itemResponse.getName());

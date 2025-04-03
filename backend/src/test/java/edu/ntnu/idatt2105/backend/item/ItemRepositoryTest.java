@@ -43,7 +43,12 @@ class ItemRepositoryTest {
 
   @Test
   void testGetItem() {
-    when(jdbcTemplate.queryForObject(eq("SELECT *, id AS itemID FROM Item WHERE id = ?"), any(Object[].class), any(BeanPropertyRowMapper.class)))
+    when(jdbcTemplate.queryForObject(eq(
+        "SELECT Item.*, Item.id AS itemID, User.email AS seller, Categories.category_name AS category FROM Item "
+        + "LEFT JOIN User ON Item.user_id = User.id "
+        + "LEFT JOIN Categories ON Item.category_id = Categories.id "
+        + " WHERE Item.id = ?"
+    ), any(Object[].class), any(BeanPropertyRowMapper.class)))
         .thenReturn(mockItem);
 
     Item retrievedItem = itemRepository.getItem(1);

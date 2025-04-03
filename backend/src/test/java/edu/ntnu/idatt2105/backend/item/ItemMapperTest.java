@@ -39,6 +39,7 @@ class ItemMapperTest {
     item1.setDescription("Test Description 1");
     item1.setPublished("2025-04-01");
     item1.setPrice(100);
+    item1.setCategory("Electronics");
 
     Item item2 = new Item();
     item2.setItemID(2);
@@ -47,6 +48,7 @@ class ItemMapperTest {
     item2.setDescription("Test Description 2");
     item2.setPublished("2025-04-02");
     item2.setPrice(150);
+    item2.setCategory("Electronics");
 
     Item[] items = new Item[]{item1, item2};
 
