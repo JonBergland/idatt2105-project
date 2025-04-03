@@ -20,11 +20,6 @@ public interface UserMapper {
    * @param signupRequest the dto to map
    * @return the mapped user model
    */
-  @Mapping(source = "email", target = "email")
-  @Mapping(source = "password", target = "password")
-  @Mapping(source = "name", target = "name")
-  @Mapping(source = "surname", target = "surname")
-  @Mapping(source = "phoneNumber", target = "phoneNumber")
   User signupRequestToUser(SignupRequest signupRequest);
 
   /**
@@ -33,7 +28,5 @@ public interface UserMapper {
    * @param signinRequest the dto to map
    * @return the mapped user model
    */
-  @Mapping(source = "email", target = "email")
-  @Mapping(source = "password", target = "password")
   User signinRequestToUser(SigninRequest signinRequest);
 }
