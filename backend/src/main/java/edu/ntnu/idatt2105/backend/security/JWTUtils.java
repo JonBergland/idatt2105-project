@@ -5,6 +5,10 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
+
 import java.time.Duration;
 import java.time.Instant;
 import org.slf4j.Logger;
@@ -94,5 +98,21 @@ public class JWTUtils {
       throw new IllegalArgumentException("Token does not contain a role");
     }
     return role;
+  }
+
+
+  /**
+   * Sets a JWT token as an HTTP-only, secure cookie in the response.
+   *
+   * @param jwtToken The JWT token to be set in the cookie.
+   * @param response The HttpServletResponse object to which the cookie will be added.
+   */
+  public void setJWTCookie(String jwtToken, HttpServletResponse response) {
+    Cookie jwtCookie = new Cookie("JWT", jwtToken);
+    jwtCookie.setHttpOnly(true);
+    jwtCookie.setSecure(true);
+    jwtCookie.setPath("/");
+    jwtCookie.setMaxAge((int) JWT_VALIDITY.getSeconds());
+    response.addCookie(jwtCookie);
   }
 }
