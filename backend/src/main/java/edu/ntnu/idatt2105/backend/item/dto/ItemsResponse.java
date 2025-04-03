@@ -8,6 +8,9 @@ import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
+/**
+ * a DTO for responding to get items with filter.
+ */
 @Getter
 @Setter
 @NoArgsConstructor
