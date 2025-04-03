@@ -64,10 +64,10 @@ public class UserRepository {
    */
   public void createUser(User user) throws DataAccessException {
     jdbcTemplate.update(
-        "INSERT INTO User (email, password, role, name, surname, phone_number)"
+        "INSERT INTO User (email, password, role, name, surname, land_code, phone_number)"
             + " VALUES (?, ?, ?, ?, ?, ?)",
         user.getEmail(), user.getPassword(), user.getRole(), user.getName(),
-        user.getSurname(), user.getPhoneNumber()
+        user.getSurname(), user.getLandCode(), user.getPhoneNumber()
     );
   }
 }
