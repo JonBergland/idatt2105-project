@@ -13,7 +13,7 @@ class UserMapperTest {
 
   @Test
   void signupRequestToUser_ShouldMapCorrectly() {
-    SignupRequest request = new SignupRequest("test@example.com", "password123", "John", "Doe", "12345678");
+    SignupRequest request = new SignupRequest("test@example.com", "password123", "John", "Doe", 47, 12345678);
     User user = userMapper.signupRequestToUser(request);
 
     assertNotNull(user, "Mapped user should not be null");
@@ -21,6 +21,7 @@ class UserMapperTest {
     assertEquals(request.getPassword(), user.getPassword(), "Password should be mapped correctly");
     assertEquals(request.getName(), user.getName(), "Name should be mapped correctly");
     assertEquals(request.getSurname(), user.getSurname(), "Surname should be mapped correctly");
+    assertEquals(request.getLandCode(), user.getLandCode(), "Land code should be mapped correctly");
     assertEquals(request.getPhoneNumber(), user.getPhoneNumber(), "Phone number should be mapped correctly");
   }
 
