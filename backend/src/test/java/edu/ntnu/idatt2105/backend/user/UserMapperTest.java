@@ -21,7 +21,7 @@ class UserMapperTest {
     assertEquals(request.getPassword(), user.getPassword(), "Password should be mapped correctly");
     assertEquals(request.getName(), user.getName(), "Name should be mapped correctly");
     assertEquals(request.getSurname(), user.getSurname(), "Surname should be mapped correctly");
-    assertEquals(request.getLandCode(), user.getLandCode(), "Land code should be mapped correctly");
+    assertEquals(request.getCountryCode(), user.getCountryCode(), "Land code should be mapped correctly");
     assertEquals(request.getPhoneNumber(), user.getPhoneNumber(), "Phone number should be mapped correctly");
   }
 
