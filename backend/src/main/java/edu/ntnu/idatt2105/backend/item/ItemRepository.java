@@ -9,12 +9,21 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+/**
+ * a repository for getting items.
+ */
 @Repository
 @RequiredArgsConstructor
 public class ItemRepository {
 
   private final JdbcTemplate jdbcTemplate;
 
+  /**
+   * get item from id from the database.
+   *
+   * @param id the item id
+   * @return the item
+   */
   public Item getItem(int id) {
     return jdbcTemplate.queryForObject(
         "SELECT *, id AS itemID FROM Item WHERE id = ?",
@@ -23,6 +32,12 @@ public class ItemRepository {
     );
   }
 
+  /**
+   * get items with filters from the database.
+   *
+   * @param itemsRequest the filters
+   * @return the items
+   */
   public Item[] getItems(ItemsRequest itemsRequest) {
     String sql = buildFilterSQL(itemsRequest);
     Object[] params = buildParams(itemsRequest);
@@ -30,6 +45,12 @@ public class ItemRepository {
     return itemList.toArray(new Item[0]);
   }
 
+  /**
+   * Helper method for generating sql query based on passed filters.
+   *
+   * @param itemsRequest the filters
+   * @return the sql query
+   */
   private String buildFilterSQL(ItemsRequest itemsRequest) {
     StringBuilder sb = new StringBuilder(
         """
@@ -67,6 +88,12 @@ public class ItemRepository {
     return sb.toString();
   }
 
+  /**
+   * helper method for collecting query parameters based on selected filters.
+   *
+   * @param itemsRequest the filters
+   * @return the query parameters
+   */
   private Object[] buildParams(ItemsRequest itemsRequest) {
     List<Object> params = new ArrayList<>();
     if (itemsRequest.getCategory() != null) {
