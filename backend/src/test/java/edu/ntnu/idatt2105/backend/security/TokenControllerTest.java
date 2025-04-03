@@ -78,12 +78,14 @@ class TokenControllerTest {
     when(userService.checkCredentials(signinRequest)).thenReturn(false);
 
     assertThrows(ResponseStatusException.class, () -> tokenController.signIn(signinRequest, this.response));
+    assertThrows(ResponseStatusException.class, () -> tokenController.signIn(signinRequest, this.response));
   }
 
   @Test
   void signIn_ShouldThrowUnauthorized_WhenDatabaseErrorOccurs() {
     when(userService.checkCredentials(signinRequest)).thenThrow(new DataAccessException("DB Error") {});
 
+    assertThrows(ResponseStatusException.class, () -> tokenController.signIn(signinRequest, this.response));
     assertThrows(ResponseStatusException.class, () -> tokenController.signIn(signinRequest, this.response));
   }
 
