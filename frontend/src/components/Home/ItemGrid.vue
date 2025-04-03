@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import ItemCard from '@/components/Home/ItemCard.vue';
 
-interface RecommendationItem {
+interface Item {
   id: number;
   name: string;
   location: string;
@@ -13,7 +13,7 @@ const emit = defineEmits(['item-clicked']);
 
 const props = defineProps({
   items: {
-    type: Array as () => RecommendationItem[],
+    type: Array as () => Item[],
     required: false,
   },
 });
@@ -29,7 +29,7 @@ const props = defineProps({
 </script>
 
 <template>
-  <div class="recommendations-grid">
+  <div class="item-grid">
     <ItemCard
     v-for="(item, index) in props.items"
     :key="index"
@@ -40,7 +40,7 @@ const props = defineProps({
 </template>
 
 <style scoped>
-.recommendations-grid {
+.item-grid {
   display: flex;
   justify-content: center;
   align-items: flex-start;
@@ -51,7 +51,7 @@ const props = defineProps({
 }
 
 @media (max-width: 768px) {
-  .recommendations-grid {
+  .item-grid {
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   }
 
