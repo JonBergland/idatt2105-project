@@ -179,7 +179,7 @@ header {
 .buttonWrapper {
   display: flex;
   justify-content: flex-end;
-  gap: 32px;
+  gap: 16px;
   display: flex;
   align-items: center;
   align-content: center;
@@ -190,17 +190,17 @@ header {
 .routerButton {
   display: flex;
   width: 83px;
-  padding: 4px;
+  padding: 8px;
   justify-content: center;
   align-items: center;
   gap: 10px;
+  border: 1px solid #ccc;
   border-radius: 8px;
   font-family: 'Inter', sans-serif;
   font-weight: 400;
   text-decoration: none;
-  color: black;
-  border: 2px solid gray;
-  transition: all 0.3s ease;
+  font-size: 0.9rem;
+  transition: background-color 0.3s ease;
 }
 
 
