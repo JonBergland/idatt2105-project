@@ -16,3 +16,6 @@ class UserService {
     return await axiosInstance.post<UserLoginDTO>('/token/signin', user)
   }
 }
+
+const userService = new UserService();
+export default userService;

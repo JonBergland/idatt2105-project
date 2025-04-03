@@ -1,10 +1,7 @@
 import type { UserLoginDTO, UserRegistrationDTO } from "@/models/user";
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import { userService } from "@/services/user/userService"
-
-import axiosInstance from "@/services/axiosService";
-
+import userService from "@/services/user/userService"
 
 /**
  * Store for authenticating the user with login and singup
