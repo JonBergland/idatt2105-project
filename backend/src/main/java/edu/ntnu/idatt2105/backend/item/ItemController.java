@@ -20,11 +20,11 @@ public class ItemController {
 
   private final Logger logger = LoggerFactory.getLogger(ItemController.class);
 
-  @PostMapping()
+  private final ItemService itemService;
+
+  @PostMapping("/filter")
   public ItemsResponse getItems(@RequestBody ItemsRequest itemsRequest) {
-    ItemResponse itemResponse = new ItemResponse(1, "bil", "tommy", "fin bil", "03.04.2025", 100);
-    ItemResponse itemResponse2 = new ItemResponse(2, "båt", "timmy", "stygg båt", "01.04.2025", 150);
-    ItemResponse[] itemResponses = {itemResponse, itemResponse2};
+    ItemResponse[] itemResponses = ItemMapper.INSTANCE.itemsToItemResponses(itemService.getItems(itemsRequest));
     return new ItemsResponse(itemResponses);
   }
 }
