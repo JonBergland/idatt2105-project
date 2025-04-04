@@ -8,7 +8,7 @@ describe('HomeView', () => {
 
     cy.get('.search-bar').should('exist');
     cy.get('.category-grid').should('exist');
-    cy.get('.recommendations-grid').should('exist');
+    cy.get('.item-group').should('exist');
   });
 
   it('handles search input and emits the search event', () => {
@@ -26,7 +26,7 @@ describe('HomeView', () => {
   });
 
   it('handles item clicks and emits the item-clicked event', () => {
-    cy.get('.recommendations-grid .item-card').first().click();
+    cy.get('.item-group .item-card').first().click();
 
     cy.log('Item-clicked event emitted');
   });
@@ -34,7 +34,7 @@ describe('HomeView', () => {
   it('renders categories and recommendations correctly', () => {
     cy.get('.category-grid button').should('have.length', 3);
 
-    cy.get('.recommendations-grid .item-card').should('have.length', 3);
+    cy.get('.item-group .item-card').should('have.length', 3);
   });
 });
 
