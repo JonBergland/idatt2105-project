@@ -1,6 +1,5 @@
 import type { UserLoginDTO, UserRegistrationDTO } from "@/models/user";
 import { defineStore } from "pinia";
-import { ref } from "vue";
 import userService from "@/services/user/userService"
 
 /**
@@ -41,8 +40,7 @@ export const useAuthStore = defineStore('auth', {
         return false
 
       } catch (error) {
-
-
+        console.log("Error when login in to Yard: ", error);
       }
     },
 
