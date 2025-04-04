@@ -68,7 +68,7 @@ defineExpose({
     <form @submit.prevent="handleLogin">
       <label for="login">Please enter email and password:</label>
       <input class="input" type="text" id="email" name="email" placeholder="Email" v-model="email" required />
-      <input class="input" type="text" id="password" name="password" placeholder="Password" v-model="password" required/>
+      <input class="input" type="password" id="password" name="password" placeholder="Password" v-model="password" required/>
       <input type="submit" :disabled="!validForm" value="Log in" id="login-button">
       <label for="error" id="login-status-label" ref="errorLabelEl"></label>
     </form>
