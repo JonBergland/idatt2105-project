@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import CategoryGrid from '@/components/Home/CategoryGrid.vue';
-import RecommendationGrid from '@/components/Home/ItemGrid.vue';
+import RecommendationGrid from '@/components/Home/ItemGroup.vue';
 import SearchBar from '@/components/Home/SearchBar.vue';
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
