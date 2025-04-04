@@ -30,18 +30,3 @@ export interface UserLoginDTO {
   password: string;
 }
 
-/**
- * Creates a UserRegistrationDTO from form data
- * @param formData The data from the registration form
- * @returns        A UserRegistrationDTO object ready to be sent to the backend
- */
-export function createRegistrationDTO(formData: any): UserRegistrationDTO {
-  return {
-    email: formData.email,
-    name: formData.firstName,
-    surname: formData.lastName,
-    countryCode: formData.countryCode,
-    phoneNumber: formData.phoneNumber,
-    password: formData.password
-  };
-}
