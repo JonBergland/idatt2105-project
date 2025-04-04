@@ -119,8 +119,21 @@ public class ItemRepository {
   public void addItem(Item item) {
     jdbcTemplate.update(
         "INSERT INTO Item (name, description, price, category_id, user_id) "
-            + "VALUES (?, ?, ?, (SELECT id FROM Categories WHERE name = ?), ?)",
+            + "VALUES (?, ?, ?, (SELECT id FROM Categories WHERE category_name = ?), ?)",
         item.getName(), item.getDescription(), item.getPrice(), item.getCategory(), item.getSellerID()
     );
+  }
+
+  public void editItem(Item item) {
+    jdbcTemplate.update(
+        "UPDATE Item " +
+        "SET name = ?, description = ?, price = ?, category_id = (SELECT id FROM Categories WHERE category_name = ?) " +
+        "WHERE id = ? AND user_id = ?",
+        item.getName(),
+        item.getDescription(),
+        item.getPrice(),
+        item.getCategory(),
+        item.getItemID(),
+        item.getSellerID());
   }
 }
