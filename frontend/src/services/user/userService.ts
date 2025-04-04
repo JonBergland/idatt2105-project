@@ -12,7 +12,6 @@ class UserService {
    * @returns A promise that resolves with the user's information.
    */
   async getUserInfo(): Promise<User> {
-    // Not implemented in backend
     const response = await axiosInstance.get<User>('/user/info');
     return response.data;
   }
