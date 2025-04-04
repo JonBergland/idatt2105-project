@@ -3,6 +3,7 @@ package edu.ntnu.idatt2105.backend.security;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -37,14 +38,31 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
       FilterChain filterChain) throws ServletException, IOException {
 
     logger.info("JWTAuthorizationFilter called for URI: {}", request.getRequestURI());
+
+    // Check Authorization header
+    String token = null;
     final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
-    if (header == null || !header.startsWith("Bearer ")) {
-      logger.warn("Token has wrong format: {}", header);
+    if (header != null && header.startsWith("Bearer ")) {
+      token = header.substring(7);
+    } else {
+        // If not found in header, check for JWT in cookie
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+          for (Cookie cookie : cookies) {
+            if ("JWT".equals(cookie.getName())) {
+              token = cookie.getValue();
+              break;
+            }
+          }
+        }
+      }
+
+    if (token == null) {
+      logger.warn("No token found in request", header);
       filterChain.doFilter(request, response);
       return;
     }
-    String token = header.substring(7);
-
+      
     final String username;
     final String role;
     logger.info("Validating token");
