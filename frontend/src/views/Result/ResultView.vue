@@ -91,6 +91,18 @@ function handleSort(sortMode: string) {
 }
 
 /**
+ * Handles the event when the price range is updated.
+ *
+ * @param {Object} priceRange - The updated price range object.
+ * @param {number | null} priceRange.min - The minimum price in the range, or null if not set.
+ * @param {number | null} priceRange.max - The maximum price in the range, or null if not set.
+ */
+function handlePriceRangeUpdated(priceRange: { min: number | null; max: number | null }): void {
+  console.log('Price range updated:', priceRange);
+  //TODO: implement
+}
+
+/**
  * Handles the 'item-clicked' event emitted by the RecommendationGrid component
  * @param {number} itemId - The unique identifier of the clicked item
  */
@@ -110,7 +122,7 @@ function handleSort(sortMode: string) {
       </div>
       <div class="filter-wrapper">
         <p>Price:</p>
-        <PriceFilter />
+        <PriceFilter @price-range-updated="handlePriceRangeUpdated"/>
       </div>
     </div>
       <div class="search-toggle-items-container">
