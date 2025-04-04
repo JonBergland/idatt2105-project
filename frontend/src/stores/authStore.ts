@@ -1,6 +1,7 @@
-import type { UserLoginDTO, UserRegistrationDTO } from "@/models/user";
+import type { User, UserLoginDTO, UserRegistrationDTO } from "@/models/user";
 import { defineStore } from "pinia";
 import userService from "@/services/user/userService"
+
 
 /**
  * Store for authenticating the user with login and singup
@@ -8,19 +9,27 @@ import userService from "@/services/user/userService"
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     isAuth: false,
-    userData: null
+    userData: null as User | null
   }),
 
   actions: {
 
     async checkIfAuth() {
       try {
-        // Tests if one can retrieve data from backend
-        this.isAuth = true
+        this.userData = await userService.getUserInfo()
+        console.log("User data from backend: ", this.userData)
 
+        if (this.userData) {
+          this.isAuth = true
+          return true
+        } else {
+          throw new Error("User data is empty")
+        }
       } catch (error) {
         console.log("Authorization check failed: ", error);
         this.isAuth = false
+        this.userData = null
+        return false;
       }
     },
 
@@ -31,14 +40,14 @@ export const useAuthStore = defineStore('auth', {
 
         // Test to see if the user is authenticated
         if (resp) {
-          this.checkIfAuth()
+          await this.checkIfAuth()
           if (this.userData) {
             return true
           }
+        } else {
+          throw new Error("Login was not successful");
         }
-
         return false
-
       } catch (error) {
         console.log("Error when login in to Yard: ", error);
       }
@@ -46,19 +55,20 @@ export const useAuthStore = defineStore('auth', {
 
     async signup(user: UserRegistrationDTO) {
       try {
-        console.log("Sending user-info to backend: ", user);
         const resp = await userService.registerUser(user)
-        console.log("Response from backend: ", resp);
 
         if (resp) {
-          this.checkIfAuth()
+          await this.checkIfAuth()
 
-        if (this.userData) {
-            return true
+          if (resp) {
+            await this.checkIfAuth()
+            if (this.userData) {
+              return true
+            }
+          } else {
+            throw new Error("Signing up was not successful");
           }
         }
-        return false
-
       } catch (error) {
         console.log("Error when signing up to Yard: ", error);
       }
