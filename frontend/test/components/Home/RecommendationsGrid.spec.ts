@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils';
-import RecommendationGrid from '@/components/Home/RecommendationGrid.vue';
+import ItemGroup from '@/components/Home/ItemGroup.vue';
 import ItemCard from '@/components/Home/ItemCard.vue';
 
-describe('RecommendationGrid.vue', () => {
+describe('ItemGroup.vue', () => {
   const mockItems = [
     { id: 1, name: 'Playstation 5', location: 'Oslo', price: 400, img: 'https://via.placeholder.com/150' },
     { id: 2, name: 'Xbox Series X', location: 'Bærum', price: 500, img: 'https://via.placeholder.com/150' },
@@ -11,7 +11,7 @@ describe('RecommendationGrid.vue', () => {
   ];
 
   it('renders the correct number of ItemCard components', () => {
-    const wrapper = mount(RecommendationGrid, {
+    const wrapper = mount(ItemGroup, {
       props: { items: mockItems },
     });
 
@@ -20,7 +20,7 @@ describe('RecommendationGrid.vue', () => {
   });
 
   it('passes the correct props to each ItemCard', () => {
-    const wrapper = mount(RecommendationGrid, {
+    const wrapper = mount(ItemGroup, {
       props: { items: mockItems },
     });
 
@@ -31,7 +31,7 @@ describe('RecommendationGrid.vue', () => {
   });
 
   it('emits "item-clicked" with the correct payload when an ItemCard is clicked', async () => {
-    const wrapper = mount(RecommendationGrid, {
+    const wrapper = mount(ItemGroup, {
       props: { items: mockItems },
     });
 
@@ -43,7 +43,7 @@ describe('RecommendationGrid.vue', () => {
   });
 
   it('renders nothing if no items are provided', () => {
-    const wrapper = mount(RecommendationGrid, {
+    const wrapper = mount(ItemGroup, {
       props: { items: [] },
     });
 
