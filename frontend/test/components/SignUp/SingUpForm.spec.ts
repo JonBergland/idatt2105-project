@@ -1,9 +1,18 @@
-import { describe, it, expect, vi, afterEach } from 'vitest'
+import { describe, it, expect, afterEach } from 'vitest'
 import { render, fireEvent, screen, cleanup } from "@testing-library/vue";
 import { mount } from '@vue/test-utils'
 import SignUpForm from '@/components/SignUp/SignUpForm.vue'
+import { UserRegistrationDTO } from '@/models/user'
 
 afterEach(cleanup);
+
+const testEmail = 'test@example.com';
+const testFirstName = 'John';
+const testLastName = 'Doe';
+const testLandCode = '+1';
+const testPhoneNr = '1234567890';
+const testPassword = 'password123';
+const testRepeatPassword = 'password123';
 
 describe('SignUpForm', () => {
   it('renders the registration form', () => {
@@ -31,23 +40,22 @@ describe('SignUpForm', () => {
     const passwordInput = wrapper.find('input#password')
     const repeatPasswordInput = wrapper.find('input#repeatPassword')
 
-    await emailInput.setValue('test@example.com')
-    await firstNameInput.setValue('John')
-    await lastNameInput.setValue('Doe')
-    await landCodeInput.setValue('+1')
-    await phoneNrInput.setValue('1234567890')
-    await passwordInput.setValue('password123')
-    await repeatPasswordInput.setValue('password123')
+    await emailInput.setValue(testEmail);
+    await firstNameInput.setValue(testFirstName);
+    await lastNameInput.setValue(testLastName);
+    await landCodeInput.setValue(testLandCode);
+    await phoneNrInput.setValue(testPhoneNr);
+    await passwordInput.setValue(testPassword);
+    await repeatPasswordInput.setValue(testRepeatPassword);
 
-    expect(wrapper.vm.email).toBe('test@example.com')
-    expect(wrapper.vm.firstName).toBe('John')
-    expect(wrapper.vm.lastName).toBe('Doe')
-    expect(wrapper.vm.landCode).toBe('+1')
-    expect(wrapper.vm.phoneNr).toBe('1234567890')
-    expect(wrapper.vm.password).toBe('password123')
-    expect(wrapper.vm.repeatPassword).toBe('password123')
+    expect(wrapper.vm.email).toBe(testEmail)
+    expect(wrapper.vm.firstName).toBe(testFirstName)
+    expect(wrapper.vm.lastName).toBe(testLastName)
+    expect(wrapper.vm.landCode).toBe(testLandCode)
+    expect(wrapper.vm.phoneNr).toBe(testPhoneNr)
+    expect(wrapper.vm.password).toBe(testPassword)
+    expect(wrapper.vm.repeatPassword).toBe(testRepeatPassword)
 
-    // Check if the submit button is enabled when all fields are set
     const submitButton = wrapper.find('input#signup-button');
     expect((submitButton.element as HTMLButtonElement).disabled).toBe(false);
   })
@@ -65,17 +73,16 @@ describe('SignUpForm', () => {
     const firstNameInput = getByPlaceholderText("First Name");
     const submitButton = getByRole("button", { name: /sign up/i });
 
-    await fireEvent.update(emailInput, "test@example.com");
+    await fireEvent.update(emailInput, testEmail);
     expect((submitButton as HTMLButtonElement).disabled).toBe(true);
 
-    await fireEvent.update(firstNameInput, "John");
+    await fireEvent.update(firstNameInput, testFirstName);
     expect((submitButton as HTMLButtonElement).disabled).toBe(true);
   })
 
-  it('processes form data on submission', async () => {
+  it('emits user data on form submission', async () => {
     const wrapper = mount(SignUpForm)
 
-    // Fill all required fields
     const emailInput = wrapper.find('input#email')
     const firstNameInput = wrapper.find('input#firstName')
     const lastNameInput = wrapper.find('input#lastName')
@@ -84,29 +91,25 @@ describe('SignUpForm', () => {
     const passwordInput = wrapper.find('input#password')
     const repeatPasswordInput = wrapper.find('input#repeatPassword')
 
-    await emailInput.setValue('test@example.com')
-    await firstNameInput.setValue('John')
-    await lastNameInput.setValue('Doe')
-    await landCodeInput.setValue('+1')
-    await phoneNrInput.setValue('1234567890')
-    await passwordInput.setValue('password123')
-    await repeatPasswordInput.setValue('password123')
-
-    const consoleSpy = vi.spyOn(console, 'log')
+    await emailInput.setValue(testEmail)
+    await firstNameInput.setValue(testFirstName)
+    await lastNameInput.setValue(testLastName)
+    await landCodeInput.setValue(testLandCode)
+    await phoneNrInput.setValue(testPhoneNr)
+    await passwordInput.setValue(testPassword)
+    await repeatPasswordInput.setValue(testRepeatPassword)
 
     await wrapper.find('form').trigger('submit')
 
-    expect(consoleSpy).toHaveBeenCalledWith(expect.objectContaining({
-      email: 'test@example.com',
-      firstName: 'John',
-      lastName: 'Doe',
-      landCode: '+1',
-      phoneNr: '1234567890',
-      password: 'password123',
-      repeatPassword: 'password123'
-    }))
-
-    consoleSpy.mockRestore()
+    expect(wrapper.emitted().signup).toBeTruthy()
+    expect((wrapper.emitted().signup![0][0] as UserRegistrationDTO)).toEqual({
+      email: testEmail,
+      name: testFirstName,
+      surname: testLastName,
+      countryCode: parseInt(testLandCode.replace('+', '')),
+      phoneNumber: parseInt(testPhoneNr),
+      password: testPassword,
+    })
   })
 
   it('displays error message on registration failure', async () => {
@@ -117,7 +120,6 @@ describe('SignUpForm', () => {
 
     await wrapper.vm.handleRegistration(new Event('submit'))
 
-    // Wait for DOM update
     await wrapper.vm.$nextTick()
 
     expect(mockErrorEl.textContent).toContain('Registration failed:')
@@ -126,7 +128,6 @@ describe('SignUpForm', () => {
   it('validates password match', async () => {
     const wrapper = mount(SignUpForm)
 
-    // Fill form but have mismatching passwords
     const emailInput = wrapper.find('input#email')
     const firstNameInput = wrapper.find('input#firstName')
     const lastNameInput = wrapper.find('input#lastName')
@@ -135,25 +136,23 @@ describe('SignUpForm', () => {
     const passwordInput = wrapper.find('input#password')
     const repeatPasswordInput = wrapper.find('input#repeatPassword')
 
-    await emailInput.setValue('test@example.com')
-    await firstNameInput.setValue('John')
-    await lastNameInput.setValue('Doe')
-    await landCodeInput.setValue('+1')
-    await phoneNrInput.setValue('1234567890')
-    await passwordInput.setValue('password123')
+    await emailInput.setValue(testEmail)
+    await firstNameInput.setValue(testFirstName)
+    await lastNameInput.setValue(testLastName)
+    await landCodeInput.setValue(testLandCode)
+    await phoneNrInput.setValue(testPhoneNr)
+    await passwordInput.setValue(testPassword)
     await repeatPasswordInput.setValue('different-password')
 
     expect(wrapper.vm.validForm).toBe(false)
   })
-
-  // TODO: Add tests for verifying sending to backend
 
   describe('SignUpForm verifyLandcode', () => {
     it('returns true when landcode is correct', async () => {
       const wrapper = mount(SignUpForm)
 
       const landCodeInput = wrapper.find('input#landCode')
-      await landCodeInput.setValue('+1')
+      await landCodeInput.setValue(testLandCode)
 
       expect(wrapper.vm.verifyLandCode()).toBe(true)
     })
@@ -171,7 +170,7 @@ describe('SignUpForm', () => {
       const wrapper = mount(SignUpForm)
 
       const landCodeInput = wrapper.find('input#landCode')
-      await landCodeInput.setValue('32')
+      await landCodeInput.setValue(testLandCode.replace('+', ''))
 
       expect(wrapper.vm.verifyLandCode()).toBe(true)
       expect(wrapper.vm.landCode).toContain('+')
@@ -181,10 +180,10 @@ describe('SignUpForm', () => {
       const wrapper = mount(SignUpForm)
 
       const landCodeInput = wrapper.find('input#landCode')
-      await landCodeInput.setValue('++32')
+      await landCodeInput.setValue('++' + testLandCode.replace('+', ''))
 
       expect(wrapper.vm.verifyLandCode()).toBe(true)
-      expect(wrapper.vm.landCode).toEqual('+32')
+      expect(wrapper.vm.landCode).toEqual(testLandCode)
     })
   })
 
