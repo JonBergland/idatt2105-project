@@ -15,9 +15,15 @@ import lombok.Setter;
 public class User {
   private int userID;
   private String email;
-  private String phoneNumber;
+  private int phoneNumber;
+  private int countryCode;
   private String name;
   private String surname;
   private String password;
   private String role;
+  private double latitude;
+  private double longitude;
+  private String city;
+  private int postalCode;
+  private String address;
 }
