@@ -5,22 +5,12 @@ WORKDIR /app
 
 # Copy package files and install dependencies
 COPY package*.json ./
-RUN npm ci
+RUN npm install
 
 # Copy project files
 COPY . .
 
-# Build the app
-RUN npm run build-only
-
-# Production stage
-FROM nginx:stable-alpine as production-stage
-
-# Copy built assets from the build stage
-COPY --from=build-stage /app/dist /usr/share/nginx/html
-
 # Expose port
-EXPOSE 80
+EXPOSE 5173
 
-# Start nginx
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["npm", "run", "dev", "--", "--host"]
