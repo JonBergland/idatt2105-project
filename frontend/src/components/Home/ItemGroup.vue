@@ -34,7 +34,7 @@ function handleItemClick(itemId: number) {
 </script>
 
 <template>
-  <div :class="['item-container', mode === 'Grid' ? 'item-grid' : 'item-column']">
+  <div :class="['item-group', mode === 'Grid' ? 'item-grid' : 'item-column']">
     <ItemCard
       v-for="(item, index) in props.items"
       :key="index"
@@ -46,7 +46,7 @@ function handleItemClick(itemId: number) {
 </template>
 
 <style scoped>
-.item-container {
+.item-group {
   width: 100%;
 }
 
