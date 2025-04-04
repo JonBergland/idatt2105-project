@@ -24,6 +24,6 @@ public class SignupRequest {
   private String name;
   @NotBlank
   private String surname;
-  @NotBlank
-  private String phoneNumber;
+  private int phoneNumber;
+  private int countryCode;
 }
