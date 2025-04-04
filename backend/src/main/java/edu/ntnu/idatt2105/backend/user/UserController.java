@@ -1,5 +1,7 @@
 package edu.ntnu.idatt2105.backend.user;
 
+import edu.ntnu.idatt2105.backend.user.dto.AddItemRequest;
+import edu.ntnu.idatt2105.backend.user.dto.EditItemRequest;
 import edu.ntnu.idatt2105.backend.user.dto.GetUserInfoResponse;
 import edu.ntnu.idatt2105.backend.user.dto.UpdateUserInfoRequest;
 import edu.ntnu.idatt2105.backend.user.model.User;
@@ -36,6 +38,11 @@ public class UserController {
     return userService.getUser(Integer.parseInt(userID));
   }
 
+  @PostMapping("/item/store")
+  public void getUserSpecificItemInfo() {
+
+  }
+
   @GetMapping("/item/recommended")
   public void getRecommendedItems() {
 
@@ -52,12 +59,12 @@ public class UserController {
   }
 
   @PostMapping("/item")
-  public void addUserItem() {
-
+  public void addUserItem(@RequestBody AddItemRequest addItemRequest) {
+    userService.addUserItem(addItemRequest);
   }
 
   @PostMapping("/item/edit")
-  public void editUserItem() {
-
+  public void editUserItem(@RequestBody EditItemRequest editItemRequest) {
+    userService.editUserItem(editItemRequest);
   }
 }

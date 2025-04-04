@@ -1,7 +1,12 @@
 package edu.ntnu.idatt2105.backend.user;
 
+import edu.ntnu.idatt2105.backend.item.ItemMapper;
+import edu.ntnu.idatt2105.backend.item.ItemRepository;
+import edu.ntnu.idatt2105.backend.item.model.Item;
 import edu.ntnu.idatt2105.backend.security.dto.SigninRequest;
 import edu.ntnu.idatt2105.backend.security.dto.SignupRequest;
+import edu.ntnu.idatt2105.backend.user.dto.AddItemRequest;
+import edu.ntnu.idatt2105.backend.user.dto.EditItemRequest;
 import edu.ntnu.idatt2105.backend.user.dto.GetUserInfoResponse;
 import edu.ntnu.idatt2105.backend.user.dto.UpdateUserInfoRequest;
 import edu.ntnu.idatt2105.backend.user.model.User;
@@ -22,6 +27,8 @@ public class UserService {
   private final Logger logger = LoggerFactory.getLogger(UserService.class);
 
   private final UserRepository userRepository;
+
+  private final ItemRepository itemRepository;
 
   private final PasswordEncoder passwordEncoder;
 
@@ -74,6 +81,20 @@ public class UserService {
     String userID = SecurityContextHolder.getContext().getAuthentication().getName();
     user.setUserID(Integer.parseInt(userID));
     userRepository.updateUser(user);
+  }
+
+  public void addUserItem(AddItemRequest addItemRequest) {
+    Item item = ItemMapper.INSTANCE.addItemRequestToItem(addItemRequest);
+    String userID = SecurityContextHolder.getContext().getAuthentication().getName();
+    item.setSellerID(Integer.parseInt(userID));
+    itemRepository.addItem(item);
+  }
+
+  public void editUserItem(EditItemRequest editItemRequest) {
+    Item item = ItemMapper.INSTANCE.editItemRequestToItem(editItemRequest);
+    String userID = SecurityContextHolder.getContext().getAuthentication().getName();
+    item.setSellerID(Integer.parseInt(userID));
+    itemRepository.editItem(item);
   }
 
   public void getUserItems() {
