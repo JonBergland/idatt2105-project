@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, afterEach } from 'vitest'
+import { describe, it, expect, afterEach } from 'vitest'
 import { render, fireEvent, screen, cleanup } from "@testing-library/vue";
 import { mount } from '@vue/test-utils'
 import LogInForm from '@/components/LogIn/LogInForm.vue'
