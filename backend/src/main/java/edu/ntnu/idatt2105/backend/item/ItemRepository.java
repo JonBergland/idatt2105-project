@@ -115,4 +115,12 @@ public class ItemRepository {
     }
     return params.toArray();
   }
+
+  public void addItem(Item item) {
+    jdbcTemplate.update(
+        "INSERT INTO Item (name, description, price, category_id, user_id) "
+            + "VALUES (?, ?, ?, (SELECT id FROM Categories WHERE name = ?), ?)",
+        item.getName(), item.getDescription(), item.getPrice(), item.getCategory(), item.getSellerID()
+    );
+  }
 }
