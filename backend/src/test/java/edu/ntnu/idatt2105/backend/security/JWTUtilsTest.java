@@ -1,13 +1,17 @@
 package edu.ntnu.idatt2105.backend.security;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.ArgumentMatchers.argThat;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import jakarta.servlet.http.HttpServletResponse;
 
 @ExtendWith(MockitoExtension.class)
 class JWTUtilsTest {
@@ -18,6 +22,9 @@ class JWTUtilsTest {
 
   @InjectMocks
   private JWTUtils jwtUtils;
+
+  @Mock
+  private HttpServletResponse response;
 
   private String validToken;
 
@@ -57,5 +64,35 @@ class JWTUtilsTest {
   @Test
   void validateTokenAndGetRole_ShouldThrowException_WhenTokenIsInvalid() {
     assertThrows(JWTVerificationException.class, () -> jwtUtils.validateTokenAndGetRole(INVALID_TOKEN));
+  }
+
+  @Test
+  void setJWTCookie_ShouldSetCookieWithCorrectProperties() {
+    jwtUtils.setJWTCookie(validToken, response);
+
+    verify(response).addCookie(argThat(cookie -> {
+      assertEquals("JWT", cookie.getName());
+      assertEquals(validToken, cookie.getValue());
+      assertTrue(cookie.isHttpOnly());
+      assertTrue(cookie.getSecure());
+      assertEquals("/", cookie.getPath());
+      assertEquals(300, cookie.getMaxAge());
+      return true;
+    }));
+  }
+
+  @Test
+  void setJWTCookie_ShouldHandleNullTokenGracefully() {
+    jwtUtils.setJWTCookie(null, response);
+
+    verify(response).addCookie(argThat(cookie -> {
+      assertEquals("JWT", cookie.getName());
+      assertNull(cookie.getValue());
+      assertTrue(cookie.isHttpOnly());
+      assertTrue(cookie.getSecure());
+      assertEquals("/", cookie.getPath());
+      assertEquals(300, cookie.getMaxAge());
+      return true;
+    }));
   }
 }

@@ -3,10 +3,13 @@ import { ref, computed } from 'vue'
 import * as stringVerificationUtils from '@/utils/stringVerificationUtils'
 import "@/assets/color.css"
 import "@/assets/base.css"
+import type { UserLoginDTO } from '@/models/user'
 
 const email = ref("")
 const password = ref("")
 const errorLabelEl = ref<HTMLElement | null>(null)
+
+const emit = defineEmits(["login"])
 
 /**
  * Sets the error label with the parameter errormessage
@@ -38,14 +41,13 @@ async function handleLogin(event: Event) {
     return
   }
 
-  const formData = {
+  try {
+    const formData: UserLoginDTO = {
     email: email.value,
     password: password.value
-  }
+    }
 
-  try {
-    console.log(formData);
-    // TODO: Add form submission logic
+    emit("login", formData)
   } catch (error) {
     setErrorLabel(String(error))
   }
@@ -66,7 +68,7 @@ defineExpose({
     <form @submit.prevent="handleLogin">
       <label for="login">Please enter email and password:</label>
       <input class="input" type="text" id="email" name="email" placeholder="Email" v-model="email" required />
-      <input class="input" type="text" id="password" name="password" placeholder="Password" v-model="password" required/>
+      <input class="input" type="password" id="password" name="password" placeholder="Password" v-model="password" required/>
       <input type="submit" :disabled="!validForm" value="Log in" id="login-button">
       <label for="error" id="login-status-label" ref="errorLabelEl"></label>
     </form>

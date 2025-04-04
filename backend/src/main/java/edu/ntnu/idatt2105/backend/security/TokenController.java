@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -43,7 +44,7 @@ public class TokenController {
    */
   @PostMapping("/signin")
   @ResponseStatus(value = HttpStatus.CREATED)
-  public SigninResponse signIn(final @Valid @RequestBody SigninRequest signinRequest)
+  public boolean signIn(final @Valid @RequestBody SigninRequest signinRequest, HttpServletResponse response)
       throws ResponseStatusException {
     logger.info("token request for user: {}", signinRequest.getEmail());
     try {
@@ -52,13 +53,15 @@ public class TokenController {
         logger.info("role: {}", user.getRole());
         String token = jwtUtils.generateToken(user.getUserID(), user.getRole());
         logger.info("token: {}", token);
-        return new SigninResponse(token);
+        jwtUtils.setJWTCookie(token, response);
+        return true;
       }
       logger.info("Access denied, wrong credentials for user {}", signinRequest.getEmail());
+      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials");
     } catch (DataAccessException e) {
       logger.warn("could not sign in user, {}", e.getMessage());
+      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
     }
-    throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
   }
 
   /**
@@ -70,13 +73,14 @@ public class TokenController {
    */
   @PostMapping("/signup")
   @ResponseStatus(value = HttpStatus.CREATED)
-  public SigninResponse registerAccount(final @Valid @RequestBody SignupRequest signupRequest) {
+  public boolean registerAccount(final @Valid @RequestBody SignupRequest signupRequest, HttpServletResponse response) {
     logger.info("signup request with email: {}", signupRequest.getEmail());
     try {
       userService.createUser(signupRequest);
       User createdUser = userService.getUserByEmail(signupRequest.getEmail());
       String token = jwtUtils.generateToken(createdUser.getUserID(), createdUser.getRole());
-      return new SigninResponse(token);
+      jwtUtils.setJWTCookie(token, response);
+      return true;
     } catch (DataAccessException e) {
       logger.warn("could not create user, {}", e.getMessage());
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
