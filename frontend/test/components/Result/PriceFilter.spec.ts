@@ -74,7 +74,6 @@ describe('PriceFilter.vue', () => {
     const wrapper = mount(PriceFilter);
 
     const minInput = wrapper.find('input[placeholder="Min"]');
-    const maxInput = wrapper.find('input[placeholder="Max"]');
 
     // Simulate entering a negative number
     await minInput.setValue(-50);
