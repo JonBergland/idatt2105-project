@@ -167,6 +167,8 @@ function handlePriceRangeUpdated(priceRange: { min: number | null; max: number |
 }
 
 .filter-wrapper {
+  display: flex;
+  flex-direction: column;
   gap: 16px;
 }
 
