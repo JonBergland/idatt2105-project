@@ -3,7 +3,7 @@ import { ref } from 'vue';
 import ToggleGroup from '@/components/Result/ToggleGroup.vue';
 import SearchBar from '@/components/Home/SearchBar.vue';
 import ItemGroup from '@/components/Home/ItemGroup.vue';
-import placeholderImage from '@/assets/placeholder-image.png';
+import placeholderImage from '@/assets/images/placeholder-image.png';
 import PriceFilter from '@/components/Result/PriceFilter.vue';
 import CategoryButton from '@/components/Home/CategoryButton.vue';
 
