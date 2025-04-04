@@ -1,8 +1,19 @@
 <script setup lang="ts">
 const props = defineProps({
   item: {
-    type: Object,
+    type: Object as () => {
+      id: number;
+      name: string;
+      location: string;
+      price: number;
+      img: string;
+    },
     required: true,
+  },
+  size: {
+    type: String,
+    default: 'narrow',
+    validator: (value: string) => ['narrow', 'full'].includes(value),
   },
 });
 
@@ -18,11 +29,13 @@ function handleClick() {
 </script>
 
 <template>
-  <div class="item-card" @click="handleClick">
-    <img :src="item.img" :alt="item.alt" draggable="false" class="item-image">
-    <p>{{ item.location }}</p>
-    <h3>{{ item.name  }}</h3>
-    <p>{{ item.price }} kr</p>
+  <div class="item-card"  :class="size === 'narrow' ? 'narrow' : 'full'" @click="handleClick">
+    <img :src="item.img" alt="" draggable="false" class="item-image" :class="size === 'narrow' ? 'narrow' : 'full'">
+    <div class="item-info">
+      <p>{{ item.location }}</p>
+      <h3>{{ item.name  }}</h3>
+      <p>{{ item.price }} kr</p>
+    </div>
   </div>
 </template>
 
@@ -44,10 +57,40 @@ function handleClick() {
   background-color: #f0f0f0;
 }
 
+.item-card.full {
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 16px;
+  width: 100%; /* Allow the card to scale down responsively */
+  max-width: 702px; /* Standard maximum width */
+  min-width: 460px; /* Minimum width for better readability */
+  flex-grow: 1;
+}
+
 .item-image {
   width: 100%;
   height: auto;
   border-radius: 8px;
   object-fit: cover;
 }
+
+.item-image.full {
+  width: auto;
+}
+
+
+@media (max-width: 768px) {
+  .item-image {
+    max-width: 116px;
+    max-height: 116px;
+  }
+
+  .item-card.narrow {
+    width: 150px
+  }
+  .item-card.full{
+    width: 300px;
+  }
+}
+
 </style>

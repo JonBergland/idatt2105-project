@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import CategoryGrid from '@/components/Home/CategoryGrid.vue';
-import RecommendationGrid from '@/components/Home/RecommendationGrid.vue';
+import RecommendationGrid from '@/components/Home/ItemGroup.vue';
 import SearchBar from '@/components/Home/SearchBar.vue';
 import { onMounted, ref } from 'vue';
-//import { useRouter } from 'vue-router';
+import { useRouter } from 'vue-router';
 import placeholderImage from '@/assets/images/placeholder-image.png'
 
-//const router = useRouter();
+const router = useRouter();
 
 const items = ref([
   {id: 1, name: 'Playstation 5', location: 'oslo', price: 400, img: placeholderImage},
@@ -48,7 +48,7 @@ async function loadRecommendations() {
  * @param {string} query - The search query entered by the user
  */
  function handleSearch(query: string) {
-  //router.push({ name: 'results', query: { search: query } });
+  router.push({ name: 'result', query: { search: query } });
   console.log('Searched for: ', query)
 }
 
@@ -57,7 +57,7 @@ async function loadRecommendations() {
  * @param {string} category - The name of the clicked category
  */
  function handleCategoryClick(category: string) {
-  //router.push({ name: 'result', query: { category } });
+  router.push({ name: 'result', query: { category } });
   console.log('Clicked Category: ', category)
 }
 
