@@ -35,6 +35,7 @@ async function handleSignUp(registrationForm: UserRegistrationDTO) {
   grid-template-rows: auto;
   place-items: center;
   color: var(--color-heading);
-  gap: 5px;
+  gap: 20px;
+  margin-top: 10px;
 }
 </style>
