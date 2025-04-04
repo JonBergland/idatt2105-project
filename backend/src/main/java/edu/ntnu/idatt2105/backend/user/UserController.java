@@ -1,6 +1,7 @@
 package edu.ntnu.idatt2105.backend.user;
 
 import edu.ntnu.idatt2105.backend.user.dto.AddItemRequest;
+import edu.ntnu.idatt2105.backend.user.dto.EditItemRequest;
 import edu.ntnu.idatt2105.backend.user.dto.GetUserInfoResponse;
 import edu.ntnu.idatt2105.backend.user.dto.UpdateUserInfoRequest;
 import edu.ntnu.idatt2105.backend.user.model.User;
@@ -63,7 +64,7 @@ public class UserController {
   }
 
   @PostMapping("/item/edit")
-  public void editUserItem() {
-
+  public void editUserItem(@RequestBody EditItemRequest editItemRequest) {
+    userService.editUserItem(editItemRequest);
   }
 }
