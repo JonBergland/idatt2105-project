@@ -1,18 +1,51 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
-// Define the minimum and maximum price range
-const minPrice = ref<number | null>(null);
-const maxPrice = ref<number | null>(null);
+const minPrice = ref<string | null>(null);
+const maxPrice = ref<string | null>(null);
 
-// Emit the selected price range to the parent component
+const isRangeValid = ref(false);
+const isNumberNegative = ref(false);
+
+
 const emit = defineEmits(['price-range-updated']);
 
 /**
- * Handles the change in price range
+ * Handles changes to the price filter input.
+ * This function is triggered when the user modifies the price range,
+ * It checkes if the input is valid and emits 'price-range-updated'
+ * If not valid it an error message apears
  */
 function handlePriceChange() {
-  emit('price-range-updated', { min: minPrice.value, max: maxPrice.value });
+  isNumberNegative.value = false;
+
+  if (minPrice.value === '') {
+    minPrice.value = null;
+  }
+  if (maxPrice.value === '') {
+    maxPrice.value = null;
+  }
+
+  const min = minPrice.value ? parseFloat(minPrice.value) : null;
+  const max = maxPrice.value ? parseFloat(maxPrice.value) : null;
+
+  if (min !== null && max !== null && min > max) {
+    isRangeValid.value = true;
+  } else {
+    isRangeValid.value = false;
+  }
+
+  if (min !== null && min < 0) {
+    isNumberNegative.value = true;
+  }
+
+  if (max !== null && max < 0) {
+    isNumberNegative.value = true;
+  }
+
+  if (isNumberNegative.value === false && isRangeValid.value === false) {
+    emit('price-range-updated', { min: min, max: max });
+  }
 }
 </script>
 
@@ -39,10 +72,11 @@ function handlePriceChange() {
       <p>To kr</p>
     </div>
   </div>
+  <p v-if="isRangeValid" class="error-message">Max price must be lower than min price</p>
+  <p v-if="isNumberNegative" class="error-message">Number cant be negative</p>
 </template>
 
 <style scoped>
-
 .price-filter {
   display: flex;
   align-items: fle;
@@ -71,5 +105,11 @@ function handlePriceChange() {
 
 .price-input:focus {
   outline: 1px solid #D9D9D9;
+}
+
+.error-message {
+  color: red;
+  font-size: 0.9em;
+  margin: 0;
 }
 </style>
