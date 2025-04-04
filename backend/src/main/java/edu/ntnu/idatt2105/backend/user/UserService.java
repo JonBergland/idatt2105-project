@@ -2,10 +2,13 @@ package edu.ntnu.idatt2105.backend.user;
 
 import edu.ntnu.idatt2105.backend.security.dto.SigninRequest;
 import edu.ntnu.idatt2105.backend.security.dto.SignupRequest;
+import edu.ntnu.idatt2105.backend.user.dto.GetUserInfoResponse;
+import edu.ntnu.idatt2105.backend.user.dto.UpdateUserInfoRequest;
 import edu.ntnu.idatt2105.backend.user.model.User;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -60,6 +63,22 @@ public class UserService {
   //    user.setPassword(encodePassword(user.getPassword()));
   //    userRepository.createUser(user);
   //  }
+
+  public GetUserInfoResponse getUser(int userID) {
+    User user = userRepository.getUser(userID);
+    return UserMapper.INSTANCE.userToGetUserInforesponse(user);
+  }
+
+  public void editUser(UpdateUserInfoRequest updateUserInfoRequest) {
+    User user = UserMapper.INSTANCE.updateUserInfoRequestToUser(updateUserInfoRequest);
+    String userID = SecurityContextHolder.getContext().getAuthentication().getName();
+    user.setUserID(Integer.parseInt(userID));
+    userRepository.updateUser(user);
+  }
+
+  public void getUserItems() {
+
+  }
 
   private String encodePassword(String password) {
     return passwordEncoder.encode(password);
