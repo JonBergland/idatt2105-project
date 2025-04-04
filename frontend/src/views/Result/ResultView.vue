@@ -130,7 +130,7 @@ function handlePriceRangeUpdated(priceRange: { min: number | null; max: number |
             <SearchBar @search="handleSearch" />
           <div class="toggle-container">
             <div class="filter-display-container">
-              <CategoryButton class="filter-toggle-button" @clicked-category="toggleFilterVisibility" :name="isFilterVisible ? 'Hide Filter' : 'Show Filter'"></CategoryButton>
+              <CategoryButton class="filter-toggle-button" @clicked-category="toggleFilterVisibility" :name="isFilterVisible ? 'Hide Filter' : 'Show Filter'"/>
               <ToggleGroup label="Display: " :names="displayModes" @toggle-selected="handleDisplay" />
             </div>
             <ToggleGroup label="Sort by: " :names="sortModes" @toggle-selected="handleSort" />
