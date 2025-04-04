@@ -93,15 +93,16 @@ public class UserRepository {
   }
 
   public User getUser(int userID) {
-    return jdbcTemplate.queryForObject(
-        "SELECT User.*, User.id AS userID, User.phone_number AS phoneNumber, User.country_code AS countryCode, Location.*, Location.postal_code AS postalCode FROM User "
-            + "LEFT JOIN Location ON User.id = Location.user_id "
-            + "WHERE User.id = ?",
-        new Object[]{userID},
-        new BeanPropertyRowMapper<>(User.class)
-    );
+    try {
+      return jdbcTemplate.queryForObject(
+          "SELECT User.*, User.id AS userID, User.phone_number AS phoneNumber, User.country_code AS countryCode, Location.*, Location.postal_code AS postalCode FROM User "
+              + "LEFT JOIN Location ON User.id = Location.user_id "
+              + "WHERE User.id = ?",
+          new Object[]{userID},
+          new BeanPropertyRowMapper<>(User.class)
+      );
     } catch (DataAccessException e) {
-      logger.error("Error inserting user into database: ", e);
+      logger.error("Error retrieving user from database: ", e);
       throw e;
     }
   }
