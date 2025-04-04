@@ -2,6 +2,7 @@ package edu.ntnu.idatt2105.backend.item;
 
 import edu.ntnu.idatt2105.backend.item.dto.ItemResponse;
 import edu.ntnu.idatt2105.backend.item.model.Item;
+import edu.ntnu.idatt2105.backend.user.dto.AddItemRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -35,4 +36,10 @@ public interface ItemMapper {
    * @return the itemResponse array
    */
   ItemResponse[] itemsToItemResponses(Item[] items);
+
+  @Mapping(source = "category", target = "category")
+  @Mapping(source = "name", target = "name")
+  @Mapping(source = "price", target = "price")
+  @Mapping(source = "description", target = "description")
+  Item addItemRequestToItem(AddItemRequest addItemRequest);
 }
