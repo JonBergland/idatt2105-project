@@ -46,7 +46,7 @@ onMounted(() => {
 
 <template>
   <div class="toggle-group" :class="direction">
-    <p>{{ props.label }}</p>
+    <p v-if="props.label">{{ props.label }}</p>
     <ToggleButton
     v-for="(name, index) in props.names"
     :key="index"
