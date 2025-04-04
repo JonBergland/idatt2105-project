@@ -79,9 +79,7 @@ function handlePriceChange() {
 <style scoped>
 .price-filter {
   display: flex;
-  align-items: fle;
   gap: 8px;
-  padding-top: 8px;
 }
 
 .input-wrapper {
