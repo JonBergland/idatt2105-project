@@ -42,7 +42,7 @@ public class SecurityConfig {
     http.cors(cors -> cors.configurationSource(source))
         .csrf(csrf -> csrf.disable())
         .authorizeHttpRequests(authorize -> authorize
-            .requestMatchers("/api/token/signup", "/api/token/signin", "api/store/**", "/api/user/**").permitAll()
+            .requestMatchers("/api/token/signup", "/api/token/signin", "/api/store/**", "/api/user/**").permitAll()
             .anyRequest().authenticated())
         .sessionManagement(session -> session
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
