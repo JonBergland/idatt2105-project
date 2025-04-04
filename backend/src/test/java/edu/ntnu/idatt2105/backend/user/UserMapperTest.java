@@ -13,7 +13,7 @@ class UserMapperTest {
 
   @Test
   void signupRequestToUser_ShouldMapCorrectly() {
-    SignupRequest request = new SignupRequest("test@example.com", "password123", "John", "Doe", "12345678");
+    SignupRequest request = new SignupRequest("test@example.com", "password123", "John", "Doe", 12345678, 34);
     User user = userMapper.signupRequestToUser(request);
 
     assertNotNull(user, "Mapped user should not be null");

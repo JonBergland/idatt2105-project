@@ -63,7 +63,6 @@ class JWTAuthorizationFilterTest {
   @Test
   void doFilterInternal_ShouldNotAuthenticate_WhenTokenIsInvalid() throws ServletException, IOException {
     when(request.getHeader(HttpHeaders.AUTHORIZATION)).thenReturn("Bearer " + INVALID_TOKEN);
-    when(jwtUtils.validateTokenAndGetUserId(INVALID_TOKEN)).thenThrow(JWTVerificationException.class);
 
     jwtAuthorizationFilter.doFilterInternal(request, response, filterChain);
 

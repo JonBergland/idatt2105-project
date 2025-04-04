@@ -31,7 +31,7 @@ class UserServiceTest {
 
   @Test
   void getUserByEmail_ShouldReturnUser() {
-    User mockUser = new User(123, "test@example.com", "hashedPassword", "John", "Doe", "12345678", "ROLE_USER");
+    User mockUser = new User(123, "test@example.com", 12345678, 123, "John", "Doe", "hashedPassword", "ROLE_USER", 12, 43, "fe", 123, "fe");
     when(userRepository.getUserByEmail("test@example.com")).thenReturn(mockUser);
 
     User user = userService.getUserByEmail("test@example.com");
@@ -60,7 +60,7 @@ class UserServiceTest {
 
   @Test
   void createUser_ShouldEncodePasswordAndSaveUser() {
-    SignupRequest request = new SignupRequest("test@example.com", "password123", "John", "Doe", "12345678");
+    SignupRequest request = new SignupRequest("test@example.com", "password123", "John", "Doe", 12345678, 54);
     User user = UserMapper.INSTANCE.signupRequestToUser(request);
     user.setRole("ROLE_USER");
     when(passwordEncoder.encode("password123")).thenReturn("encodedPassword");

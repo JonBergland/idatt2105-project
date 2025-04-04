@@ -21,12 +21,13 @@ import org.springframework.web.filter.OncePerRequestFilter;
 /**
  * The JWT filter for authenticating a JWT authenticated request.
  */
+@RequiredArgsConstructor
 @Component
 public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
   private final Logger logger = LoggerFactory.getLogger(JWTAuthorizationFilter.class);
 
-  private final JWTUtils jwtUtils = new JWTUtils();
+  private final JWTUtils jwtUtils;
 
 
   @Override

@@ -40,7 +40,7 @@ public class SecurityConfig {
     http.csrf(csrf -> csrf.ignoringRequestMatchers("/api/token/**"));
     http.csrf(csrf -> csrf.ignoringRequestMatchers("/api/store/**"));
     http.csrf(csrf -> csrf.ignoringRequestMatchers("/api/user/**"));
-    http.addFilterBefore(new JWTAuthorizationFilter(),
+    http.addFilterBefore(new JWTAuthorizationFilter(new JWTUtils()),
         UsernamePasswordAuthenticationFilter.class);
 
     return http.build();
