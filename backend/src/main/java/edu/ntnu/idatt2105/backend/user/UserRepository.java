@@ -1,11 +1,15 @@
 package edu.ntnu.idatt2105.backend.user;
 
+import edu.ntnu.idatt2105.backend.item.model.Item;
+import edu.ntnu.idatt2105.backend.user.dto.UpdateUserInfoRequest;
 import edu.ntnu.idatt2105.backend.user.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Repository for updating, deleting and inserting to the User table.
@@ -62,13 +66,53 @@ public class UserRepository {
    * @param user the user to store
    * @throws DataAccessException if something goes wrong
    */
+  @Transactional
   public void createUser(User user) throws DataAccessException {
     jdbcTemplate.update(
-        "INSERT INTO User (email, password, role, name, surname, phone_number)"
-            + " VALUES (?, ?, ?, ?, ?, ?)",
+        "INSERT INTO User (email, password, role, name, surname, phone_number, country_code)"
+            + " VALUES (?, ?, ?, ?, ?, ?, ?)",
         user.getEmail(), user.getPassword(), user.getRole(), user.getName(),
-        user.getSurname(), user.getPhoneNumber()
+        user.getSurname(), user.getPhoneNumber(), user.getCountryCode()
+    );
+
+    int userID = getUserIDFromEmail(user.getEmail());
+
+    jdbcTemplate.update(
+        "INSERT INTO Location (user_id) VALUES (?)", userID);
+  }
+
+  private int getUserIDFromEmail(String email) {
+    return jdbcTemplate.queryForObject(
+        "SELECT id FROM User WHERE email = ?",
+        new Object[]{email},
+        Integer.class);
+  }
+
+  public User getUser(int userID) {
+    return jdbcTemplate.queryForObject(
+        "SELECT User.*, User.id AS userID, User.phone_number AS phoneNumber, User.country_code AS countryCode, Location.*, Location.postal_code AS postalCode FROM User "
+            + "LEFT JOIN Location ON User.id = Location.user_id "
+            + "WHERE User.id = ?",
+        new Object[]{userID},
+        new BeanPropertyRowMapper<>(User.class)
     );
   }
-}
 
+  public void updateUser(User user) {
+    jdbcTemplate.update(
+        "UPDATE User "
+        + "LEFT JOIN Location ON User.id = Location.user_id "
+        + "SET User.name = ?, User.surname = ?, User.phone_number = ?, User.country_code = ?, Location.address = ?, Location.postal_code = ?, Location.city = ?, Location.longitude = ?, Location.latitude = ? "
+        + "WHERE User.id = ?",
+        user.getName(),
+        user.getSurname(),
+        user.getPhoneNumber(),
+        user.getCountryCode(),
+        user.getAddress(),
+        user.getPostalCode(),
+        user.getCity(),
+        user.getLongitude(),
+        user.getLatitude(),
+        user.getUserID());
+  }
+}

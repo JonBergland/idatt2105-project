@@ -36,16 +36,22 @@ class TokenControllerTest {
   private static final String PASSWORD = "password123";
   private static final String NAME = "Joe";
   private static final String SURNAME = "Doe";
-  private static final String PHONE = "+47 12345678";
+  private static final int PHONE = 12345678;
+  private static final int COUNTRY_CODE = 2;
   private static final int USER_ID = 123;
   private static final String ROLE = "ROLE_USER";
   private static final String TOKEN = "valid.jwt.token";
+  private static double LATITUDE;
+  private static double LONGITUDE;
+  private static String CITY;
+  private static int POSTAL_CODE;
+  private static String ADDRESS;
 
   @BeforeEach
   void setUp() {
     signinRequest = new SigninRequest(EMAIL, PASSWORD);
-    signupRequest = new SignupRequest(EMAIL, PASSWORD, NAME, SURNAME, PHONE);
-    user = new User(USER_ID, EMAIL, PHONE, NAME, SURNAME, PASSWORD, ROLE);
+    signupRequest = new SignupRequest(EMAIL, PASSWORD, NAME, SURNAME, PHONE, COUNTRY_CODE);
+    user = new User(USER_ID, EMAIL, PHONE, COUNTRY_CODE, NAME, SURNAME, PASSWORD, ROLE, LATITUDE, LONGITUDE, CITY, POSTAL_CODE, ADDRESS);
   }
 
   @Test
