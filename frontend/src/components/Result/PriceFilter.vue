@@ -26,8 +26,8 @@ function handlePriceChange() {
     maxPrice.value = null;
   }
 
-  const min = minPrice.value ? parseFloat(minPrice.value) : null;
-  const max = maxPrice.value ? parseFloat(maxPrice.value) : null;
+  const min = minPrice.value === null ? null : parseInt(minPrice.value);
+  const max = maxPrice.value === null ? null : parseInt(maxPrice.value);
 
   if (min !== null && max !== null && min > max) {
     isRangeValid.value = true;
@@ -45,6 +45,7 @@ function handlePriceChange() {
 
   if (isNumberNegative.value === false && isRangeValid.value === false) {
     emit('price-range-updated', { min: min, max: max });
+    console.log(min, max)
   }
 }
 </script>
