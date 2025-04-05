@@ -8,7 +8,7 @@ class ResultService {
    * @returns A promise resolving to the filtered items.
    */
   async getItems(request: ItemsRequestDTO): Promise<ItemsResponseDTO> {
-    const response = await axiosInstance.post<ItemsResponseDTO>('/filter', request);
+    const response = await axiosInstance.post<ItemsResponseDTO>('/store/item/filter', request);
     return response.data;
   }
 }
