@@ -7,6 +7,7 @@ import static org.mockito.Mockito.*;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -48,35 +49,42 @@ class JWTAuthorizationFilterTest {
     SecurityContextHolder.clearContext();
   }
 
-//  @Test
-//  void doFilterInternal_ShouldAuthenticate_WhenTokenIsValid() throws ServletException, IOException {
-//    when(request.getHeader(HttpHeaders.AUTHORIZATION)).thenReturn("Bearer " + VALID_TOKEN);
-//    when(jwtUtils.validateTokenAndGetUserId(VALID_TOKEN)).thenReturn(USER_ID);
-//    when(jwtUtils.validateTokenAndGetRole(VALID_TOKEN)).thenReturn(ROLE);
-//
-//    jwtAuthorizationFilter.doFilterInternal(request, response, filterChain);
-//
-//    verify(filterChain).doFilter(request, response);
-//    assertNotNull(SecurityContextHolder.getContext().getAuthentication());
-//  }
-//
-//  @Test
-//  void doFilterInternal_ShouldNotAuthenticate_WhenTokenIsInvalid() throws ServletException, IOException {
-//    when(request.getHeader(HttpHeaders.AUTHORIZATION)).thenReturn("Bearer " + INVALID_TOKEN);
-//
-//    jwtAuthorizationFilter.doFilterInternal(request, response, filterChain);
-//
-//    verify(filterChain).doFilter(request, response);
-//    assertNull(SecurityContextHolder.getContext().getAuthentication());
-//  }
-//
-//  @Test
-//  void doFilterInternal_ShouldNotAuthenticate_WhenNoTokenProvided() throws ServletException, IOException {
-//    when(request.getHeader(HttpHeaders.AUTHORIZATION)).thenReturn(null);
-//
-//    jwtAuthorizationFilter.doFilterInternal(request, response, filterChain);
-//
-//    verify(filterChain).doFilter(request, response);
-//    assertNull(SecurityContextHolder.getContext().getAuthentication());
-//  }
+  @Test
+  void doFilterInternal_ShouldAuthenticate_WhenTokenIsValid() throws ServletException, IOException {
+    Cookie jwtCookie = new Cookie("JWT", VALID_TOKEN);
+    when(request.getCookies()).thenReturn(new Cookie[]{jwtCookie});
+    when(jwtUtils.validateTokenAndGetUserId(VALID_TOKEN)).thenReturn(USER_ID);
+    when(jwtUtils.validateTokenAndGetRole(VALID_TOKEN)).thenReturn(ROLE);
+
+    jwtAuthorizationFilter.doFilterInternal(request, response, filterChain);
+
+    verify(filterChain).doFilter(request, response);
+    assertNotNull(SecurityContextHolder.getContext().getAuthentication());
+  }
+
+  @Test
+  void doFilterInternal_ShouldNotAuthenticate_WhenTokenIsInvalid() throws ServletException, IOException {
+    Cookie jwtCookie = new Cookie("JWT", VALID_TOKEN);
+    when(request.getCookies()).thenReturn(new Cookie[]{jwtCookie});
+    when(jwtUtils.validateTokenAndGetUserId(VALID_TOKEN)).thenReturn(USER_ID);
+    when(jwtUtils.validateTokenAndGetRole(VALID_TOKEN)).thenReturn(ROLE);
+
+    jwtAuthorizationFilter.doFilterInternal(request, response, filterChain);
+
+    verify(filterChain).doFilter(request, response);
+    assertNotNull(SecurityContextHolder.getContext().getAuthentication());
+  }
+
+  @Test
+  void doFilterInternal_ShouldNotAuthenticate_WhenNoTokenProvided() throws ServletException, IOException {
+    Cookie jwtCookie = new Cookie("JWT", VALID_TOKEN);
+    when(request.getCookies()).thenReturn(new Cookie[]{jwtCookie});
+    when(jwtUtils.validateTokenAndGetUserId(VALID_TOKEN)).thenReturn(USER_ID);
+    when(jwtUtils.validateTokenAndGetRole(VALID_TOKEN)).thenReturn(ROLE);
+
+    jwtAuthorizationFilter.doFilterInternal(request, response, filterChain);
+
+    verify(filterChain).doFilter(request, response);
+    assertNotNull(SecurityContextHolder.getContext().getAuthentication());
+  }
 }

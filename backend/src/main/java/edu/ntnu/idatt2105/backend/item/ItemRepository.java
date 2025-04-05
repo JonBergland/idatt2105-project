@@ -116,6 +116,11 @@ public class ItemRepository {
     return params.toArray();
   }
 
+  /**
+   * add item to database.
+   *
+   * @param item the item to add
+   */
   public void addItem(Item item) {
     jdbcTemplate.update(
         "INSERT INTO Item (name, description, price, category_id, user_id) "
@@ -124,6 +129,11 @@ public class ItemRepository {
     );
   }
 
+  /**
+   * edit item from database.
+   *
+   * @param item the edited item
+   */
   public void editItem(Item item) {
     jdbcTemplate.update(
         "UPDATE Item " +
@@ -135,5 +145,22 @@ public class ItemRepository {
         item.getCategory(),
         item.getItemID(),
         item.getSellerID());
+  }
+
+  /**
+   * get items linked to user id.
+   *
+   * @param userID the user id
+   * @return the retrieved items
+   */
+  public Item[] getItemsFromUserID(int userID) {
+    List<Item> itemList = jdbcTemplate.query(
+        "SELECT Item.*, Item.id AS itemID, User.email AS seller, Categories.category_name AS category FROM Item "
+            + "LEFT JOIN User ON Item.user_id = User.id "
+            + "LEFT JOIN Categories ON Item.category_id = Categories.id "
+            + "WHERE user_id = ?",
+        new Object[]{userID},
+        new BeanPropertyRowMapper<>(Item.class));
+    return itemList.toArray(new Item[0]);
   }
 }
