@@ -30,33 +30,4 @@ const axiosInstance = axios.create({
   withCredentials: true,
 })
 
-// Catches Unauthorized Access
-axiosInstance.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    const originalRequest = error.config
-    const router = useRouter()
-
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true
-
-      // TODO If userstore is valid, get new token
-      try {
-        //Get new token
-
-        return axiosInstance(originalRequest)
-      } catch (refreshError) {
-        // TODO Clear user
-        router.push('home')
-        return Promise.reject(refreshError)
-      }
-    } else {
-      // No user logged in to refresh with
-      router.push('home')
-    }
-
-    return Promise.reject(error)
-  }
-)
-
 export default axiosInstance
