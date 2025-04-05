@@ -10,9 +10,12 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.dao.DataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.server.ResponseStatusException;
 
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -47,6 +50,18 @@ class UserControllerTest {
   }
 
   @Test
+  void testUpdateUserInfo_ShouldThrowResponseStatusException_WhenDataAccessExceptionOccurs() {
+    UpdateUserInfoRequest updateUserInfoRequest = new UpdateUserInfoRequest();
+    doThrow(new DataAccessException("DB Error") {}).when(userService).editUser(updateUserInfoRequest);
+
+    ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> {
+      userController.updateUserInfo(updateUserInfoRequest);
+    });
+
+    assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
+  }
+
+  @Test
   void testGetUserInfo() {
     GetUserInfoResponse getUserInfoResponse = new GetUserInfoResponse();
     when(userService.getUser(1)).thenReturn(getUserInfoResponse);
@@ -55,6 +70,17 @@ class UserControllerTest {
 
     assertNotNull(response);
     assertEquals(getUserInfoResponse, response);
+  }
+
+  @Test
+  void testGetUserInfo_ShouldThrowResponseStatusException_WhenDataAccessExceptionOccurs() {
+    when(userService.getUser(1)).thenThrow(new DataAccessException("DB Error") {});
+
+    ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> {
+      userController.getUserInfo();
+    });
+
+    assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, exception.getStatusCode());
   }
 
   @Test
@@ -69,6 +95,17 @@ class UserControllerTest {
   }
 
   @Test
+  void testGetUserItems_ShouldThrowResponseStatusException_WhenDataAccessExceptionOccurs() {
+    doThrow(new DataAccessException("DB Error") {}).when(userService).getUserItems();
+
+    ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> {
+      userController.getUserItems();
+    });
+
+    assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, exception.getStatusCode());
+  }
+
+  @Test
   void testAddUserItem() {
     AddItemRequest addItemRequest = new AddItemRequest();
     userController.addUserItem(addItemRequest);
@@ -76,9 +113,33 @@ class UserControllerTest {
   }
 
   @Test
+  void testAddUserItem_ShouldThrowResponseStatusException_WhenDataAccessExceptionOccurs() {
+    AddItemRequest addItemRequest = new AddItemRequest();
+    doThrow(new DataAccessException("DB Error") {}).when(userService).addUserItem(addItemRequest);
+
+    ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> {
+      userController.addUserItem(addItemRequest);
+    });
+
+    assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
+  }
+
+  @Test
   void testEditUserItem() {
     EditItemRequest editItemRequest = new EditItemRequest();
     userController.editUserItem(editItemRequest);
     verify(userService, times(1)).editUserItem(editItemRequest);
+  }
+
+  @Test
+  void testEditUserItem_ShouldThrowResponseStatusException_WhenDataAccessExceptionOccurs() {
+    EditItemRequest editItemRequest = new EditItemRequest();
+    doThrow(new DataAccessException("DB Error") {}).when(userService).editUserItem(editItemRequest);
+
+    ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> {
+      userController.editUserItem(editItemRequest);
+    });
+
+    assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
   }
 }
