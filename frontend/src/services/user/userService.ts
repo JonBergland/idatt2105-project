@@ -1,5 +1,6 @@
 import type { User, UserLoginDTO, UserRegistrationDTO } from "@/models/user";
 import axiosInstance from "@/services/axiosService";
+import axios from 'axios';
 
 
 /**
@@ -12,8 +13,15 @@ class UserService {
    * @returns A promise that resolves with the user's information.
    */
   async getUserInfo(): Promise<User> {
-    const response = await axiosInstance.get<User>('/user/info');
-    return response.data;
+    try {
+      const response = await axiosInstance.get<User>('/user/info');
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 403) {
+        return null
+      }
+      throw error;
+    }
   }
 
   /**
