@@ -40,6 +40,12 @@ public interface UserMapper {
   @Mapping(source = "password", target = "password")
   User signinRequestToUser(SigninRequest signinRequest);
 
+  /**
+   * maps user model to getUserInfoResponse dto.
+   *
+   * @param user the user model to map
+   * @return the mapped dto
+   */
   @Mapping(source = "userID", target = "userID")
   @Mapping(source = "email", target = "email")
   @Mapping(source = "phoneNumber", target = "phoneNumber")
@@ -52,8 +58,14 @@ public interface UserMapper {
   @Mapping(source = "city", target = "city")
   @Mapping(source = "postalCode", target = "postalCode")
   @Mapping(source = "address", target = "address")
-  GetUserInfoResponse userToGetUserInforesponse(User user);
+  GetUserInfoResponse userToGetUserInfoResponse(User user);
 
+  /**
+   * maps updateUserInfoRequest dto to user model.
+   *
+   * @param updateUserInfoRequest the dto to map
+   * @return the mapped user model
+   */
   @Mapping(source = "phoneNumber", target = "phoneNumber")
   @Mapping(source = "countryCode", target = "countryCode")
   @Mapping(source = "name", target = "name")
