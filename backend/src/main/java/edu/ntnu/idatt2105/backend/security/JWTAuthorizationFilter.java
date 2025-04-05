@@ -12,7 +12,6 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -38,13 +37,6 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
       FilterChain filterChain) throws ServletException, IOException {
 
     logger.info("JWTAuthorizationFilter called for URI: {}", request.getRequestURI());
-//    final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
-//    if (header == null || !header.startsWith("Bearer ")) {
-//      logger.warn("Token has wrong format: {}", header);
-//      filterChain.doFilter(request, response);
-//      return;
-//    }
-//    String token = header.substring(7);
 
     Cookie[] cookies = request.getCookies();
     if (cookies == null) {
