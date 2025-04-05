@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ItemsRequestDTO } from '@/models/item';
+import type { ItemsRequestDTO, ItemResponseDTO} from '@/models/item';
 import { ref, onMounted } from 'vue';
 import { useResultStore } from '@/stores/resultStore';
 import ToggleGroup from '@/components/Result/ToggleGroup.vue';
@@ -33,19 +33,10 @@ onMounted(() => {
 });
 
 //Placeholder
-const items = ref([
-  {id: 1, name: 'Playstation 5', location: 'Oslo', price: 400, img: placeholderImage},
-  {id: 2, name: 'Playst3', location: 'Bærum', price: 20, img: placeholderImage},
-  {id: 3, name: 'Playstation 1', location: 'Asker', price: 20000, img: placeholderImage},
-  {id: 4, name: 'Playstation 1', location: 'Asker', price: 20000, img: placeholderImage},
-  {id: 5, name: 'Playstation 1', location: 'Asker', price: 20000, img: placeholderImage},
-  {id: 6, name: 'Playstation 1', location: 'Asker', price: 20000, img: placeholderImage},
-  {id: 7, name: 'Playstation 5', location: 'Oslo', price: 400, img: placeholderImage},
-  {id: 8, name: 'Playst3', location: 'Bærum', price: 20, img: placeholderImage},
-  {id: 9, name: 'Playstation 1', location: 'Asker', price: 20000, img: placeholderImage},
-  {id: 10, name: 'Playstation 1', location: 'Asker', price: 20000, img: placeholderImage},
-  {id: 11, name: 'Playstation 1', location: 'Asker', price: 20000, img: placeholderImage},
-  {id: 12, name: 'Playstation 1', location: 'Asker', price: 20000, img: placeholderImage},
+const items = ref<ItemResponseDTO[]>([
+  {itemID: 1, name: 'Playstation 5', category: 'Gaming', seller: 'Ola nordmann', description: 'Nice playstation', published: '2020', price: 2},
+  {itemID: 1, name: 'Playstation 5', category: 'Gaming', seller: 'Ola nordmann', description: 'Nice playstation', published: '2020', price: 2},
+  {itemID: 1, name: 'Playstation 5', category: 'Gaming', seller: 'Ola nordmann', description: 'Nice playstation', published: '2020', price: 2},
 ]);
 
 //Placeholder
@@ -152,7 +143,7 @@ function handlePriceRangeUpdated(priceRange: { min: number | null; max: number |
           </div>
         </div>
         <div class="item-group-warpper">
-          <ItemGroup :items="resultStore.items" @item-clicked="handleItemClick" :mode="currentDisplayMode" />
+          <ItemGroup :items="items" @item-clicked="handleItemClick" :mode="currentDisplayMode" />
         </div>
       </div>
     </div>
