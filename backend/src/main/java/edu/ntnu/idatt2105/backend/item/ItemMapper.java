@@ -38,12 +38,24 @@ public interface ItemMapper {
    */
   ItemResponse[] itemsToItemResponses(Item[] items);
 
+  /**
+   * maps addItemRequest dto to item model.
+   *
+   * @param addItemRequest the dto
+   * @return the item model
+   */
   @Mapping(source = "category", target = "category")
   @Mapping(source = "name", target = "name")
   @Mapping(source = "price", target = "price")
   @Mapping(source = "description", target = "description")
   Item addItemRequestToItem(AddItemRequest addItemRequest);
 
+  /**
+   * maps editItemRequest dto to item model.
+   *
+   * @param editItemRequest the dto
+   * @return the item model
+   */
   @Mapping(source = "category", target = "category")
   @Mapping(source = "name", target = "name")
   @Mapping(source = "price", target = "price")

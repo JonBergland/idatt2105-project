@@ -1,7 +1,5 @@
 package edu.ntnu.idatt2105.backend.user;
 
-import edu.ntnu.idatt2105.backend.item.model.Item;
-import edu.ntnu.idatt2105.backend.user.dto.UpdateUserInfoRequest;
 import edu.ntnu.idatt2105.backend.user.model.User;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -85,6 +83,12 @@ public class UserRepository {
         "INSERT INTO Location (user_id) VALUES (?)", userID);
   }
 
+  /**
+   * gets user id from database, based on user email.
+   *
+   * @param email the user's email
+   * @return the linked user id
+   */
   private int getUserIDFromEmail(String email) {
     return jdbcTemplate.queryForObject(
         "SELECT id FROM User WHERE email = ?",
@@ -92,6 +96,12 @@ public class UserRepository {
         Integer.class);
   }
 
+  /**
+   * gets a user from database, based on user id.
+   *
+   * @param userID the user's id
+   * @return the retrieved user
+   */
   public User getUser(int userID) {
     try {
       return jdbcTemplate.queryForObject(
@@ -107,11 +117,18 @@ public class UserRepository {
     }
   }
 
+  /**
+   * updates certain user info in database.
+   *
+   * @param user the updated user
+   */
   public void updateUser(User user) {
     jdbcTemplate.update(
         "UPDATE User "
         + "LEFT JOIN Location ON User.id = Location.user_id "
-        + "SET User.name = ?, User.surname = ?, User.phone_number = ?, User.country_code = ?, Location.address = ?, Location.postal_code = ?, Location.city = ?, Location.longitude = ?, Location.latitude = ? "
+        + "SET User.name = ?, User.surname = ?, User.phone_number = ?, User.country_code = ?, "
+        + "Location.address = ?, Location.postal_code = ?, Location.city = ?, "
+        + "Location.longitude = ?, Location.latitude = ? "
         + "WHERE User.id = ?",
         user.getName(),
         user.getSurname(),

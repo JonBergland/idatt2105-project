@@ -1,8 +1,10 @@
 package edu.ntnu.idatt2105.backend.security;
 
+import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -10,8 +12,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-import java.util.List;
 
 /**
  * Configuration class for setting up authentication and authorization configurations.
@@ -40,19 +40,21 @@ public class SecurityConfig {
     source.registerCorsConfiguration("/**", corsConfiguration);
 
     http.cors(cors -> cors.configurationSource(source))
-        .csrf(csrf -> csrf.disable())
+        .csrf(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests(authorize -> authorize
             .requestMatchers(
-              "/api/token/signup", 
-              "/api/token/signin", 
-              "/api/store/**", 
-              "/api/user/info",
-              "/api/user/**").permitAll()
+                "/api/token/signup", "/api/token/signin", "/api/store/**")
+            .permitAll()
+            .requestMatchers("/api/user/**")
+            .hasAnyRole("USER", "ADMIN")
+            .requestMatchers("/api/admin/**")
+            .hasRole("ADMIN")
             .anyRequest().authenticated())
         .sessionManagement(session -> session
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
             
-    http.addFilterBefore(new JWTAuthorizationFilter(new JWTUtils()), UsernamePasswordAuthenticationFilter.class);
+    http.addFilterBefore(
+        new JWTAuthorizationFilter(new JWTUtils()), UsernamePasswordAuthenticationFilter.class);
     
     return http.build();
   }

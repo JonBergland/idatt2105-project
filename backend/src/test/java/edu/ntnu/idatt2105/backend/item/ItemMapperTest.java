@@ -2,6 +2,8 @@ package edu.ntnu.idatt2105.backend.item;
 
 import edu.ntnu.idatt2105.backend.item.dto.ItemResponse;
 import edu.ntnu.idatt2105.backend.item.model.Item;
+import edu.ntnu.idatt2105.backend.user.dto.AddItemRequest;
+import edu.ntnu.idatt2105.backend.user.dto.EditItemRequest;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -60,5 +62,41 @@ class ItemMapperTest {
     assertEquals(item2.getItemID(), itemResponses[1].getItemID());
     assertEquals(item1.getName(), itemResponses[0].getName());
     assertEquals(item2.getName(), itemResponses[1].getName());
+  }
+
+  @Test
+  void testAddItemRequestToItem() {
+    AddItemRequest addItemRequest = new AddItemRequest();
+    addItemRequest.setCategory("Electronics");
+    addItemRequest.setName("Test Item");
+    addItemRequest.setPrice(100);
+    addItemRequest.setDescription("Test Description");
+
+    Item item = itemMapper.addItemRequestToItem(addItemRequest);
+
+    assertNotNull(item);
+    assertEquals(addItemRequest.getCategory(), item.getCategory());
+    assertEquals(addItemRequest.getName(), item.getName());
+    assertEquals(addItemRequest.getPrice(), item.getPrice());
+    assertEquals(addItemRequest.getDescription(), item.getDescription());
+  }
+
+  @Test
+  void testEditItemRequestToItem() {
+    EditItemRequest editItemRequest = new EditItemRequest();
+    editItemRequest.setCategory("Electronics");
+    editItemRequest.setName("Updated Item");
+    editItemRequest.setPrice(150);
+    editItemRequest.setDescription("Updated Description");
+    editItemRequest.setItemID(1);
+
+    Item item = itemMapper.editItemRequestToItem(editItemRequest);
+
+    assertNotNull(item);
+    assertEquals(editItemRequest.getCategory(), item.getCategory());
+    assertEquals(editItemRequest.getName(), item.getName());
+    assertEquals(editItemRequest.getPrice(), item.getPrice());
+    assertEquals(editItemRequest.getDescription(), item.getDescription());
+    assertEquals(editItemRequest.getItemID(), item.getItemID());
   }
 }
