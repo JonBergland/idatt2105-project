@@ -35,6 +35,16 @@ class UserService {
     const response = await axiosInstance.post<boolean>('/token/signin', user)
     return response.data
   }
+
+  /**
+   * Logs out the currently authenticated user.
+   *
+   * @returns {Promise<void>} A promise that resolves when the logout request is completed.
+   */
+  async logoutUser(): Promise<void> {
+    const resp = await axiosInstance.post('/token/logout')
+    console.log(resp);
+  }
 }
 
 const userService = new UserService();
