@@ -18,19 +18,19 @@ function handleSignUpButton() {
 async function handleLogin(user: UserLoginDTO) {
   try {
     console.log("Handling login");
-
     const resp = await authStore.login(user)
 
-    //TODO: handle boolean response from signup
-    console.log(resp);
-
+    if(resp) {
+      router.push({ name: 'home' })
+    } else {
+      throw new Error("Response from store was false");
+    }
   } catch (error) {
     console.log("Error in handling login in LogInView: ", error);
   }
 }
 
 </script>
-
 <template>
  <div class="login-wrapper">
   <h1>Log In</h1>
@@ -38,7 +38,6 @@ async function handleLogin(user: UserLoginDTO) {
   <h4>or</h4>
   <button class="signup-button" @click="handleSignUpButton">Sign up</button>
  </div>
-
 </template>
 
 <style>

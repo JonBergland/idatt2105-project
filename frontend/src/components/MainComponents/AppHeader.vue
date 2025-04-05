@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
+import { useAuthStore } from '@/stores/authStore';
 
 const route = useRoute();
+const authStore = useAuthStore();
 
 const pageName = computed(() => route.name);
 
@@ -12,12 +14,14 @@ const isMessagePage = computed(() => pageName.value === "messages");
 const isProfilePage = computed(() => pageName.value === "profile");
 const isLoginPage = computed(() => pageName.value === "login")
 const isSignupPage = computed(() => pageName.value === "signup")
+const isLoggedIn = computed(() => authStore.isAuth)
 
 //TODO: implement logic for notifications
 const hasNotifications = ref(true)
 
-//TODO: implement logic for token
-const hasToken = ref(false)
+onMounted(async () => {
+  await authStore.checkIfAuth()
+})
 
 </script>
 
@@ -27,7 +31,7 @@ const hasToken = ref(false)
      <img src="@/assets/logos/logo.svg" alt="Yard logo" id="desktopLogo" />
      <img src="@/assets/logos/logo3.svg" alt="Yard logo mobile" id="mobileLogo" />
     </router-link>
-    <div class="buttonWrapper" v-if="!isLoginPage && !isSignupPage && hasToken">
+    <div class="buttonWrapper" v-if="!isLoginPage && !isSignupPage && isLoggedIn">
       <router-link
       to="/listing"
       class="routerLink"
@@ -179,7 +183,7 @@ header {
 .buttonWrapper {
   display: flex;
   justify-content: flex-end;
-  gap: 32px;
+  gap: 16px;
   display: flex;
   align-items: center;
   align-content: center;
@@ -190,17 +194,17 @@ header {
 .routerButton {
   display: flex;
   width: 83px;
-  padding: 4px;
+  padding: 8px;
   justify-content: center;
   align-items: center;
   gap: 10px;
+  border: 1px solid #ccc;
   border-radius: 8px;
   font-family: 'Inter', sans-serif;
   font-weight: 400;
   text-decoration: none;
-  color: black;
-  border: 2px solid gray;
-  transition: all 0.3s ease;
+  font-size: 0.9rem;
+  transition: background-color 0.3s ease;
 }
 
 
