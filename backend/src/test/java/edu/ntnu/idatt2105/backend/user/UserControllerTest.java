@@ -12,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.Authentication;
@@ -66,10 +67,10 @@ class UserControllerTest {
     GetUserInfoResponse getUserInfoResponse = new GetUserInfoResponse();
     when(userService.getUser(1)).thenReturn(getUserInfoResponse);
 
-    GetUserInfoResponse response = userController.getUserInfo();
+    ResponseEntity<GetUserInfoResponse> response = userController.getUserInfo();
 
     assertNotNull(response);
-    assertEquals(getUserInfoResponse, response);
+    assertEquals(getUserInfoResponse, response.getBody());
   }
 
   @Test
