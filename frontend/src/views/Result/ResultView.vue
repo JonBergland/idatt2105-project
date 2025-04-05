@@ -20,15 +20,16 @@ window.addEventListener('resize', () => {
 
 const resultStore = useResultStore();
 
-onMounted(() => {
-  const itemsRequest: ItemsRequestDTO = {
+const itemsRequest = ref<ItemsRequestDTO>({
     category: null,
     searchWord: null,
     priceMinMax: null,
     sort: null,
     segmentOffset: [0, 10],
-  };
-  resultStore.fetchItems(itemsRequest);
+});
+
+onMounted(() => {
+  resultStore.fetchItems(itemsRequest.value);
 });
 
 //Placeholder
@@ -75,8 +76,8 @@ function handleSort(sortMode: string) {
  * @param {string} query - The search query entered by the user
  */
  function handleSearch(query: string) {
-  console.log('Searched for: ', query);
-  //TODO: implement
+  itemsRequest.value.searchWord = query;
+  resultStore.fetchItems(itemsRequest.value)
 }
 
 /**
@@ -84,8 +85,8 @@ function handleSort(sortMode: string) {
  * @param {string} category - The name of the clicked category
  */
  function handleCategoryClick(category: string) {
-  console.log('Clicked Category: ', category);
-  //TODO: implement
+ // itemsRequest.value.category = category;
+  resultStore.fetchItems(itemsRequest.value)
 }
 
 /**
@@ -97,7 +98,10 @@ function handleSort(sortMode: string) {
  */
 function handlePriceRangeUpdated(priceRange: { min: number | null; max: number | null }): void {
   console.log('Price range updated:', priceRange);
-  //TODO: implement
+  itemsRequest.value.priceMinMax = priceRange.min !== null && priceRange.max !== null
+    ? [priceRange.min, priceRange.max]
+    : null;
+  resultStore.fetchItems(itemsRequest.value)
 }
 
 /**
