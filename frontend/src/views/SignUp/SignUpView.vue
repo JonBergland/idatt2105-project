@@ -2,21 +2,23 @@
 import SignUpForm from '@/components/SignUp/SignUpForm.vue';
 import type { UserRegistrationDTO } from '@/models/user';
 import { useAuthStore } from '@/stores/authStore';
+import { useRouter } from 'vue-router';
 
 const authStore = useAuthStore()
+const router = useRouter()
 
 async function handleSignUp(registrationForm: UserRegistrationDTO) {
   try {
     console.log("Handing signup");
-
     const resp = await authStore.signup(registrationForm)
 
-    //TODO: handle boolean response from signup
-    console.log(resp);
-
-
+    if(resp) {
+      router.push({ name: 'home' })
+    } else {
+      throw new Error("Response from store was false");
+    }
   } catch (error) {
-    console.log("Error in handling singup in SignupView: ", error);
+    console.log("Error in handling signup in SignupView: ", error);
   }
 }
 </script>

@@ -2,12 +2,18 @@
  * Represents a user in the application
  */
 export interface User {
+  userID: number;
   email: string;
   name: string;
   surname: string;
   countryCode: number;
   phoneNumber: number;
   role: string;
+  latitude: number;
+  longitude: number;
+  city: string;
+  postalCode: number;
+  address: string;
 }
 
 /**

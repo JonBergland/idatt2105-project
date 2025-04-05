@@ -1,7 +1,9 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount } from '@vue/test-utils';
+import { createPinia, setActivePinia, Pinia } from 'pinia';
 import Header from '@/components/MainComponents/AppHeader.vue';
 import { createRouter, createWebHistory } from 'vue-router';
+import { useAuthStore } from '@/stores/authStore';
 
 const routes = [
   { path: '/', name: 'home', component: {} },
@@ -18,18 +20,26 @@ const router = createRouter({
   routes,
 });
 
+let pinia: Pinia;
+
 vi.mock('@/assets/logos/logo.svg', () => ({ default: '/mocked-logo.svg' }));
 vi.mock('@/assets/logos/logo3.svg', () => ({ default: '/mocked-logo3.svg' }));
 
 vi.mock('@/assets/icons/user-selected.svg', () => ({ default: '/mocked-user-selected-icon.svg' }));
 vi.mock('@/assets/icons/message-notification.svg', () => ({ default: '/mocked-notification-icon.svg' }));
 
+
+
 describe('Header.vue', () => {
+  beforeEach(() => {
+    pinia = createPinia();
+    setActivePinia(pinia);
+  })
 
   it('renders the logo correctly', () => {
     const wrapper = mount(Header, {
       global: {
-        plugins: [router],
+        plugins: [router, pinia],
       },
     });
 
@@ -45,10 +55,10 @@ describe('Header.vue', () => {
   it('renders the "Log in" and "Sign up" buttons when not logged in', () => {
     const wrapper = mount(Header, {
       global: {
-        plugins: [router],
+        plugins: [router, pinia],
         mocks: {
-          hasToken: false,
-        },
+          isLoggedIn: true,
+        }
       },
     });
 
@@ -68,12 +78,15 @@ describe('Header.vue', () => {
   it('renders the navigation links when logged in', async () => {
     const wrapper = mount(Header, {
       global: {
-        plugins: [router],
-        mocks: {
-          hasToken: true,
-        },
+        plugins: [router, pinia],
       },
     });
+
+  const authStore = useAuthStore();
+  authStore.isAuth = true;
+  authStore.userData = { name: 'Test User' };
+
+  await wrapper.vm.$nextTick();
 
   const links = wrapper.findAll('.routerLink');
 
@@ -90,12 +103,15 @@ describe('Header.vue', () => {
 
     const wrapper = mount(Header, {
       global: {
-        plugins: [router],
-        mocks: {
-          hasToken: true,
-        },
+        plugins: [router, pinia],
       },
     });
+
+    const authStore = useAuthStore();
+    authStore.isAuth = true;
+    authStore.userData = { name: 'Test User' };
+
+    await wrapper.vm.$nextTick();
 
     const listingLink = wrapper.find('.routerLink.active');
     expect(listingLink.exists()).toBe(true);
@@ -108,12 +124,15 @@ describe('Header.vue', () => {
 
     const wrapper = mount(Header, {
       global: {
-        plugins: [router],
-        mocks: {
-          hasToken: true,
-        },
+        plugins: [router, pinia],
       },
     });
+
+    const authStore = useAuthStore();
+    authStore.isAuth = true;
+    authStore.userData = { name: 'Test User' };
+
+    await wrapper.vm.$nextTick();
 
     const listingLink = wrapper.find('.routerLink.active');
     const selectedIcon = listingLink.find('img[src="/mocked-user-selected-icon.svg"]');
@@ -121,16 +140,21 @@ describe('Header.vue', () => {
     expect(selectedIcon.attributes('src')).toBe('/mocked-user-selected-icon.svg');
   });
 
-  it('renders the notification icon when there are notifications', () => {
+  it('renders the notification icon when there are notifications', async () => {
     const wrapper = mount(Header, {
       global: {
-        plugins: [router],
+        plugins: [router, pinia],
         mocks: {
-          hasToken: true,
           hasNotification: true,
         },
       },
     });
+
+    const authStore = useAuthStore();
+    authStore.isAuth = true;
+    authStore.userData = { name: 'Test User' };
+
+    await wrapper.vm.$nextTick();
 
     const notificationIcon = wrapper.find('img[src="/mocked-notification-icon.svg"]');
     expect(notificationIcon.exists()).toBe(true);
