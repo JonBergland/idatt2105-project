@@ -5,7 +5,6 @@ import { useResultStore } from '@/stores/resultStore';
 import ToggleGroup from '@/components/Result/ToggleGroup.vue';
 import SearchBar from '@/components/Home/SearchBar.vue';
 import ItemGroup from '@/components/Home/ItemGroup.vue';
-import placeholderImage from '@/assets/images/placeholder-image.png';
 import PriceFilter from '@/components/Result/PriceFilter.vue';
 import CategoryButton from '@/components/Home/CategoryButton.vue';
 

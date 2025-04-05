@@ -5,7 +5,6 @@ import RecommendationGrid from '@/components/Home/ItemGroup.vue';
 import SearchBar from '@/components/Home/SearchBar.vue';
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import placeholderImage from '@/assets/images/placeholder-image.png'
 
 const router = useRouter();
 
