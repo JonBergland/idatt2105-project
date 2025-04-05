@@ -32,8 +32,14 @@ export const useAuthStore = defineStore('auth', {
         } else {
           throw new Error("User data is empty");
         }
-      } catch (error) {
-        console.log("Authorization check failed: ", error);
+      } catch (error: any) {
+
+        if (this.userData == null) {
+          this.isAuth = false;
+          return false;
+        }
+
+        console.error("Unexpected error during auth check:", error);
         this.isAuth = false;
         this.userData = null;
         return false;
