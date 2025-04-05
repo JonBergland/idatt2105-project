@@ -7,6 +7,10 @@ export const useResultStore = defineStore('result', {
     items: [] as ItemsResponseDTO['items'],
     isLoading: false,
     error: null as string | null,
+
+    categories: [] as string[],
+    isCategoriesLoading: false,
+    categoriesError: null as string | null,
   }),
 
   actions: {
@@ -24,5 +28,19 @@ export const useResultStore = defineStore('result', {
         this.isLoading = false;
       }
     },
+
+    async fetchCategories() {
+      this.isCategoriesLoading = true;
+      this.categoriesError = null;
+
+      try {
+        this.categories = await resultService.getCategories();
+      } catch (error) {
+        this.categoriesError = "Failed to fetch categories.";
+        console.error("Error fetching categories:", error);
+      } finally {
+        this.isCategoriesLoading = false;
+      }
+    }
   },
 });
