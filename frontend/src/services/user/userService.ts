@@ -1,7 +1,5 @@
 import type { User, UserLoginDTO, UserRegistrationDTO } from "@/models/user";
 import axiosInstance from "@/services/axiosService";
-import axios from 'axios';
-
 
 /**
  * A service class for handling user-related operations such as registration and login.

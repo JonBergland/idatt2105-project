@@ -31,8 +31,7 @@ export const useAuthStore = defineStore('auth', {
         } else {
           throw new Error("User data is empty");
         }
-      } catch (error: any) {
-
+      } catch (error) {
         if (this.userData == null) {
           this.isAuth = false;
           return false;

@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { useRouter } from 'vue-router'
 
 /**
  * Creates a pre-configured Axios instance for making HTTP requests to the backend API.
