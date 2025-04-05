@@ -11,6 +11,15 @@ class ResultService {
     const response = await axiosInstance.post<ItemsResponseDTO>('/store/item/filter', request);
     return response.data;
   }
+
+  /**
+   * Fetches all available categories from the backend.
+   * @returns A promise resolving to an array of category names.
+   */
+  async getCategories(): Promise<string[]> {
+    const response = await axiosInstance.get<string[]>('/store/category');
+    return response.data;
+  }
 }
 
 const resultService = new ResultService();
