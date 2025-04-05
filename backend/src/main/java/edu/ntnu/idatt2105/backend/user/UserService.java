@@ -2,7 +2,6 @@ package edu.ntnu.idatt2105.backend.user;
 
 import edu.ntnu.idatt2105.backend.item.ItemMapper;
 import edu.ntnu.idatt2105.backend.item.ItemRepository;
-import edu.ntnu.idatt2105.backend.item.dto.ItemsRequest;
 import edu.ntnu.idatt2105.backend.item.dto.ItemsResponse;
 import edu.ntnu.idatt2105.backend.item.model.Item;
 import edu.ntnu.idatt2105.backend.security.dto.SigninRequest;
@@ -73,11 +72,22 @@ public class UserService {
   //    userRepository.createUser(user);
   //  }
 
+  /**
+   * get info of logged in user.
+   *
+   * @param userID logged in user's id
+   * @return the user info response
+   */
   public GetUserInfoResponse getUser(int userID) {
     User user = userRepository.getUser(userID);
-    return UserMapper.INSTANCE.userToGetUserInforesponse(user);
+    return UserMapper.INSTANCE.userToGetUserInfoResponse(user);
   }
 
+  /**
+   * edit info of logged-in user.
+   *
+   * @param updateUserInfoRequest the edit info request
+   */
   public void editUser(UpdateUserInfoRequest updateUserInfoRequest) {
     User user = UserMapper.INSTANCE.updateUserInfoRequestToUser(updateUserInfoRequest);
     String userID = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -85,6 +95,11 @@ public class UserService {
     userRepository.updateUser(user);
   }
 
+  /**
+   * add item for user.
+   *
+   * @param addItemRequest the item to add
+   */
   public void addUserItem(AddItemRequest addItemRequest) {
     Item item = ItemMapper.INSTANCE.addItemRequestToItem(addItemRequest);
     String userID = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -92,6 +107,11 @@ public class UserService {
     itemRepository.addItem(item);
   }
 
+  /**
+   * edit item for user.
+   *
+   * @param editItemRequest the edited item
+   */
   public void editUserItem(EditItemRequest editItemRequest) {
     Item item = ItemMapper.INSTANCE.editItemRequestToItem(editItemRequest);
     String userID = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -99,6 +119,11 @@ public class UserService {
     itemRepository.editItem(item);
   }
 
+  /**
+   * get the user's items.
+   *
+   * @return the users items
+   */
   public ItemsResponse getUserItems() {
     String userID = SecurityContextHolder.getContext().getAuthentication().getName();
     Item[] items = itemRepository.getItemsFromUserID(Integer.parseInt(userID));
