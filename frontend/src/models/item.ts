@@ -1,7 +1,7 @@
 export interface ItemsRequestDTO {
   category: string | null;
   searchWord: string | null;
-  priceMinMax: [number, number] | null;
+  priceMinMax: [number | null, number | null] | null;
   sort: string | null;
   segmentOffset: [number, number] | null;
 }
