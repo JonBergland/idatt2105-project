@@ -2,6 +2,8 @@ package edu.ntnu.idatt2105.backend.user;
 
 import edu.ntnu.idatt2105.backend.item.ItemMapper;
 import edu.ntnu.idatt2105.backend.item.ItemRepository;
+import edu.ntnu.idatt2105.backend.item.dto.ItemsRequest;
+import edu.ntnu.idatt2105.backend.item.dto.ItemsResponse;
 import edu.ntnu.idatt2105.backend.item.model.Item;
 import edu.ntnu.idatt2105.backend.security.dto.SigninRequest;
 import edu.ntnu.idatt2105.backend.security.dto.SignupRequest;
@@ -97,8 +99,10 @@ public class UserService {
     itemRepository.editItem(item);
   }
 
-  public void getUserItems() {
-
+  public ItemsResponse getUserItems() {
+    String userID = SecurityContextHolder.getContext().getAuthentication().getName();
+    Item[] items = itemRepository.getItemsFromUserID(Integer.parseInt(userID));
+    return new ItemsResponse(ItemMapper.INSTANCE.itemsToItemResponses(items));
   }
 
   private String encodePassword(String password) {
