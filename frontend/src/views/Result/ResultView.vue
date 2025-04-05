@@ -32,13 +32,6 @@ onMounted(() => {
 });
 
 //Placeholder
-const items = ref<ItemResponseDTO[]>([
-  {itemID: 1, name: 'Playstation 5', category: 'Gaming', seller: 'Ola nordmann', description: 'Nice playstation', published: '2020', price: 2},
-  {itemID: 1, name: 'Playstation 5', category: 'Gaming', seller: 'Ola nordmann', description: 'Nice playstation', published: '2020', price: 2},
-  {itemID: 1, name: 'Playstation 5', category: 'Gaming', seller: 'Ola nordmann', description: 'Nice playstation', published: '2020', price: 2},
-]);
-
-//Placeholder
 const categories = ref([
   'Books',
   'Furniture',
@@ -142,7 +135,7 @@ function handlePriceRangeUpdated(priceRange: { min: number | null; max: number |
           </div>
         </div>
         <div class="item-group-warpper">
-          <ItemGroup :items="items" @item-clicked="handleItemClick" :mode="currentDisplayMode" />
+          <ItemGroup :items="resultStore.items" @item-clicked="handleItemClick" :mode="currentDisplayMode" />
         </div>
       </div>
     </div>
