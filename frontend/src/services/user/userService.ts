@@ -10,17 +10,15 @@ class UserService {
 
   /**
    * Retrieves information about the currently authenticated user.
-   * @returns A promise that resolves with the user's information.
+   * @returns A promise that resolves with the user's information or null if not authenticated.
    */
-  async getUserInfo(): Promise<User> {
+  async getUserInfo(): Promise<User | null> {
     try {
       const response = await axiosInstance.get<User>('/user/info');
       return response.data;
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response?.status === 403) {
-        return null
-      }
-      throw error;
+      console.error("Unexpected error in getUserInfo:", error);
+      return null;
     }
   }
 
