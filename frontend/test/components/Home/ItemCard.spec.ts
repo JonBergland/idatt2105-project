@@ -3,12 +3,14 @@ import { mount } from '@vue/test-utils';
 import ItemCard from '@/components/Home/ItemCard.vue';
 
 describe('ItemCard.vue', () => {
-  const mockItem = {
-    id: 1,
+    const mockItem = {
+    itemID: 1,
     name: 'Playstation 5',
-    location: 'Oslo',
+    category: 'Gaming',
+    seller: 'Ola Nordmann',
+    description: 'Nice playstation',
+    published: '2020',
     price: 400,
-    img: 'https://via.placeholder.com/150',
   };
 
   it('renders the item details correctly', () => {
@@ -17,11 +19,8 @@ describe('ItemCard.vue', () => {
     });
 
     expect(wrapper.text()).toContain(mockItem.name);
-    expect(wrapper.text()).toContain(mockItem.location);
     expect(wrapper.text()).toContain(`${mockItem.price} kr`);
 
-    const img = wrapper.find('img');
-    expect(img.attributes('src')).toBe(mockItem.img);
   });
 
   it('emits "clicked-item" with the correct payload when clicked', async () => {
@@ -32,7 +31,7 @@ describe('ItemCard.vue', () => {
     await wrapper.find('.item-card').trigger('click');
 
     expect(wrapper.emitted('clicked-item')).toBeTruthy();
-    expect(wrapper.emitted('clicked-item')![0]).toEqual([mockItem.id]);
+    expect(wrapper.emitted('clicked-item')![0]).toEqual([mockItem.itemID]);
   });
 
   it('has the correct default styles', () => {
