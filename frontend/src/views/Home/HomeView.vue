@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { ItemResponseDTO } from '@/models/item';
 import CategoryGrid from '@/components/Home/CategoryGrid.vue';
 import RecommendationGrid from '@/components/Home/ItemGroup.vue';
 import SearchBar from '@/components/Home/SearchBar.vue';
@@ -8,16 +9,18 @@ import placeholderImage from '@/assets/images/placeholder-image.png'
 
 const router = useRouter();
 
-const items = ref([
-  {id: 1, name: 'Playstation 5', location: 'oslo', price: 400, img: placeholderImage},
-  {id: 2, name: 'Playst3', location: 'bærum', price: 20, img: placeholderImage},
-  {id: 3, name: 'Playstation 1', location: 'asker', price: 20000, img: placeholderImage},
-  ])
+
+const items = ref<ItemResponseDTO[]>([
+  {itemID: 1, name: 'Playstation 5', category: 'Gaming', seller: 'Ola nordmann', description: 'Nice playstation', published: '2020', price: 2},
+  {itemID: 1, name: 'Playstation 5', category: 'Gaming', seller: 'Ola nordmann', description: 'Nice playstation', published: '2020', price: 2},
+  {itemID: 1, name: 'Playstation 5', category: 'Gaming', seller: 'Ola nordmann', description: 'Nice playstation', published: '2020', price: 2},
+]);
+
 const categories = ref([
   'category 1',
   'category 2',
   'category 3',
-])
+]);
 
 /**
  * Fetches the categories from service
