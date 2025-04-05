@@ -30,17 +30,8 @@ const itemsRequest = ref<ItemsRequestDTO>({
 
 onMounted(() => {
   resultStore.fetchItems(itemsRequest.value);
+  resultStore.fetchCategories();
 });
-
-//Placeholder
-const categories = ref([
-  'Books',
-  'Furniture',
-  'Toys',
-  'Electronics',
-  'Sports Equipment',
-  'Clothing',
-]);
 
 /**
  * Toggles the visibility of the filter container.
@@ -66,8 +57,20 @@ function handleDisplay(displayMode: string) {
  * @param {String} sortMode - The mode by which the data should be sorted.
  */
 function handleSort(sortMode: string) {
-  console.log('Sort by:', sortMode);
-  //TODO: implement
+  switch(sortMode) {
+    case 'New':
+      itemsRequest.value.sort = 'published_DESC';
+      break;
+    case 'Price Up':
+      itemsRequest.value.sort = 'price_ASC';
+      break;
+    case 'Price Down':
+      itemsRequest.value.sort = 'price_DESC';
+      break;
+    default:
+      itemsRequest.value.sort = null;
+  }
+  resultStore.fetchItems(itemsRequest.value);
 };
 
 /**
@@ -85,7 +88,7 @@ function handleSort(sortMode: string) {
  * @param {string} category - The name of the clicked category
  */
  function handleCategoryClick(category: string) {
- // itemsRequest.value.category = category;
+  itemsRequest.value.category = category;
   resultStore.fetchItems(itemsRequest.value)
 }
 
@@ -97,10 +100,7 @@ function handleSort(sortMode: string) {
  * @param {number | null} priceRange.max - The maximum price in the range, or null if not set.
  */
 function handlePriceRangeUpdated(priceRange: { min: number | null; max: number | null }): void {
-  console.log('Price range updated:', priceRange);
-  itemsRequest.value.priceMinMax = priceRange.min !== null && priceRange.max !== null
-    ? [priceRange.min, priceRange.max]
-    : null;
+  itemsRequest.value.priceMinMax = [priceRange.min, priceRange.max];
   resultStore.fetchItems(itemsRequest.value)
 }
 
@@ -120,7 +120,7 @@ function handlePriceRangeUpdated(priceRange: { min: number | null; max: number |
       <h3>Filter</h3>
       <div class="filter-wrapper">
         <p>Category:</p>
-        <ToggleGroup :names="categories" @toggle-selected="handleCategoryClick" direction="column" />
+        <ToggleGroup :names="resultStore.categories" @toggle-selected="handleCategoryClick" direction="column" />
       </div>
       <div class="filter-wrapper">
         <p>Price:</p>
