@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import type { ItemsRequestDTO } from '@/models/item';
+import { ref, onMounted } from 'vue';
+import { useResultStore } from '@/stores/resultStore';
 import ToggleGroup from '@/components/Result/ToggleGroup.vue';
 import SearchBar from '@/components/Home/SearchBar.vue';
 import ItemGroup from '@/components/Home/ItemGroup.vue';
@@ -15,6 +17,19 @@ const screenWidth = ref(window.innerWidth);
 
 window.addEventListener('resize', () => {
   screenWidth.value = window.innerWidth;
+});
+
+const resultStore = useResultStore();
+
+onMounted(() => {
+  const itemsRequest: ItemsRequestDTO = {
+    category: null,
+    searchWord: null,
+    priceMinMax: null,
+    sort: null,
+    segmentOffset: [0, 10],
+  };
+  resultStore.fetchItems(itemsRequest);
 });
 
 //Placeholder
@@ -137,7 +152,7 @@ function handlePriceRangeUpdated(priceRange: { min: number | null; max: number |
           </div>
         </div>
         <div class="item-group-warpper">
-          <ItemGroup :items="items" @item-clicked="handleItemClick" :mode="currentDisplayMode" />
+          <ItemGroup :items="resultStore.items" @item-clicked="handleItemClick" :mode="currentDisplayMode" />
         </div>
       </div>
     </div>

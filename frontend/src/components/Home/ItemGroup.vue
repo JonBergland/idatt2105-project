@@ -1,19 +1,12 @@
 <script setup lang="ts">
+import type { ItemsResponseDTO } from '@/models/item';
 import ItemCard from '@/components/Home/ItemCard.vue';
-
-interface Item {
-  id: number;
-  name: string;
-  location: string;
-  price: number;
-  img: string;
-}
 
 const emit = defineEmits(['item-clicked']);
 
 const props = defineProps({
   items: {
-    type: Array as () => Item[],
+    type: Array as () => ItemsResponseDTO['items'],
     required: false,
   },
   mode: {
