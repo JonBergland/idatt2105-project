@@ -37,12 +37,13 @@ public class ItemController {
    */
   @PostMapping("/filter")
   public ItemsResponse getItems(@RequestBody ItemsRequest itemsRequest) {
-    ItemResponse[] itemResponses = ItemMapper.INSTANCE.itemsToItemResponses(itemService.getItems(itemsRequest));
+    ItemResponse[] itemResponses = ItemMapper.INSTANCE.itemsToItemResponses(
+        itemService.getItems(itemsRequest));
     return new ItemsResponse(itemResponses);
   }
 
   /**
-   * Endpoint for getting an item from id
+   * Endpoint for getting an item from id.
    *
    * @param itemRequest the request with id
    * @return the item
