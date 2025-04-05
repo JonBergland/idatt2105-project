@@ -3,14 +3,24 @@ package edu.ntnu.idatt2105.backend.user;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import edu.ntnu.idatt2105.backend.item.ItemRepository;
+import edu.ntnu.idatt2105.backend.item.dto.ItemsResponse;
+import edu.ntnu.idatt2105.backend.item.model.Item;
 import edu.ntnu.idatt2105.backend.security.dto.SigninRequest;
 import edu.ntnu.idatt2105.backend.security.dto.SignupRequest;
+import edu.ntnu.idatt2105.backend.user.dto.AddItemRequest;
+import edu.ntnu.idatt2105.backend.user.dto.EditItemRequest;
+import edu.ntnu.idatt2105.backend.user.dto.GetUserInfoResponse;
+import edu.ntnu.idatt2105.backend.user.dto.UpdateUserInfoRequest;
 import edu.ntnu.idatt2105.backend.user.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 class UserServiceTest {
@@ -19,7 +29,16 @@ class UserServiceTest {
   private UserRepository userRepository;
 
   @Mock
+  private ItemRepository itemRepository;
+
+  @Mock
   private PasswordEncoder passwordEncoder;
+
+  @Mock
+  SecurityContext securityContext;
+
+  @Mock
+  Authentication authentication;
 
   @InjectMocks
   private UserService userService;
@@ -72,5 +91,77 @@ class UserServiceTest {
             savedUser.getPassword().equals("encodedPassword") &&
             savedUser.getRole().equals("ROLE_USER")
     ));
+  }
+
+  @Test
+  void getUser_ShouldReturnUserInfoResponse() {
+    User mockUser = new User(1, "test@example.com", 12345678, 123, "John", "Doe", "hashedPassword", "ROLE_USER", 12, 43, "fe", 123, "fe");
+    when(userRepository.getUser(1)).thenReturn(mockUser);
+
+    GetUserInfoResponse response = userService.getUser(1);
+
+    assertNotNull(response);
+    assertEquals(mockUser.getEmail(), response.getEmail());
+  }
+
+  @Test
+  void editUser_ShouldUpdateUser() {
+    UpdateUserInfoRequest updateUserInfoRequest = new UpdateUserInfoRequest();
+    updateUserInfoRequest.setName("John");
+    updateUserInfoRequest.setSurname("Doe");
+
+    when(securityContext.getAuthentication()).thenReturn(authentication);
+    when(authentication.getName()).thenReturn("1");
+    SecurityContextHolder.setContext(securityContext);
+
+    userService.editUser(updateUserInfoRequest);
+
+    verify(userRepository, times(1)).updateUser(any(User.class));
+  }
+
+  @Test
+  void addUserItem_ShouldAddItem() {
+    AddItemRequest addItemRequest = new AddItemRequest();
+    addItemRequest.setName("Test Item");
+
+    when(securityContext.getAuthentication()).thenReturn(authentication);
+    when(authentication.getName()).thenReturn("1");
+    SecurityContextHolder.setContext(securityContext);
+
+    userService.addUserItem(addItemRequest);
+
+    verify(itemRepository, times(1)).addItem(any(Item.class));
+  }
+
+  @Test
+  void editUserItem_ShouldEditItem() {
+    EditItemRequest editItemRequest = new EditItemRequest();
+    editItemRequest.setName("Updated Item");
+
+    when(securityContext.getAuthentication()).thenReturn(authentication);
+    when(authentication.getName()).thenReturn("1");
+    SecurityContextHolder.setContext(securityContext);
+
+    userService.editUserItem(editItemRequest);
+
+    verify(itemRepository, times(1)).editItem(any(Item.class));
+  }
+
+  @Test
+  void getUserItems_ShouldReturnItemsResponse() {
+    Item mockItem = new Item();
+    mockItem.setName("Test Item");
+    Item[] items = new Item[]{mockItem};
+    when(itemRepository.getItemsFromUserID(1)).thenReturn(items);
+
+    when(securityContext.getAuthentication()).thenReturn(authentication);
+    when(authentication.getName()).thenReturn("1");
+    SecurityContextHolder.setContext(securityContext);
+
+    ItemsResponse response = userService.getUserItems();
+
+    assertNotNull(response);
+    assertEquals(1, response.getItems().length);
+    assertEquals(mockItem.getName(), response.getItems()[0].getName());
   }
 }
