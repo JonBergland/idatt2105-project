@@ -8,6 +8,8 @@ import edu.ntnu.idatt2105.backend.user.dto.UpdateUserInfoRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,9 +17,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 /**
- * a controller for user specific operations
+ * a controller for user specific operations.
  */
 @RestController
 @RequestMapping(value = "/api/user")
@@ -36,8 +39,13 @@ public class UserController {
    */
   @PostMapping("/info")
   public void updateUserInfo(@RequestBody UpdateUserInfoRequest updateUserInfoRequest) {
-    logger.info("hei");
-    userService.editUser(updateUserInfoRequest);
+    logger.info("update user info request");
+    try {
+      userService.editUser(updateUserInfoRequest);
+    } catch (DataAccessException e) {
+      logger.warn("Could not update user: {}", e.getMessage());
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+    }
   }
 
   /**
@@ -47,8 +55,14 @@ public class UserController {
    */
   @GetMapping("/info")
   public GetUserInfoResponse getUserInfo() {
+    logger.info("get user info request");
     String userID = SecurityContextHolder.getContext().getAuthentication().getName();
-    return userService.getUser(Integer.parseInt(userID));
+    try {
+      return userService.getUser(Integer.parseInt(userID));
+    } catch (DataAccessException e) {
+      logger.warn("Could not retrieve user info: {}", e.getMessage());
+      throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   @PostMapping("/item/store")
@@ -83,7 +97,13 @@ public class UserController {
    */
   @PostMapping("/item")
   public void addUserItem(@RequestBody AddItemRequest addItemRequest) {
-    userService.addUserItem(addItemRequest);
+    logger.info("add item for user request");
+    try {
+      userService.addUserItem(addItemRequest);
+    } catch (DataAccessException e) {
+      logger.warn("Could not add item for user: {}", e.getMessage());
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+    }
   }
 
   /**
@@ -93,6 +113,12 @@ public class UserController {
    */
   @PostMapping("/item/edit")
   public void editUserItem(@RequestBody EditItemRequest editItemRequest) {
-    userService.editUserItem(editItemRequest);
+    logger.info("edit item for user request");
+    try {
+      userService.editUserItem(editItemRequest);
+    } catch (DataAccessException e) {
+      logger.warn("could not edit item for user:", e.getMessage());
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+    }
   }
 }
