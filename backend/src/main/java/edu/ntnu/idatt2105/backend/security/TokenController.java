@@ -1,15 +1,14 @@
 package edu.ntnu.idatt2105.backend.security;
 
 import edu.ntnu.idatt2105.backend.security.dto.SigninRequest;
-import edu.ntnu.idatt2105.backend.security.dto.SigninResponse;
 import edu.ntnu.idatt2105.backend.security.dto.SignupRequest;
 import edu.ntnu.idatt2105.backend.user.UserService;
 import edu.ntnu.idatt2105.backend.user.model.User;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
