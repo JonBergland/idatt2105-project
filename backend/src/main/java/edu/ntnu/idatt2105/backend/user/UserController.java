@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2105.backend.user;
 
+import edu.ntnu.idatt2105.backend.item.dto.ItemsResponse;
 import edu.ntnu.idatt2105.backend.user.dto.AddItemRequest;
 import edu.ntnu.idatt2105.backend.user.dto.EditItemRequest;
 import edu.ntnu.idatt2105.backend.user.dto.GetUserInfoResponse;
@@ -54,8 +55,8 @@ public class UserController {
   }
 
   @GetMapping("/item")
-  public void getUserItems() {
-
+  public ItemsResponse getUserItems() {
+    return userService.getUserItems();
   }
 
   @PostMapping("/item")
