@@ -87,7 +87,13 @@ public class UserController {
    */
   @GetMapping("/item")
   public ItemsResponse getUserItems() {
-    return userService.getUserItems();
+    logger.info("getting all items by user");
+    try {
+      return userService.getUserItems();
+    } catch (DataAccessException e) {
+      logger.warn("Could not get items by user: {}", e.getMessage());
+      throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   /**
