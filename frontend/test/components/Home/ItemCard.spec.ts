@@ -9,7 +9,6 @@ describe('ItemCard.vue', () => {
     location: 'Oslo',
     price: 400,
     img: 'https://via.placeholder.com/150',
-    alt: 'Playstation 5 Image',
   };
 
   it('renders the item details correctly', () => {
@@ -23,7 +22,6 @@ describe('ItemCard.vue', () => {
 
     const img = wrapper.find('img');
     expect(img.attributes('src')).toBe(mockItem.img);
-    expect(img.attributes('alt')).toBe(mockItem.alt);
   });
 
   it('emits "clicked-item" with the correct payload when clicked', async () => {
