@@ -24,7 +24,6 @@ export const useAuthStore = defineStore('auth', {
     async checkIfAuth() {
       try {
         this.userData = await userService.getUserInfo();
-        console.log("User data from backend: ", this.userData);
 
         if (this.userData) {
           this.isAuth = true;
