@@ -26,7 +26,7 @@ export const useAuthStore = defineStore('auth', {
           throw new Error("User data is empty")
         }
       } catch (error) {
-        console.log("Authorization check failed: ", error);
+        console.log("Authorization check failed: ", error)
         this.isAuth = false
         this.userData = null
         return false;
@@ -45,11 +45,11 @@ export const useAuthStore = defineStore('auth', {
             return true
           }
         } else {
-          throw new Error("Login was not successful");
+          throw new Error("Login was not successful")
         }
         return false
       } catch (error) {
-        console.log("Error when login in to Yard: ", error);
+        console.log("Error when login in to Yard: ", error)
       }
     },
 
@@ -66,13 +66,18 @@ export const useAuthStore = defineStore('auth', {
               return true
             }
           } else {
-            throw new Error("Signing up was not successful");
+            throw new Error("Signing up was not successful")
           }
         }
       } catch (error) {
-        console.log("Error when signing up to Yard: ", error);
+        console.log("Error when signing up to Yard: ", error)
       }
-    }
+    },
 
+    async logout() {
+      await userService.logoutUser()
+      this.isAuth = false
+      this.userData = null
+    }
   }
 })
