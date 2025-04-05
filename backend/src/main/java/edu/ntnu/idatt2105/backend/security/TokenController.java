@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,10 +37,13 @@ public class TokenController {
   private final Logger logger = LoggerFactory.getLogger(TokenController.class);
 
   /**
-   * Endpoint for signing in, creates and returns a token after user authentication.
+   * Endpoint for signing in.
+   * This method generates a JWT-cookie, sets the token to the response and returns a boolean
+   * representing the success of the sign in
    *
    * @param signinRequest contains signin information
-   * @return a jwt for the user
+   * @param response      the HTTP response object coming with the request
+   * @return              a boolean representing the success of the sing in
    * @throws ResponseStatusException if wrong credentials were passed in
    */
   @PostMapping("/signin")
@@ -65,10 +69,13 @@ public class TokenController {
   }
 
   /**
-   * Endpoint for signing up, creates a user and returns a token for user authentication.
-   *
+   * Endpoint for signing up.
+   * This method generates a JWT-cookie, sets the token to the response and returns a boolean
+   * representing the success of the sign up
+   * 
    * @param signupRequest contains signup information
-   * @return a jwt for the user
+   * @param response      the HTTP response object coming with the request
+   * @return              a boolean representing the success of the sing up
    * @throws ResponseStatusException if wrong credentials were passed in
    */
   @PostMapping("/signup")
@@ -85,5 +92,19 @@ public class TokenController {
       logger.warn("could not create user, {}", e.getMessage());
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
     }
+  }
+
+  /**
+   * Endpoint for logging out a user.
+   * This method set an expired JWT cookie to the response, thereby logging out the user.
+   *
+   * @param response the HTTP response object comming with the request
+   * @return         a {@link ResponseEntity} containing a confirmation message of successful logout
+   */
+  @PostMapping("/logout")
+  public ResponseEntity<?> logout(HttpServletResponse response) {
+    jwtUtils.setLogOutJWTCookie(response);
+    logger.info("User logged out successfully.");
+    return ResponseEntity.ok("Logged out successfully");
   }
 }
