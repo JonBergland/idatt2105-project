@@ -33,7 +33,7 @@ services:
       spring.datasource.password: ${SPRING_DATASOURCE_PASSWORD}
     volumes:
       - ./backend:/src
-    command: ./mvnw spring-boot:run
+    command: mvn spring-boot:run
     deploy:
       resources:
         limits:
