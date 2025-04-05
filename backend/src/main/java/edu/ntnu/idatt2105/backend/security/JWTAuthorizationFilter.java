@@ -38,25 +38,30 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
     logger.info("JWTAuthorizationFilter called for URI: {}", request.getRequestURI());
 
-    Cookie[] cookies = request.getCookies();
-    if (cookies == null) {
-      filterChain.doFilter(request, response);
-      return;
-    }
-    String token = "";
-    for (Cookie cookie : cookies) {
-      if (cookie.getName().equals("JWT")) {
-        token = cookie.getValue();
-        break;
+    // Check Authorization header
+    String token = null;
+    final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
+    if (header != null && header.startsWith("Bearer ")) {
+      token = header.substring(7);
+    } else {
+        // If not found in header, check for JWT in cookie
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+          for (Cookie cookie : cookies) {
+            if ("JWT".equals(cookie.getName())) {
+              token = cookie.getValue();
+              break;
+            }
+          }
+        }
       }
-      logger.info(cookie.getName());
-    }
-    if (token.isBlank()) {
-      logger.warn("Token not found");
+
+    if (token == null) {
+      logger.warn("No token found in request", header);
       filterChain.doFilter(request, response);
       return;
     }
-
+    
     final String username;
     final String role;
     logger.info("Validating token");

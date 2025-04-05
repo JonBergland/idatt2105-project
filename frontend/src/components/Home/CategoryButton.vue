@@ -31,6 +31,7 @@ function handleClick() {
   font-size: 0.9rem;
   transition: background-color 0.3s ease;
   max-width: 120px;
+  white-space: nowrap;
 }
 
 .category-button:hover {
