@@ -136,4 +136,15 @@ public class ItemRepository {
         item.getItemID(),
         item.getSellerID());
   }
+
+  public Item[] getItemsFromUserID(int userID) {
+    List<Item> itemList = jdbcTemplate.query(
+        "SELECT Item.*, Item.id AS itemID, User.email AS seller, Categories.category_name AS category FROM Item "
+            + "LEFT JOIN User ON Item.user_id = User.id "
+            + "LEFT JOIN Categories ON Item.category_id = Categories.id "
+            + "WHERE user_id = ?",
+        new Object[]{userID},
+        new BeanPropertyRowMapper<>(Item.class));
+    return itemList.toArray(new Item[0]);
+  }
 }
