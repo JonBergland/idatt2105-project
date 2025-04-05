@@ -16,4 +16,5 @@ public class Item {
   private String description;
   private String published;
   private int price;
+  private int sellerID;
 }

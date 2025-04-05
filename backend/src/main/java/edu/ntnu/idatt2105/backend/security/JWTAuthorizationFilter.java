@@ -62,7 +62,7 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
       filterChain.doFilter(request, response);
       return;
     }
-      
+    
     final String username;
     final String role;
     logger.info("Validating token");

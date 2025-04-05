@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import ItemCard from '@/components/Home/ItemCard.vue';
 
-interface RecommendationItem {
+interface Item {
   id: number;
   name: string;
   location: string;
@@ -13,8 +13,13 @@ const emit = defineEmits(['item-clicked']);
 
 const props = defineProps({
   items: {
-    type: Array as () => RecommendationItem[],
+    type: Array as () => Item[],
     required: false,
+  },
+  mode: {
+    type: String,
+    default: 'Grid',
+    validator: (value: string) => ['Grid', 'Column'].includes(value),
   },
 });
 
@@ -23,40 +28,46 @@ const props = defineProps({
  *
  * @param {number} itemId - The unique identifier of the clicked item.
  */
- function handleItemClick(itemId: number) {
+function handleItemClick(itemId: number) {
   emit('item-clicked', itemId);
 }
 </script>
 
 <template>
-  <div class="recommendations-grid">
+  <div :class="['item-group', mode === 'Grid' ? 'item-grid' : 'item-column']">
     <ItemCard
-    v-for="(item, index) in props.items"
-    :key="index"
-    :item="item"
-    @clicked-item="handleItemClick"
+      v-for="(item, index) in props.items"
+      :key="index"
+      :item="item"
+      :size="mode === 'Grid' ? 'narrow' : 'full'"
+      @clicked-item="handleItemClick"
     />
   </div>
 </template>
 
 <style scoped>
-.recommendations-grid {
+.item-group {
+  width: 100%;
+}
+
+.item-grid {
   display: flex;
   justify-content: center;
   align-items: flex-start;
   align-content: flex-start;
   gap: 24px;
-  flex: 1 0 0;
   flex-wrap: wrap;
 }
 
-@media (max-width: 768px) {
-  .recommendations-grid {
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  }
+.item-column {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
 
-  .item-card {
-    width: 150px;
+@media (max-width: 768px) {
+  .item-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   }
 }
 </style>
