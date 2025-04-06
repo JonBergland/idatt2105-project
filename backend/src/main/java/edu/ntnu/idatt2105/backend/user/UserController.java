@@ -1,7 +1,9 @@
 package edu.ntnu.idatt2105.backend.user;
 
+import edu.ntnu.idatt2105.backend.item.dto.ItemRequest;
 import edu.ntnu.idatt2105.backend.item.dto.ItemsResponse;
 import edu.ntnu.idatt2105.backend.user.dto.AddItemRequest;
+import edu.ntnu.idatt2105.backend.user.dto.GetStoreItemResponse;
 import edu.ntnu.idatt2105.backend.user.dto.ToggleBookmarkRequest;
 import edu.ntnu.idatt2105.backend.user.dto.EditItemRequest;
 import edu.ntnu.idatt2105.backend.user.dto.GetUserInfoResponse;
@@ -73,9 +75,21 @@ public class UserController {
     }
   }
 
+  /**
+   * endpoint for getting item from store with user specific info.
+   *
+   * @param itemRequest the item to get
+   * @return the item info
+   */
   @PostMapping("/item/store")
-  public void getUserSpecificItemInfo() {
-
+  public GetStoreItemResponse getUserSpecificItemInfo(@RequestBody ItemRequest itemRequest) {
+    logger.info("get item with user specific info request");
+    try {
+      return userService.getUserSpecificItemInfo(itemRequest);
+    } catch (DataAccessException e) {
+      logger.warn("could not get item: {}", e.getMessage());
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+    }
   }
 
   @GetMapping("/item/recommended")
@@ -85,7 +99,13 @@ public class UserController {
 
   @PostMapping("/item/bookmark")
   public void bookmarkItem(@RequestBody ToggleBookmarkRequest toggleBookmarkRequest) {
-    userService.toggleBookmark(toggleBookmarkRequest);
+    logger.info("toggling bookmark request");
+    try {
+      userService.toggleBookmark(toggleBookmarkRequest);
+    } catch (DataAccessException e) {
+      logger.warn("could not toggle bookmark: {}", e.getMessage());
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+    }
   }
 
   /**
@@ -95,7 +115,7 @@ public class UserController {
    */
   @GetMapping("/item")
   public ItemsResponse getUserItems() {
-    logger.info("getting all items by user");
+    logger.info("get all items by user request");
     try {
       return userService.getUserItems();
     } catch (DataAccessException e) {
@@ -131,7 +151,7 @@ public class UserController {
     try {
       userService.editUserItem(editItemRequest);
     } catch (DataAccessException e) {
-      logger.warn("could not edit item for user:", e.getMessage());
+      logger.warn("could not edit item for user: {}", e.getMessage());
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
     }
   }

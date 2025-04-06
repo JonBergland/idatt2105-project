@@ -18,4 +18,5 @@ public class Item {
   private String published;
   private int price;
   private int sellerID;
+  private boolean bookmark;
 }

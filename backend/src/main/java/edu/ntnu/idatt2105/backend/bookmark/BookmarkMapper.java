@@ -11,6 +11,12 @@ public interface BookmarkMapper {
 
   BookmarkMapper INSTANCE = Mappers.getMapper(BookmarkMapper.class);
 
+  /**
+   * maps addItemRequest dto to bookmark model.
+   *
+   * @param toggleBookmarkRequest the dto
+   * @return the bookmark model
+   */
   @Mapping(target = "itemID", source = "itemID")
   Bookmark bookmarkRequestToBookmark(ToggleBookmarkRequest toggleBookmarkRequest);
 }
