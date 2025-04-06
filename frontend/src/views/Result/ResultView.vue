@@ -121,7 +121,7 @@ function handlePriceRangeUpdated(priceRange: { min: number | null; max: number |
       <div class="filter-wrapper">
         <p>Category:</p>
         <p v-if="resultStore.categoriesError"> {{ resultStore.categoriesError }}</p>
-        <ToggleGroup v-else :names="resultStore.categories" @toggle-selected="handleCategoryClick" direction="column" />
+        <ToggleGroup v-else :names="resultStore.categories" @toggle-selected="handleCategoryClick" direction="column" :allow-deselect="true"/>
       </div>
       <div class="filter-wrapper">
         <p>Price:</p>

@@ -21,6 +21,11 @@ const props = defineProps({
     default: false,
     required: false
   },
+  allowDeselect: {
+    type: Boolean,
+    default: false,
+    required: false
+  }
 });
 
 const emit = defineEmits(['toggle-selected']);
@@ -28,14 +33,20 @@ const emit = defineEmits(['toggle-selected']);
 const selectedToggle = ref<string | null>(null);
 
 /**
- * Emits the 'toggle-clicked' event to the parent component.
- *
+ * Handles toggle button clicks with optional deselection.
+ * If allowDeselect is true and clicking an already selected toggle,
+ * it will deselect it. Otherwise, it just selects the clicked toggle.
  *
  * @param {string} name - The name of the clicked toggle
  */
-function handleToggleClick(name: string) {
-  selectedToggle.value = name;
-  emit('toggle-selected', name);
+ function handleToggleClick(name: string) {
+  if (props.allowDeselect && selectedToggle.value === name) {
+    selectedToggle.value = null;
+    emit('toggle-selected', null);
+  } else {
+    selectedToggle.value = name;
+    emit('toggle-selected', name);
+  }
 }
 
 
