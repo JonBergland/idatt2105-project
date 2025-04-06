@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { ItemsRequestDTO, ItemResponseDTO} from '@/models/item';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useResultStore } from '@/stores/resultStore';
 import ToggleGroup from '@/components/Result/ToggleGroup.vue';
 import SearchBar from '@/components/Home/SearchBar.vue';
@@ -29,8 +29,8 @@ const itemsRequest = ref<ItemsRequestDTO>({
 });
 
 onMounted(() => {
-  resultStore.fetchItems(itemsRequest.value);
   resultStore.fetchCategories();
+  resultStore.fetchItems(itemsRequest.value);
 });
 
 /**
@@ -120,7 +120,8 @@ function handlePriceRangeUpdated(priceRange: { min: number | null; max: number |
       <h3>Filter</h3>
       <div class="filter-wrapper">
         <p>Category:</p>
-        <ToggleGroup :names="resultStore.categories" @toggle-selected="handleCategoryClick" direction="column" />
+        <p v-if="resultStore.categoriesError"> {{ resultStore.categoriesError }}</p>
+        <ToggleGroup v-else :names="resultStore.categories" @toggle-selected="handleCategoryClick" direction="column" />
       </div>
       <div class="filter-wrapper">
         <p>Price:</p>
@@ -133,12 +134,13 @@ function handlePriceRangeUpdated(priceRange: { min: number | null; max: number |
           <div class="toggle-container">
             <div class="filter-display-container">
               <CategoryButton class="filter-toggle-button" @clicked-category="toggleFilterVisibility" :name="isFilterVisible ? 'Hide Filter' : 'Show Filter'"/>
-              <ToggleGroup label="Display: " :names="displayModes" @toggle-selected="handleDisplay" />
+              <ToggleGroup label="Display: " :names="displayModes" @toggle-selected="handleDisplay" :auto-select-first="true"/>
             </div>
-            <ToggleGroup label="Sort by: " :names="sortModes" @toggle-selected="handleSort" />
+            <ToggleGroup label="Sort by: " :names="sortModes" @toggle-selected="handleSort" :auto-select-first="true"/>
           </div>
         </div>
         <div class="item-group-warpper">
+          <p v-if="resultStore.error"> {{ resultStore.error }}</p>
           <ItemGroup :items="resultStore.items" @item-clicked="handleItemClick" :mode="currentDisplayMode" />
         </div>
       </div>
