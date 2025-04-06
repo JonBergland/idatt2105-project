@@ -3,13 +3,17 @@ package edu.ntnu.idatt2105.backend.user;
 import edu.ntnu.idatt2105.backend.bookmark.BookmarkMapper;
 import edu.ntnu.idatt2105.backend.bookmark.BookmarkRepository;
 import edu.ntnu.idatt2105.backend.bookmark.model.Bookmark;
+import edu.ntnu.idatt2105.backend.browseHistory.BrowseHistoryRepository;
+import edu.ntnu.idatt2105.backend.browseHistory.model.BrowseHistory;
 import edu.ntnu.idatt2105.backend.item.ItemMapper;
 import edu.ntnu.idatt2105.backend.item.ItemRepository;
+import edu.ntnu.idatt2105.backend.item.dto.ItemRequest;
 import edu.ntnu.idatt2105.backend.item.dto.ItemsResponse;
 import edu.ntnu.idatt2105.backend.item.model.Item;
 import edu.ntnu.idatt2105.backend.security.dto.SigninRequest;
 import edu.ntnu.idatt2105.backend.security.dto.SignupRequest;
 import edu.ntnu.idatt2105.backend.user.dto.AddItemRequest;
+import edu.ntnu.idatt2105.backend.user.dto.GetStoreItemResponse;
 import edu.ntnu.idatt2105.backend.user.dto.ToggleBookmarkRequest;
 import edu.ntnu.idatt2105.backend.user.dto.EditItemRequest;
 import edu.ntnu.idatt2105.backend.user.dto.GetUserInfoResponse;
@@ -36,6 +40,8 @@ public class UserService {
   private final ItemRepository itemRepository;
 
   private final BookmarkRepository bookmarkRepository;
+
+  private final BrowseHistoryRepository browseHistoryRepository;
 
   private final PasswordEncoder passwordEncoder;
 
@@ -147,6 +153,23 @@ public class UserService {
     } else {
       bookmarkRepository.addBookmark(bookmark);
     }
+  }
+
+  public GetStoreItemResponse getUserSpecificItemInfo(ItemRequest itemRequest) {
+    Item item = itemRepository.getItem(itemRequest.getItemID());
+
+    String userID = SecurityContextHolder.getContext().getAuthentication().getName();
+
+    Bookmark bookmark = new Bookmark(Integer.parseInt(userID), itemRequest.getItemID());
+    boolean bookmarked = bookmarkRepository.checkBookmark(bookmark);
+    item.setBookmark(bookmarked);
+
+    BrowseHistory browseHistory = new BrowseHistory();
+    browseHistory.setItemID(itemRequest.getItemID());
+    browseHistory.setUserID(Integer.parseInt(userID));
+    browseHistoryRepository.addUpdateBrowseHistory(browseHistory);
+
+    return ItemMapper.INSTANCE.itemToGetStoreItemResponse(item);
   }
 
   private String encodePassword(String password) {
