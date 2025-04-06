@@ -155,9 +155,10 @@ public class ItemRepository {
    */
   public Item[] getItemsFromUserID(int userID) {
     List<Item> itemList = jdbcTemplate.query(
-        "SELECT Item.*, Item.id AS itemID, User.email AS seller, Categories.category_name AS category FROM Item "
+        "SELECT Item.*, Item.id AS itemID, User.email AS seller, Categories.category_name AS category, State.state_name AS state FROM Item "
             + "LEFT JOIN User ON Item.user_id = User.id "
             + "LEFT JOIN Categories ON Item.category_id = Categories.id "
+            + "LEFT JOIN State ON Item.state_id = State.id "
             + "WHERE user_id = ?",
         new Object[]{userID},
         new BeanPropertyRowMapper<>(Item.class));
