@@ -16,6 +16,7 @@ public class ItemResponse {
   int itemID;
   String name;
   String category;
+  String state;
   String seller;
   String description;
   String published;
