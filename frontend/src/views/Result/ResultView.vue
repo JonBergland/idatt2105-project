@@ -17,8 +17,8 @@ const screenWidth = ref(window.innerWidth);
 
 const currentDisplayMode = ref('');
 const searchValue = ref('');
-const sortSelected = ref('');
-const categorySelected = ref('');
+const sortSelected = ref('published_DESC');
+const categorySelected = ref();
 
 const route = useRoute();
 const router = useRouter();
