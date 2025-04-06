@@ -1,4 +1,4 @@
-import type { ItemsResponseDTO, ItemsRequestDTO } from "@/models/item";
+import type { ItemsResponseDTO, ItemsRequestDTO, CategoriesResponseDTO } from "@/models/item";
 import { defineStore } from "pinia";
 import resultService from "@/services/item/resultService";
 
@@ -13,7 +13,7 @@ export const useResultStore = defineStore('result', {
     isLoading: false,
     error: null as string | null,
 
-    categories: [] as string[],
+    categories: [] as CategoriesResponseDTO['categories'],
     isCategoriesLoading: false,
     categoriesError: null as string | null,
   }),
@@ -75,7 +75,8 @@ export const useResultStore = defineStore('result', {
       this.categoriesError = null;
 
       try {
-        this.categories = await resultService.getCategories();
+        const response = await resultService.getCategories();
+        this.categories = response.categories;
       } catch (error) {
         this.categoriesError = "Failed to fetch categories.";
         console.error("Error fetching categories:", error);

@@ -19,3 +19,7 @@ export interface ItemResponseDTO {
 export interface ItemsResponseDTO {
   items: ItemResponseDTO[];
 }
+
+export interface CategoriesResponseDTO {
+  categories: string[];
+}

@@ -1,4 +1,4 @@
-import type { ItemsRequestDTO, ItemsResponseDTO } from '@/models/item.ts';
+import type { ItemsRequestDTO, ItemsResponseDTO, CategoriesResponseDTO } from '@/models/item.ts';
 import axiosInstance from "@/services/axiosService";
 
 class ResultService {
@@ -16,8 +16,8 @@ class ResultService {
    * Fetches all available categories from the backend.
    * @returns A promise resolving to an array of category names.
    */
-  async getCategories(): Promise<string[]> {
-    const response = await axiosInstance.get<string[]>('/store/category');
+  async getCategories(): Promise<CategoriesResponseDTO> {
+    const response = await axiosInstance.get<CategoriesResponseDTO>('/store/category');
     return response.data;
   }
 }
