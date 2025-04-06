@@ -1,5 +1,6 @@
 import type { User, UserLoginDTO, UserRegistrationDTO } from "@/models/user";
 import axiosInstance from "@/services/axiosService";
+import axios from 'axios';
 
 /**
  * A service class for handling user-related operations such as registration and login.
@@ -15,6 +16,10 @@ class UserService {
       const response = await axiosInstance.get<User>('/user/info');
       return response.data;
     } catch (error) {
+      if (axios.isAxiosError(error) && (error.response?.status === 401 || error.response?.status === 403)) {
+        console.log("User not authenticated");
+        return null;
+      }
       console.error("Unexpected error in getUserInfo:", error);
       return null;
     }
