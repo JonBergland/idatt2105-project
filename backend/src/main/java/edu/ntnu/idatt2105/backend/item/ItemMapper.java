@@ -65,6 +65,12 @@ public interface ItemMapper {
   @Mapping(source = "itemID", target = "itemID")
   Item editItemRequestToItem(EditItemRequest editItemRequest);
 
+  /**
+   * maos item model to getStoreItemResponse dto.
+   *
+   * @param item the item model
+   * @return the dto
+   */
   @Mapping(source = "category", target = "category")
   @Mapping(source = "itemID", target = "itemID")
   @Mapping(source = "seller", target = "seller")
