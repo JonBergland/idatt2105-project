@@ -5,7 +5,7 @@ import resultService from "@/services/item/resultService";
 // Define constants for default values
 const DEFAULT_MIN_PRICE = 0;
 const DEFAULT_MAX_PRICE = 2147483647; // Maximum 32-bit integer
-const DEFAULT_SEGMENT_SIZE = 10;
+const DEFAULT_SEGMENT_SIZE = 5;
 
 export const useResultStore = defineStore('result', {
   state: () => ({
@@ -16,6 +16,10 @@ export const useResultStore = defineStore('result', {
     categories: [] as CategoriesResponseDTO['categories'],
     isCategoriesLoading: false,
     categoriesError: null as string | null,
+
+    isLoadingMore: false,
+    moreItemsError: null as string | null,
+    newItemsCount: 0,
   }),
 
   actions: {
@@ -64,6 +68,29 @@ export const useResultStore = defineStore('result', {
         console.error("Error fetching items:", error);
       } finally {
         this.isLoading = false;
+      }
+    },
+
+    /**
+     * Fetches more items and appends them to the existing items array.
+     * Used for infinite scrolling functionality.
+     *
+     * @param request The filter and pagination request
+     */
+    async loadMoreItems(request: ItemsRequestDTO): Promise<void> {
+      this.isLoadingMore = true;
+      this.moreItemsError = null;
+
+      try {
+        const normalizedRequest = this.normalizeRequest(request);
+        const response = await resultService.getItems(normalizedRequest);
+        this.items = [...this.items, ...response.items];
+        this.newItemsCount = response.items.length;
+      } catch (error) {
+        this.moreItemsError = "Failed to load more items.";
+        console.error("Error loading more items:", error);
+      } finally {
+        this.isLoadingMore = false;
       }
     },
 
