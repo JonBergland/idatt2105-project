@@ -11,13 +11,14 @@ import CategoryButton from '@/components/Home/CategoryButton.vue';
 
 const sortModes = ref(['New', 'Price Up', 'Price Down']);
 const displayModes = ref(['Grid', 'Column']);
-const currentDisplayMode = ref('');
+
 const isFilterVisible = ref(false);
 const screenWidth = ref(window.innerWidth);
 
-window.addEventListener('resize', () => {
-  screenWidth.value = window.innerWidth;
-});
+const currentDisplayMode = ref('');
+const searchValue = ref('');
+const sortSelected = ref('');
+const categorySelected = ref('');
 
 const route = useRoute();
 const router = useRouter();
@@ -27,21 +28,28 @@ const itemsRequest = ref<ItemsRequestDTO>({
     category: null,
     searchWord: null,
     priceMinMax: null,
-    sort: null,
+    sort: 'published_DESC',
     segmentOffset: [0, 10],
+});
+
+window.addEventListener('resize', () => {
+  screenWidth.value = window.innerWidth;
 });
 
 onMounted(() => {
   if (route.query.search) {
     itemsRequest.value.searchWord = route.query.search as string;
+    searchValue.value = route.query.search as string;
   }
 
   if (route.query.category) {
     itemsRequest.value.category = route.query.category as string;
+    categorySelected.value = route.query.category as string;
   }
 
   if (route.query.sort) {
     itemsRequest.value.sort = route.query.sort as string;
+    sortSelected.value = route.query.sort as string;
   }
 
   if (route.query.minPrice && route.query.maxPrice) {
@@ -69,6 +77,16 @@ function updateUrlParams() {
 
   if (JSON.stringify(query) !== JSON.stringify(route.query)) {
     router.replace({ query });
+  }
+}
+
+function getSortLabel(sortValue: string | null): string {
+  if (!sortValue) return 'published_DESC';
+  switch(sortValue) {
+    case 'published_DESC': return 'New';
+    case 'price_ASC': return 'Price Up';
+    case 'price_DESC': return 'Price Down';
+    default: return 'published_DESC';
   }
 }
 
@@ -116,7 +134,7 @@ function handleSort(sortMode: string) {
  * @param {string} query - The search query entered by the user
  */
  function handleSearch(query: string) {
-  itemsRequest.value.searchWord = query;
+  itemsRequest.value.searchWord = query || null;
   updateUrlParams();
 }
 
@@ -163,7 +181,14 @@ watch(itemsRequest, () => {
       <div class="filter-wrapper">
         <p>Category:</p>
         <p v-if="resultStore.categoriesError"> {{ resultStore.categoriesError }}</p>
-        <ToggleGroup v-else :names="resultStore.categories" @toggle-selected="handleCategoryClick" direction="column" :allow-deselect="true"/>
+        <ToggleGroup
+          v-else
+          :names="resultStore.categories"
+          :initial-selected="categorySelected"
+          @toggle-selected="handleCategoryClick"
+          direction="column"
+          :allow-deselect="true"
+          />
       </div>
       <div class="filter-wrapper">
         <p>Price:</p>
@@ -172,13 +197,25 @@ watch(itemsRequest, () => {
     </div>
       <div class="search-toggle-items-container">
         <div class="search-toggle-container">
-            <SearchBar @search-input="handleSearch" />
+            <SearchBar
+            v-model="searchValue"
+            @search-input="handleSearch"
+            />
           <div class="toggle-container">
             <div class="filter-display-container">
               <CategoryButton class="filter-toggle-button" @clicked-category="toggleFilterVisibility" :name="isFilterVisible ? 'Hide Filter' : 'Show Filter'"/>
-              <ToggleGroup label="Display: " :names="displayModes" @toggle-selected="handleDisplay" :auto-select-first="true"/>
+              <ToggleGroup
+                label="Display: "
+                :names="displayModes"
+                @toggle-selected="handleDisplay"
+                :auto-select-first="true"/>
             </div>
-            <ToggleGroup label="Sort by: " :names="sortModes" @toggle-selected="handleSort" :auto-select-first="true"/>
+            <ToggleGroup
+              label="Sort by: "
+              :names="sortModes"
+              :initial-selected="getSortLabel(sortSelected)"
+              @toggle-selected="handleSort"
+            />
           </div>
         </div>
         <div class="item-group-warpper">
