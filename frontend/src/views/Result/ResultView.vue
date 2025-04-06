@@ -9,17 +9,21 @@ import ItemGroup from '@/components/Home/ItemGroup.vue';
 import PriceFilter from '@/components/Result/PriceFilter.vue';
 import CategoryButton from '@/components/Home/CategoryButton.vue';
 
+// Display and sorting options
 const sortModes = ref(['New', 'Price Up', 'Price Down']);
 const displayModes = ref(['Grid', 'Column']);
 
+// UI state for responsive design
 const isFilterVisible = ref(false);
 const screenWidth = ref(window.innerWidth);
 
+// Current selection state
 const currentDisplayMode = ref('');
 const searchValue = ref('');
 const sortSelected = ref('published_DESC');
 const categorySelected = ref();
 
+// Pagination state for infinite scroll
 const isLoadingMore = ref(false);
 const currentPage = ref(0);
 const itemsPerPage = ref(6);
