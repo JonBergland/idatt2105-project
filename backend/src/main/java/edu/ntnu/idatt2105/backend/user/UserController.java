@@ -75,9 +75,21 @@ public class UserController {
     }
   }
 
+  /**
+   * endpoint for getting item from store with user specific info.
+   *
+   * @param itemRequest the item to get
+   * @return the item info
+   */
   @PostMapping("/item/store")
   public GetStoreItemResponse getUserSpecificItemInfo(@RequestBody ItemRequest itemRequest) {
-    return userService.getUserSpecificItemInfo(itemRequest);
+    logger.info("get item with user specific info request");
+    try {
+      return userService.getUserSpecificItemInfo(itemRequest);
+    } catch (DataAccessException e) {
+      logger.warn("could not get item: {}", e.getMessage());
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+    }
   }
 
   @GetMapping("/item/recommended")
@@ -87,7 +99,13 @@ public class UserController {
 
   @PostMapping("/item/bookmark")
   public void bookmarkItem(@RequestBody ToggleBookmarkRequest toggleBookmarkRequest) {
-    userService.toggleBookmark(toggleBookmarkRequest);
+    logger.info("toggling bookmark request");
+    try {
+      userService.toggleBookmark(toggleBookmarkRequest);
+    } catch (DataAccessException e) {
+      logger.warn("could not toggle bookmark: {}", e.getMessage());
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+    }
   }
 
   /**
@@ -97,7 +115,7 @@ public class UserController {
    */
   @GetMapping("/item")
   public ItemsResponse getUserItems() {
-    logger.info("getting all items by user");
+    logger.info("get all items by user request");
     try {
       return userService.getUserItems();
     } catch (DataAccessException e) {
@@ -133,7 +151,7 @@ public class UserController {
     try {
       userService.editUserItem(editItemRequest);
     } catch (DataAccessException e) {
-      logger.warn("could not edit item for user:", e.getMessage());
+      logger.warn("could not edit item for user: {}", e.getMessage());
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
     }
   }
