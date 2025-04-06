@@ -16,6 +16,11 @@ const props = defineProps({
     default: 'row',
     validator: (value: string) => ['row', 'column'].includes(value),
   },
+  autoSelectFirst: {
+    type: Boolean,
+    default: true,
+    required: false
+  },
 });
 
 const emit = defineEmits(['toggle-selected']);
@@ -35,10 +40,10 @@ function handleToggleClick(name: string) {
 
 
 /**
- * Selects the first toggle when the component is mounted.
+ * Selects the first toggle when the component is mounted if autoSelectFirst is true.
  */
-onMounted(() => {
-  if (props.names.length > 0) {
+ onMounted(() => {
+  if (props.autoSelectFirst && props.names.length > 0) {
     handleToggleClick(props.names[0]);
   }
 });
