@@ -1,16 +1,23 @@
 <script setup lang="ts">
 import profileImage from '@/assets/icons/profile-avatar.svg'
 import type { User } from '@/models/user';
-import { ref } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 import UserInfoComponent from '@/components/Profile/UserInfoComponent.vue';
 import ProfileButtonsComponent from '@/components/Profile/ProfileButtonsComponent.vue';
 
-defineProps<{
+const props = defineProps<{
   user: User | null
 }>()
 
 const emit = defineEmits(["saveUser", "logoutUser"])
-const editableUser = ref(user)
+
+const editableUser = ref<User | null>(null)
+
+watch(() => props.user, (newUser) => {
+  if (newUser) {
+    editableUser.value = {...newUser};
+  }
+}, { immediate: true });
 
 const isEditing = ref(false)
 const isLoggingOut = ref(false)
@@ -43,7 +50,7 @@ function handleCancel() {
   isEditing.value = false
   isLoggingOut.value = false
 
-  editableUser.value = user
+  editableUser.value = props.user
 }
 
 </script>
@@ -54,14 +61,19 @@ function handleCancel() {
     </div>
     <div class="profile-details">
       <UserInfoComponent
-        v-model:firstName="editableUser.firstName"
-        v-model:lastName="editableUser.lastName"
+        v-if="editableUser"
+        v-model:firstName="editableUser.name"
+        v-model:lastName="editableUser.surname"
         v-model:email="editableUser.email"
+        v-model:countryCode="editableUser.countryCode"
         v-model:phoneNumber="editableUser.phoneNumber"
-        v-model:location="editableUser.location"
+        v-model:location="editableUser.city"
         :isEditing="isEditing"
         @save="handleSave"
       />
+      <div v-else class="loading-message">
+        Loading user information...
+      </div>
       <ProfileButtonsComponent
       :editMode = isEditing
       :logoutMode = isLoggingOut
@@ -141,5 +153,11 @@ function handleCancel() {
   .profile-image img {
     max-width: 140px;
   }
+}
+
+.loading-message {
+  margin: 25px 0;
+  font-style: italic;
+  color: #666;
 }
 </style>
