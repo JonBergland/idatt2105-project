@@ -92,7 +92,6 @@ async function loadMoreItems() {
  */
 function handleSearch(query: string) {
   router.push({ name: 'result', query: { search: query } });
-  console.log('Searched for: ', query)
 }
 
 /**
@@ -101,16 +100,14 @@ function handleSearch(query: string) {
  */
 function handleCategoryClick(category: string) {
   router.push({ name: 'result', query: { category } });
-  console.log('Clicked Category: ', category)
 }
 
 /**
  * Handles the 'item-clicked' event emitted by the RecommendationGrid component
- * @param {number} itemId - The unique identifier of the clicked item
+ * @param {number} itemID - The unique identifier of the clicked item
  */
-function handleItemClick(itemId: number) {
-  router.push({ name: 'items', params: { id: itemId } });
-  console.log('Clicked Item: ', itemId)
+function handleItemClick(itemID: number) {
+  router.push({ name: 'product', query: { id: itemID } });
 }
 </script>
 
