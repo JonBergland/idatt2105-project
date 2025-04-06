@@ -118,4 +118,48 @@ describe('ResultService', () => {
       expect(axiosInstance.get).toHaveBeenCalledWith('/store/category');
     });
   });
+
+  describe('getItemDetails', () => {
+    it('should call the correct endpoint with the provided item ID', async () => {
+      const mockRequest = {
+        itemID: 123
+      };
+
+      const mockResponse = {
+        data: {
+          itemID: 123,
+          name: 'Test Product',
+          price: 799,
+          category: 'Electronics',
+          seller: 'TestSeller',
+          description: 'A detailed description',
+          published: '2023-04-05',
+          state: 'available',
+          images: []
+        }
+      };
+
+      vi.mocked(axiosInstance.post).mockResolvedValueOnce(mockResponse);
+
+      const result = await resultService.getItemDetails(mockRequest);
+
+      expect(axiosInstance.post).toHaveBeenCalledTimes(1);
+      expect(axiosInstance.post).toHaveBeenCalledWith('/store/item/get', mockRequest);
+      expect(result).toEqual(mockResponse.data);
+      expect(result.itemID).toBe(123);
+      expect(result.name).toBe('Test Product');
+    });
+
+    it('should propagate errors from the API', async () => {
+      const mockRequest = {
+        itemID: 99999 // Non-existent item
+      };
+
+      const mockError = new Error('Item not found');
+      vi.mocked(axiosInstance.post).mockRejectedValueOnce(mockError);
+
+      await expect(resultService.getItemDetails(mockRequest)).rejects.toThrow('Item not found');
+      expect(axiosInstance.post).toHaveBeenCalledWith('/store/item/get', mockRequest);
+    });
+  });
 });
