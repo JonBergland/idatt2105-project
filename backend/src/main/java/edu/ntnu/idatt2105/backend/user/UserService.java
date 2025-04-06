@@ -1,5 +1,8 @@
 package edu.ntnu.idatt2105.backend.user;
 
+import edu.ntnu.idatt2105.backend.bid.BidMapper;
+import edu.ntnu.idatt2105.backend.bid.BidRepository;
+import edu.ntnu.idatt2105.backend.bid.model.Bid;
 import edu.ntnu.idatt2105.backend.bookmark.BookmarkMapper;
 import edu.ntnu.idatt2105.backend.bookmark.BookmarkRepository;
 import edu.ntnu.idatt2105.backend.bookmark.model.Bookmark;
@@ -14,6 +17,7 @@ import edu.ntnu.idatt2105.backend.security.dto.SigninRequest;
 import edu.ntnu.idatt2105.backend.security.dto.SignupRequest;
 import edu.ntnu.idatt2105.backend.user.dto.AddItemRequest;
 import edu.ntnu.idatt2105.backend.user.dto.GetStoreItemResponse;
+import edu.ntnu.idatt2105.backend.user.dto.PlaceBidRequest;
 import edu.ntnu.idatt2105.backend.user.dto.ToggleBookmarkRequest;
 import edu.ntnu.idatt2105.backend.user.dto.EditItemRequest;
 import edu.ntnu.idatt2105.backend.user.dto.GetUserInfoResponse;
@@ -42,6 +46,8 @@ public class UserService {
   private final BookmarkRepository bookmarkRepository;
 
   private final BrowseHistoryRepository browseHistoryRepository;
+
+  private final BidRepository bidRepository;
 
   private final PasswordEncoder passwordEncoder;
 
@@ -170,6 +176,13 @@ public class UserService {
     browseHistoryRepository.addUpdateBrowseHistory(browseHistory);
 
     return ItemMapper.INSTANCE.itemToGetStoreItemResponse(item);
+  }
+
+  public void placeBid(PlaceBidRequest placeBidRequest) {
+    Bid bid = BidMapper.INSTANCE.placeBidReqeustToBid(placeBidRequest);
+    String userID = SecurityContextHolder.getContext().getAuthentication().getName();
+    bid.setUserID(Integer.parseInt(userID));
+    bidRepository.placeBid(bid);
   }
 
   private String encodePassword(String password) {
