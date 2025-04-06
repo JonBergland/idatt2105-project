@@ -5,7 +5,7 @@ import resultService from "@/services/item/resultService";
 // Define constants for default values
 const DEFAULT_MIN_PRICE = 0;
 const DEFAULT_MAX_PRICE = 2147483647; // Maximum 32-bit integer
-const DEFAULT_SEGMENT_SIZE = 5;
+const DEFAULT_SEGMENT_SIZE = 10;
 
 export const useResultStore = defineStore('result', {
   state: () => ({
