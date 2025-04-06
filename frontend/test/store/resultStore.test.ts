@@ -154,4 +154,119 @@ describe('Result Store', () => {
       expect(store.isCategoriesLoading).toBe(false);
     });
   });
+
+  describe('loadMoreItems', () => {
+    it('should set loading state while fetching more items', async () => {
+      const store = useResultStore();
+
+      vi.mocked(resultService.getItems).mockImplementation(() => {
+        return new Promise(resolve => {
+          setTimeout(() => resolve({ items: [] }), 100);
+        });
+      });
+
+      const loadMorePromise = store.loadMoreItems({
+        category: null,
+        searchWord: null,
+        priceMinMax: null,
+        sort: null,
+        segmentOffset: [1, 10],
+      });
+
+      expect(store.isLoadingMore).toBe(true);
+
+      await loadMorePromise;
+
+      expect(store.isLoadingMore).toBe(false);
+    });
+
+    it('should append new items to existing items', async () => {
+      const store = useResultStore();
+
+      const initialItems = [
+        { itemID: 1, name: 'Initial Item 1', price: 100, category: 'Electronics', seller: 'User1', description: 'Test', published: '2023-04-01' },
+        { itemID: 2, name: 'Initial Item 2', price: 200, category: 'Books', seller: 'User2', description: 'Test', published: '2023-04-02' }
+      ];
+
+      const moreItems = [
+        { itemID: 3, name: 'More Item 1', price: 300, category: 'Clothing', seller: 'User3', description: 'Test', published: '2023-04-03' },
+        { itemID: 4, name: 'More Item 2', price: 400, category: 'Sports', seller: 'User4', description: 'Test', published: '2023-04-04' }
+      ];
+
+      store.items = initialItems;
+
+      vi.mocked(resultService.getItems).mockResolvedValue({ items: moreItems });
+
+      await store.loadMoreItems({
+        category: null,
+        searchWord: null,
+        priceMinMax: null,
+        sort: null,
+        segmentOffset: [1, 10],
+      });
+
+      expect(store.items).toHaveLength(4);
+      expect(store.items[0].itemID).toBe(1);
+      expect(store.items[2].itemID).toBe(3);
+      expect(store.newItemsCount).toBe(2);
+    });
+
+    it('should set newItemsCount to the number of items received', async () => {
+      const store = useResultStore();
+
+      const moreItems = [
+        { itemID: 5, name: 'More Item 3', price: 500, category: 'Home', seller: 'User5', description: 'Test', published: '2023-04-05' }
+      ];
+
+      vi.mocked(resultService.getItems).mockResolvedValue({ items: moreItems });
+
+      await store.loadMoreItems({
+        category: null,
+        searchWord: null,
+        priceMinMax: null,
+        sort: null,
+        segmentOffset: [2, 10],
+      });
+
+      expect(store.newItemsCount).toBe(1);
+    });
+
+    it('should handle empty response correctly', async () => {
+      const store = useResultStore();
+
+      store.items = [
+        { itemID: 1, name: 'Initial Item', price: 100, category: 'Electronics', seller: 'User1', description: 'Test', published: '2023-04-01' }
+      ];
+
+      vi.mocked(resultService.getItems).mockResolvedValue({ items: [] });
+
+      await store.loadMoreItems({
+        category: null,
+        searchWord: null,
+        priceMinMax: null,
+        sort: null,
+        segmentOffset: [1, 10],
+      });
+
+      expect(store.items).toHaveLength(1);
+      expect(store.newItemsCount).toBe(0);
+    });
+
+    it('should handle errors correctly when loading more items', async () => {
+      const store = useResultStore();
+
+      vi.mocked(resultService.getItems).mockRejectedValue(new Error('API error'));
+
+      await store.loadMoreItems({
+        category: null,
+        searchWord: null,
+        priceMinMax: null,
+        sort: null,
+        segmentOffset: [1, 10],
+      });
+
+      expect(store.moreItemsError).toBe("Failed to load more items.");
+      expect(store.isLoadingMore).toBe(false);
+    });
+  });
 });
