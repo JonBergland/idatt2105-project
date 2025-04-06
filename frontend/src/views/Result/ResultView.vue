@@ -70,6 +70,13 @@ onMounted(() => {
   window.addEventListener('scroll', handleScroll);
 });
 
+/**
+ * Monitors user scroll position and triggers loading of more items when the user
+ * approaches the bottom of the page (80% scroll threshold).
+ *
+ * This function is bound to the window's scroll event in onMounted and helps
+ * implement the infinite scrolling functionality.
+ */
 function handleScroll() {
   const scrollPosition = window.scrollY + window.innerHeight;
   const pageHeight = document.documentElement.scrollHeight;
@@ -79,6 +86,18 @@ function handleScroll() {
   }
 }
 
+/**
+ * Loads the next page of items by incrementing the current page counter
+ * and making a request to the API for more items.
+ *
+ * This function handles:
+ * - Updating loading state indicators
+ * - Constructing the pagination request with the correct offset
+ * - Calling the store's loadMoreItems method
+ * - Detecting when there are no more items to load
+ *
+ * @throws Will log errors to console but won't throw to UI
+ */
 async function loadMoreItems() {
   if (isLoadingMore.value || !hasMoreItems.value) return;
 
@@ -103,6 +122,16 @@ async function loadMoreItems() {
   }
 }
 
+/**
+ * Updates the URL query parameters based on the current filter state.
+ * This ensures the URL reflects the current search criteria and allows
+ * for shareable/bookmarkable search results.
+ *
+ * The function:
+ * 1. Creates a query object from the current filters
+ * 2. Compares it with the current URL query
+ * 3. Only updates if there's a difference (to avoid unnecessary history entries)
+ */
 function updateUrlParams() {
   const query: Record<string, string> = {};
 
@@ -120,6 +149,17 @@ function updateUrlParams() {
   }
 }
 
+/**
+ * Converts internal sort values to user-friendly display labels.
+ *
+ * @param {string | null} sortValue - The internal sort value (e.g., 'published_DESC')
+ * @returns {string} The user-friendly label (e.g., 'New')
+ *
+ * Mapping:
+ * - 'published_DESC' → 'New' (newest items first)
+ * - 'price_ASC' → 'Price Up' (cheapest first)
+ * - 'price_DESC' → 'Price Down' (most expensive first)
+ */
 function getSortLabel(sortValue: string | null): string {
   if (!sortValue) return 'published_DESC';
   switch(sortValue) {
@@ -147,9 +187,10 @@ function handleDisplay(displayMode: string) {
 }
 
 /**
- * Handles the sorting functionality based on the provided sort mode.
+ * Handles sort mode selection from the ToggleGroup component.
+ * Converts user-friendly sort names to API-compatible sort values.
  *
- * @param {String} sortMode - The mode by which the data should be sorted.
+ * @param {string} sortMode - The selected sort mode ('New', 'Price Up', 'Price Down')
  */
 function handleSort(sortMode: string) {
   switch(sortMode) {
@@ -168,7 +209,9 @@ function handleSort(sortMode: string) {
 };
 
 /**
- * Handles the 'search' event emitted by the SearchBar component.
+ * Handles search input from the SearchBar component.
+ * Updates the search term in the request object which triggers
+ * the watcher to fetch items and update URL parameters.
  *
  * @param {string} query - The search query entered by the user
  */
@@ -177,19 +220,23 @@ function handleSort(sortMode: string) {
 }
 
 /**
- * Handles the 'category-clicked' event emitted by the CategoryGrid component
- * @param {string} category - The name of the clicked category
+ * Handles category selection from the ToggleGroup component.
+ * Updates the category filter in the request object which triggers
+ * the watcher to fetch items and update URL parameters.
+ *
+ * @param {string | null} category - The selected category name or null if deselected
  */
  function handleCategoryClick(category: string) {
   itemsRequest.value.category = category;
 }
 
 /**
- * Handles the event when the price range is updated.
+ * Handles price range filter updates from the PriceFilter component.
+ * Updates the min/max price values in the request object.
  *
- * @param {Object} priceRange - The updated price range object.
- * @param {number | null} priceRange.min - The minimum price in the range, or null if not set.
- * @param {number | null} priceRange.max - The maximum price in the range, or null if not set.
+ * @param {Object} priceRange - The updated price range
+ * @param {number | null} priceRange.min - Minimum price (null for no lower limit)
+ * @param {number | null} priceRange.max - Maximum price (null for no upper limit)
  */
 function handlePriceRangeUpdated(priceRange: { min: number | null; max: number | null }): void {
   itemsRequest.value.priceMinMax = [priceRange.min, priceRange.max];
@@ -204,11 +251,31 @@ function handlePriceRangeUpdated(priceRange: { min: number | null; max: number |
   //TODO: implement
 };
 
+/**
+ * Watches for changes to the entire itemsRequest object and performs two operations:
+ * 1. Fetches updated items from the API with the current filter criteria
+ * 2. Updates the URL query parameters to reflect the current search state
+ *
+ * The deep:true option ensures that changes to nested properties (like priceMinMax[0])
+ * will also trigger the watcher.
+ */
 watch(itemsRequest, () => {
   resultStore.fetchItems(itemsRequest.value);
   updateUrlParams();
 }, { deep: true });
 
+/**
+ * Watches for filter changes specifically (not pagination changes) and resets
+ * the pagination state whenever a filter is modified.
+ *
+ * This ensures that:
+ * 1. When a user changes any filter, they see results from the beginning
+ * 2. The infinite scroll starts fresh with each new filter combination
+ * 3. hasMoreItems is reset to allow loading more results
+ *
+ * Note: This watcher specifically excludes the segmentOffset property to avoid
+ * creating an infinite loop when loadMoreItems() updates the segmentOffset.
+ */
 watch([
   () => itemsRequest.value.category,
   () => itemsRequest.value.searchWord,
