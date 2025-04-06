@@ -3,6 +3,7 @@ package edu.ntnu.idatt2105.backend.user;
 import edu.ntnu.idatt2105.backend.item.dto.ItemRequest;
 import edu.ntnu.idatt2105.backend.item.dto.ItemsResponse;
 import edu.ntnu.idatt2105.backend.user.dto.AddItemRequest;
+import edu.ntnu.idatt2105.backend.user.dto.GetBidItemResponse;
 import edu.ntnu.idatt2105.backend.user.dto.GetStoreItemResponse;
 import edu.ntnu.idatt2105.backend.user.dto.PlaceBidRequest;
 import edu.ntnu.idatt2105.backend.user.dto.ToggleBookmarkRequest;
@@ -112,6 +113,11 @@ public class UserController {
   @PostMapping("/item/bid")
   public void placeBid(@RequestBody PlaceBidRequest placeBidRequest) {
     userService.placeBid(placeBidRequest);
+  }
+
+  @GetMapping("/item/bid")
+  public GetBidItemResponse[] answerBid() {
+    return userService.getUniqueBids();
   }
 
   /**
