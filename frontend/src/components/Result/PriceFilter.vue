@@ -7,7 +7,6 @@ const maxPrice = ref<string | null>(null);
 const isRangeValid = ref(false);
 const isNumberNegative = ref(false);
 
-
 const emit = defineEmits(['price-range-updated']);
 
 /**
@@ -45,7 +44,6 @@ function handlePriceChange() {
 
   if (isNumberNegative.value === false && isRangeValid.value === false) {
     emit('price-range-updated', { min: min, max: max });
-    console.log(min, max)
   }
 }
 </script>
