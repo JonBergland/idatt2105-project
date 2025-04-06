@@ -9,20 +9,21 @@ const props = defineProps<{
   item: ItemResponseDTO,
 }>()
 
-const available = ref("")
+const itemStatus = ref("")
 
 onMounted(() => {
-  //TODO: impement availability from backend
-
-  available.value = true ? "Available" : "Not available"
+  if (props.item.state === 'available') itemStatus.value = "Available";
+  if (props.item.state === 'archived') itemStatus.value = "Not Available: Archived";
+  if (props.item.state === 'reserved') itemStatus.value = "Reserved";
+  if (props.item.state === 'sold') itemStatus.value = "Not Available: Sold";
 })
 
 </script>
 
 <template>
   <div class="product-info-container">
-    <h2 class="product-center-header"><strong>{{ available }}</strong></h2>
-    <h2 class="product-center-header"><strong>{{ props.item.price }} kr</strong></h2>
+    <h3 class="product-center-header"><strong>{{ itemStatus }}</strong></h3>
+    <h3 class="product-center-header"><strong>{{ props.item.price }} kr</strong></h3>
     <div class="product-buttons">
       <button class="give-bid-button">Give a bid</button>
       <button class="vipps-button">Pay with vipps</button>
