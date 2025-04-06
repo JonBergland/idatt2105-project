@@ -26,6 +26,18 @@ class UserService {
   }
 
   /**
+   * Updates an existing user in the system with new information.
+   * @param user  An {@link User} containing the user details.
+   */
+  async updateUserInfo(user: User): Promise<void> {
+    try {
+      await axiosInstance.post('/user/info', user);
+    } catch (error) {
+      console.error("Unexpected error in updateUserInfo:", error);
+    }
+  }
+
+  /**
    * Registers a new user in the system.
    * @param user  An {@link UserRegistrationDTO} containing the user's registration details.
    * @returns     A promise containing the status of the signup
