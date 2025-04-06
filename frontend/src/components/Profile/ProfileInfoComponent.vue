@@ -23,16 +23,30 @@ watch(() => props.user, (newUser) => {
 const isEditing = ref(false)
 const isLoggingOut = ref(false)
 
+ /**
+ * Toggles the edit mode for the profile information component.
+ * Enables editing of user profile details while disabling logout mode.
+ */
 function handleEditMode() {
   isEditing.value = true
   isLoggingOut.value = false
 }
 
+/**
+ * Toggles the logout mode for the profile information component.
+ * Enables logout mode while disabling editing of user profile details.
+ */
 function handleLogoutMode() {
   isEditing.value = false
   isLoggingOut.value = true
 }
 
+
+/**
+ * Saves the current state of the editable user profile.
+ * Disables both editing and logout modes, and emits a "saveUser" event
+ * with a cleaned user object.
+ */
 function handleSave() {
   isEditing.value = false
   isLoggingOut.value = false
@@ -54,6 +68,10 @@ function handleSave() {
   emit("saveUser", cleanUser)
 }
 
+/**
+ * Handles the logout action for the user.
+ * Disables both editing and logout modes, and emits a "logoutUser" event.
+ */
 function handleLogout() {
   isEditing.value = false
   isLoggingOut.value = false
@@ -61,6 +79,11 @@ function handleLogout() {
   emit("logoutUser")
 }
 
+/**
+ * Cancels any changes made to the editable user profile.
+ * Resets the editable user to the original user data from props
+ * and disables both editing and logout modes.
+ */
 function handleCancel() {
   isEditing.value = false
   isLoggingOut.value = false
@@ -68,6 +91,12 @@ function handleCancel() {
   editableUser.value = props.user
 }
 
+/**
+ * Updates the validity state of the user form.
+ * Sets the `validUser` value based on the provided form validity.
+ *
+ * @param {boolean} validForm - Indicates whether the form is valid.
+ */
 function handleUpdate(validForm: boolean) {
   validUser.value = validForm
 }
