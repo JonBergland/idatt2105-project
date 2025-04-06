@@ -12,6 +12,7 @@ const props = defineProps<{
 const emit = defineEmits(["saveUser", "logoutUser"])
 
 const editableUser = ref<User | null>(null)
+const validUser = ref(false)
 
 watch(() => props.user, (newUser) => {
   if (newUser) {
@@ -53,6 +54,10 @@ function handleCancel() {
   editableUser.value = props.user
 }
 
+function handleUpdate(validForm: boolean) {
+  validUser.value = validForm
+}
+
 </script>
 <template>
   <div class="profile-info-wrapper">
@@ -69,7 +74,7 @@ function handleCancel() {
         v-model:phoneNumber="editableUser.phoneNumber"
         v-model:location="editableUser.city"
         :isEditing="isEditing"
-        @save="handleSave"
+        @update="handleUpdate"
       />
       <div v-else class="loading-message">
         Loading user information...
@@ -77,6 +82,7 @@ function handleCancel() {
       <ProfileButtonsComponent
       :editMode = isEditing
       :logoutMode = isLoggingOut
+      :activeSaveButton = validUser
       @edit-mode="handleEditMode"
       @logout-mode="handleLogoutMode"
       @save="handleSave"

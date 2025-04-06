@@ -4,7 +4,8 @@ import "@/assets/main.css"
 
 defineProps<{
   editMode: boolean,
-  logoutMode: boolean
+  logoutMode: boolean,
+  activeSaveButton: boolean
 }>()
 
 const emit = defineEmits(['editMode', 'logoutMode', 'save', 'logout', 'cancel'])
@@ -22,7 +23,7 @@ const emit = defineEmits(['editMode', 'logoutMode', 'save', 'logout', 'cancel'])
   <div v-else-if="editMode && !logoutMode" class="profile-buttons">
     <p></p>
     <div class="buttons-container">
-      <button class="save-info" @click="emit('save')">Save</button>
+      <button :disabled="!activeSaveButton" class="save-info" @click="emit('save')">Save</button>
       <button class="cancel-button" @click="emit('cancel')">Cancel</button>
     </div>
   </div>
@@ -91,6 +92,11 @@ const emit = defineEmits(['editMode', 'logoutMode', 'save', 'logout', 'cancel'])
 
 .save-info:hover {
   background-color: var(--color-primary-hover);
+}
+
+.save-info:disabled {
+  background-color: var(--color-background-mute);
+  color: var(--color-button-disabled);
 }
 
 .logout {
