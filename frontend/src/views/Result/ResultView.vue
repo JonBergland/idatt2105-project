@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { ItemsRequestDTO, ItemResponseDTO} from '@/models/item';
-import { ref, onMounted, computed } from 'vue';
+import type { ItemsRequestDTO } from '@/models/item';
+import { ref, onMounted } from 'vue';
 import { useResultStore } from '@/stores/resultStore';
 import ToggleGroup from '@/components/Result/ToggleGroup.vue';
 import SearchBar from '@/components/Home/SearchBar.vue';
