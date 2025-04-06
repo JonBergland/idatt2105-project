@@ -24,6 +24,7 @@ function handleSearchInput() {
       type="text"
       v-model="searchInput"
       @input="handleSearchInput"
+      @keyup.enter="handleSearchTriggered"
       placeholder="Search for anything..." />
       <button @click="handleSearchTriggered">
         <img src="@/assets/icons/search.svg" alt="Search">
