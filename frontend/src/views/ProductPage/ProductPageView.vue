@@ -35,9 +35,7 @@ async function loadProduct(productId:string) {
 }
 
 function handleBackClick() {
-  console.log("Back clicked");
-
-  router.push({ name:'home'}) // Adjust as needed
+  router.back();
 }
 
 function handleFavorite(isFavorited: boolean) {
