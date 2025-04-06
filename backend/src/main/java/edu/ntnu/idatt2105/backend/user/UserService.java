@@ -1,5 +1,8 @@
 package edu.ntnu.idatt2105.backend.user;
 
+import edu.ntnu.idatt2105.backend.bookmark.BookmarkMapper;
+import edu.ntnu.idatt2105.backend.bookmark.BookmarkRepository;
+import edu.ntnu.idatt2105.backend.bookmark.model.Bookmark;
 import edu.ntnu.idatt2105.backend.item.ItemMapper;
 import edu.ntnu.idatt2105.backend.item.ItemRepository;
 import edu.ntnu.idatt2105.backend.item.dto.ItemsResponse;
@@ -7,6 +10,7 @@ import edu.ntnu.idatt2105.backend.item.model.Item;
 import edu.ntnu.idatt2105.backend.security.dto.SigninRequest;
 import edu.ntnu.idatt2105.backend.security.dto.SignupRequest;
 import edu.ntnu.idatt2105.backend.user.dto.AddItemRequest;
+import edu.ntnu.idatt2105.backend.user.dto.ToggleBookmarkRequest;
 import edu.ntnu.idatt2105.backend.user.dto.EditItemRequest;
 import edu.ntnu.idatt2105.backend.user.dto.GetUserInfoResponse;
 import edu.ntnu.idatt2105.backend.user.dto.UpdateUserInfoRequest;
@@ -30,6 +34,8 @@ public class UserService {
   private final UserRepository userRepository;
 
   private final ItemRepository itemRepository;
+
+  private final BookmarkRepository bookmarkRepository;
 
   private final PasswordEncoder passwordEncoder;
 
@@ -128,6 +134,19 @@ public class UserService {
     String userID = SecurityContextHolder.getContext().getAuthentication().getName();
     Item[] items = itemRepository.getItemsFromUserID(Integer.parseInt(userID));
     return new ItemsResponse(ItemMapper.INSTANCE.itemsToItemResponses(items));
+  }
+
+  public void toggleBookmark(ToggleBookmarkRequest toggleBookmarkRequest) {
+    Bookmark bookmark = BookmarkMapper.INSTANCE.bookmarkRequestToBookmark(toggleBookmarkRequest);
+    String userID = SecurityContextHolder.getContext().getAuthentication().getName();
+    bookmark.setUserID(Integer.parseInt(userID));
+
+    boolean bookmarkSet = bookmarkRepository.checkBookmark(bookmark);
+    if (bookmarkSet) {
+      bookmarkRepository.deleteBookmark(bookmark);
+    } else {
+      bookmarkRepository.addBookmark(bookmark);
+    }
   }
 
   private String encodePassword(String password) {
