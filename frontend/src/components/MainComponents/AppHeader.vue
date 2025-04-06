@@ -1,7 +1,13 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useAuthStore } from '@/stores/authStore';
+
+const props = withDefaults(defineProps<{
+  skipAuthCheck?: boolean
+}>(), {
+  skipAuthCheck: false
+});
 
 const route = useRoute()
 const authStore = useAuthStore()
@@ -20,16 +26,20 @@ const isSignupPage = computed(() => pageName.value === "signup")
 const hasNotifications = ref(true)
 
 // Wait for authentication to finish before loading
-try {
-  await Promise.all([
-    authStore.checkIfAuth().then(result => {
-      isAuthenticated.value = result
-    }),
-    new Promise(resolve => setTimeout(resolve, 300)) // Wait for at least 300 ms to prevent flickering
-  ]);
-} catch (error) {
-  console.error("Error checking authentication:", error)
-}
+onMounted(async () => {
+  if (!props.skipAuthCheck) {
+    try {
+      await Promise.all([
+        authStore.checkIfAuth().then(result => {
+          isAuthenticated.value = result
+        }),
+        new Promise(resolve => setTimeout(resolve, 300)) // Wait for at least 300 ms to prevent flickering
+      ]);
+    } catch (error) {
+      console.error("Error checking authentication:", error)
+    }
+  }
+})
 
 watch(() => authStore.isAuth, (newValue) => {
   isAuthenticated.value = newValue
