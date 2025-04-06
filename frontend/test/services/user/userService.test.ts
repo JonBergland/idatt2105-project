@@ -31,7 +31,7 @@ describe("UserService", () => {
     it("should throw an error if fetching user info fails", async () => {
       (axiosInstance.get as vi.Mock).mockRejectedValueOnce(new Error("Failed to fetch user info"));
 
-      await expect(userService.getUserInfo()).rejects.toThrow("Failed to fetch user info");
+      expect(await userService.getUserInfo()).toEqual(null);
     });
   });
 

@@ -8,8 +8,9 @@ import edu.ntnu.idatt2105.backend.user.dto.UpdateUserInfoRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -54,11 +55,17 @@ public class UserController {
    * @return the user info to send
    */
   @GetMapping("/info")
-  public GetUserInfoResponse getUserInfo() {
-    logger.info("get user info request");
+  public ResponseEntity<GetUserInfoResponse> getUserInfo() {
     String userID = SecurityContextHolder.getContext().getAuthentication().getName();
+
+    // Check if no user is logged in
+    if ("anonymousUser".equals(userID)) {
+        return ResponseEntity.ok(null);
+    }
+
     try {
-      return userService.getUser(Integer.parseInt(userID));
+      int userId = Integer.parseInt(userID);
+      return ResponseEntity.ok(userService.getUser(userId));
     } catch (DataAccessException e) {
       logger.warn("Could not retrieve user info: {}", e.getMessage());
       throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);

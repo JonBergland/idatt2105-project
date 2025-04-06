@@ -9,6 +9,9 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import java.time.Duration;
 import java.time.Instant;
+
+import javax.swing.text.html.HTML;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -111,6 +114,22 @@ public class JWTUtils {
     jwtCookie.setSecure(true);
     jwtCookie.setPath("/");
     jwtCookie.setMaxAge((int) JWT_VALIDITY.getSeconds());
+    response.addCookie(jwtCookie);
+  }
+
+
+  /**
+   * Sets a logout JWT cookie in the HTTP response to effectively log out the user.
+   * The cookie is configured to expire immediately, ending the client's session.
+   *
+   * @param response The HttpServletResponse object to which the cookie will be added.
+   */
+  public void setLogOutJWTCookie(HttpServletResponse response) {
+    Cookie jwtCookie = new Cookie("JWT", null);
+    jwtCookie.setHttpOnly(true);
+    jwtCookie.setSecure(true);
+    jwtCookie.setPath("/");
+    jwtCookie.setMaxAge(0); // Expire token immediately
     response.addCookie(jwtCookie);
   }
 }

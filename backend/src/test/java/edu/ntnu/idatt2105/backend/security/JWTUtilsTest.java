@@ -95,4 +95,19 @@ class JWTUtilsTest {
       return true;
     }));
   }
+
+  @Test
+  void setLogOutJWTCookie_ShouldSetCookieWithNullProperties() {
+    jwtUtils.setLogOutJWTCookie(response);
+
+    verify(response).addCookie(argThat(cookie -> {
+      assertEquals("JWT", cookie.getName());
+      assertNull(cookie.getValue());
+      assertTrue(cookie.isHttpOnly());
+      assertTrue(cookie.getSecure());
+      assertEquals("/", cookie.getPath());
+      assertEquals(0, cookie.getMaxAge());
+      return true;
+    }));
+  }
 }

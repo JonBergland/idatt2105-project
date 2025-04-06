@@ -1,7 +1,6 @@
 import type { User, UserLoginDTO, UserRegistrationDTO } from "@/models/user";
 import axiosInstance from "@/services/axiosService";
 
-
 /**
  * A service class for handling user-related operations such as registration and login.
  */
@@ -9,11 +8,16 @@ class UserService {
 
   /**
    * Retrieves information about the currently authenticated user.
-   * @returns A promise that resolves with the user's information.
+   * @returns A promise that resolves with the user's information or null if not authenticated.
    */
-  async getUserInfo(): Promise<User> {
-    const response = await axiosInstance.get<User>('/user/info');
-    return response.data;
+  async getUserInfo(): Promise<User | null> {
+    try {
+      const response = await axiosInstance.get<User>('/user/info');
+      return response.data;
+    } catch (error) {
+      console.error("Unexpected error in getUserInfo:", error);
+      return null;
+    }
   }
 
   /**
@@ -34,6 +38,16 @@ class UserService {
   async loginUser(user: UserLoginDTO): Promise<boolean> {
     const response = await axiosInstance.post<boolean>('/token/signin', user)
     return response.data
+  }
+
+  /**
+   * Logs out the currently authenticated user.
+   *
+   * @returns {Promise<void>} A promise that resolves when the logout request is completed.
+   */
+  async logoutUser(): Promise<void> {
+    const resp = await axiosInstance.post('/token/logout')
+    console.log(resp);
   }
 }
 
