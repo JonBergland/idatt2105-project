@@ -1,4 +1,4 @@
-import type { ItemsResponseDTO, ItemsRequestDTO, CategoriesResponseDTO } from "@/models/item";
+import type { ItemsResponseDTO, ItemsRequestDTO, CategoriesResponseDTO, ItemRequestDTO, ItemResponseDTO } from "@/models/item";
 import { defineStore } from "pinia";
 import resultService from "@/services/item/resultService";
 
@@ -10,8 +10,8 @@ const DEFAULT_SEGMENT_SIZE = 10;
 export const useResultStore = defineStore('result', {
   state: () => ({
     items: [] as ItemsResponseDTO['items'],
-    isLoading: false,
-    error: null as string | null,
+    isItemsLoading: false,
+    itemsError: null as string | null,
 
     categories: [] as CategoriesResponseDTO['categories'],
     isCategoriesLoading: false,
@@ -20,6 +20,10 @@ export const useResultStore = defineStore('result', {
     isLoadingMore: false,
     moreItemsError: null as string | null,
     newItemsCount: 0,
+
+    item: null as ItemResponseDTO | null,
+    isItemLoading: false,
+    itemError: null as string | null,
   }),
 
   actions: {
@@ -56,18 +60,18 @@ export const useResultStore = defineStore('result', {
      * @param itemRequest The filter request object
      */
     async fetchItems(itemRequest: ItemsRequestDTO) {
-      this.isLoading = true;
-      this.error = null;
+      this.isItemsLoading = true;
+      this.itemsError = null;
 
       try {
         const normalizedRequest = this.normalizeRequest(itemRequest);
         const response = await resultService.getItems(normalizedRequest);
         this.items = response.items;
       } catch (error) {
-        this.error = "Failed to fetch items.";
+        this.itemsError = "Failed to fetch items.";
         console.error("Error fetching items:", error);
       } finally {
-        this.isLoading = false;
+        this.isItemsLoading = false;
       }
     },
 
@@ -110,6 +114,24 @@ export const useResultStore = defineStore('result', {
       } finally {
         this.isCategoriesLoading = false;
       }
+    },
+
+    /**
+     * Fetches the list of categories from the result service and updates the store state.
+     */
+  async fetchItemDetails(request: ItemRequestDTO) {
+    this.isItemLoading = true;
+    this.itemError = null;
+
+    try {
+      const response = await resultService.getItemDetails(request);
+      this.item = response;
+    } catch (error) {
+      this.itemError = "Failed to fetch item.";
+      console.error("Error fetching item:", error);
+    } finally {
+      this.isItemLoading = false;
     }
-  },
+  }
+  }
 });
