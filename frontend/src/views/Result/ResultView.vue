@@ -20,6 +20,11 @@ const searchValue = ref('');
 const sortSelected = ref('published_DESC');
 const categorySelected = ref();
 
+const isLoadingMore = ref(false);
+const currentPage = ref(0);
+const itemsPerPage = ref(6);
+const hasMoreItems = ref(true);
+
 const route = useRoute();
 const router = useRouter();
 const resultStore = useResultStore();
@@ -29,7 +34,7 @@ const itemsRequest = ref<ItemsRequestDTO>({
     searchWord: null,
     priceMinMax: null,
     sort: 'published_DESC',
-    segmentOffset: [0, 10],
+    segmentOffset: [0, itemsPerPage.value],
 });
 
 window.addEventListener('resize', () => {
@@ -61,7 +66,42 @@ onMounted(() => {
 
   resultStore.fetchCategories();
   resultStore.fetchItems(itemsRequest.value);
+
+  window.addEventListener('scroll', handleScroll);
 });
+
+function handleScroll() {
+  const scrollPosition = window.scrollY + window.innerHeight;
+  const pageHeight = document.documentElement.scrollHeight;
+
+  if (scrollPosition > pageHeight * 0.8 && !isLoadingMore.value && hasMoreItems.value) {
+    loadMoreItems();
+  }
+}
+
+async function loadMoreItems() {
+  if (isLoadingMore.value || !hasMoreItems.value) return;
+
+  isLoadingMore.value = true;
+  currentPage.value++;
+
+  try {
+    const nextPageRequest: ItemsRequestDTO = {
+      ...itemsRequest.value,
+      segmentOffset: [currentPage.value, itemsPerPage.value] as [number, number]
+    };
+
+    await resultStore.loadMoreItems(nextPageRequest);
+
+    if (resultStore.newItemsCount < itemsPerPage.value) {
+      hasMoreItems.value = false;
+    }
+  } catch (error) {
+    console.error('Failed to load more items:', error);
+  } finally {
+    isLoadingMore.value = false;
+  }
+}
 
 function updateUrlParams() {
   const query: Record<string, string> = {};
@@ -169,6 +209,17 @@ watch(itemsRequest, () => {
   updateUrlParams();
 }, { deep: true });
 
+watch([
+  () => itemsRequest.value.category,
+  () => itemsRequest.value.searchWord,
+  () => itemsRequest.value.priceMinMax,
+  () => itemsRequest.value.sort
+], () => {
+  currentPage.value = 0;
+  hasMoreItems.value = true;
+  itemsRequest.value.segmentOffset = [0, itemsPerPage.value];
+});
+
 </script>
 <template>
     <div class="result-container">
@@ -217,6 +268,8 @@ watch(itemsRequest, () => {
         <div class="item-group-warpper">
           <p v-if="resultStore.error"> {{ resultStore.error }}</p>
           <ItemGroup :items="resultStore.items" @item-clicked="handleItemClick" :mode="currentDisplayMode" />
+          <div v-if="isLoadingMore" class="loading-more">Loading more items...</div>
+          <div v-if="!hasMoreItems && resultStore.items.length > 0" class="end-of-results">No more items to display</div>
         </div>
       </div>
     </div>
@@ -287,6 +340,19 @@ watch(itemsRequest, () => {
 
 .filter-toggle-button {
   display: none;
+}
+
+.loading-more {
+  text-align: center;
+  padding: 20px 0;
+  width: 100%;
+}
+
+.end-of-results {
+  text-align: center;
+  padding: 20px 0;
+  color: #888;
+  width: 100%;
 }
 
 @media (max-width: 768px) {
