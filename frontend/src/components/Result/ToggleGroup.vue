@@ -43,7 +43,7 @@ const selectedToggle = ref<string | null>(null);
   if (props.allowDeselect && selectedToggle.value === name) {
     selectedToggle.value = null;
     emit('toggle-selected', null);
-  } else {
+  } else if (selectedToggle.value !== name) {
     selectedToggle.value = name;
     emit('toggle-selected', name);
   }
