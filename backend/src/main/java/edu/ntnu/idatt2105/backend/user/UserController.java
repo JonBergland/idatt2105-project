@@ -2,6 +2,7 @@ package edu.ntnu.idatt2105.backend.user;
 
 import edu.ntnu.idatt2105.backend.item.dto.ItemsResponse;
 import edu.ntnu.idatt2105.backend.user.dto.AddItemRequest;
+import edu.ntnu.idatt2105.backend.user.dto.ToggleBookmarkRequest;
 import edu.ntnu.idatt2105.backend.user.dto.EditItemRequest;
 import edu.ntnu.idatt2105.backend.user.dto.GetUserInfoResponse;
 import edu.ntnu.idatt2105.backend.user.dto.UpdateUserInfoRequest;
@@ -83,8 +84,8 @@ public class UserController {
   }
 
   @PostMapping("/item/bookmark")
-  public void bookmarkItem() {
-
+  public void bookmarkItem(@RequestBody ToggleBookmarkRequest toggleBookmarkRequest) {
+    userService.toggleBookmark(toggleBookmarkRequest);
   }
 
   /**

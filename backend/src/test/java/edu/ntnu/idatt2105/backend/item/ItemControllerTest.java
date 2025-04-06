@@ -48,7 +48,7 @@ class ItemControllerTest {
     ItemRequest itemRequest = new ItemRequest();
     itemRequest.setItemID(1);
 
-    ItemResponse itemResponse = new ItemResponse(1, "Laptop", "testSeller", "Electronics","A great laptop", "2025-04-03", 300);
+    ItemResponse itemResponse = new ItemResponse(1, "Laptop", "testSeller", "Electronics","Available","A great laptop", "2025-04-03", 300);
 
     when(itemService.getItem(eq(itemRequest))).thenReturn(itemResponse);
 
