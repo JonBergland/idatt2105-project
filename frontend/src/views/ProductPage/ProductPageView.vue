@@ -3,13 +3,10 @@ import ProductImageComponent from '@/components/ProductPage/ProductImageComponen
 import ProductNameComponent from '@/components/ProductPage/ProductNameComponent.vue'
 import placeholderImage from '@/assets/images/placeholder-image.png'
 import { onMounted, ref,  } from 'vue';
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import ProductInfoComponent from '@/components/ProductPage/ProductInfoComponent.vue';
 
-const props = defineProps<{
-  productId: string
-}>()
-
+const route = useRoute()
 const router = useRouter()
 
 const productName = ref("")
@@ -50,7 +47,9 @@ function handleFavorite(isFavorited: boolean) {
 }
 
 onMounted(() => {
-  loadProduct(props.productId)
+  if (route.query.id) {
+    console.log('Product: ', route.query.id)
+  }
 })
 
 </script>
