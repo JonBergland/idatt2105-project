@@ -101,7 +101,11 @@ class ItemRepositoryTest {
   void testGetItemsFromUserID() {
     List<Item> itemList = Collections.singletonList(mockItem);
     when(jdbcTemplate.query(
-        eq("SELECT Item.*, Item.id AS itemID, User.email AS seller, Categories.category_name AS category FROM Item LEFT JOIN User ON Item.user_id = User.id LEFT JOIN Categories ON Item.category_id = Categories.id WHERE user_id = ?"),
+        eq("SELECT Item.*, Item.id AS itemID, User.email AS seller, Categories.category_name AS category, State.state_name AS state FROM Item "
+            + "LEFT JOIN User ON Item.user_id = User.id "
+            + "LEFT JOIN Categories ON Item.category_id = Categories.id "
+            + "LEFT JOIN State ON Item.state_id = State.id "
+            + "WHERE user_id = ?"),
         any(Object[].class),
         any(BeanPropertyRowMapper.class)
     )).thenReturn(itemList);
