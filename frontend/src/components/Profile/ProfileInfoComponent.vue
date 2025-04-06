@@ -37,7 +37,21 @@ function handleSave() {
   isEditing.value = false
   isLoggingOut.value = false
 
-  // TODO: add logic for updating user info
+  const cleanUser: User = {
+    userID: editableUser.value.userID,
+    name: editableUser.value.name,
+    surname: editableUser.value.surname,
+    email: editableUser.value.email,
+    phoneNumber: editableUser.value.phoneNumber,
+    countryCode: editableUser.value.countryCode,
+    city: editableUser.value.city,
+    role: editableUser.value.role,
+    latitude: editableUser.value.latitude,
+    longitude: editableUser.value.longitude,
+    postalCode: editableUser.value.postalCode,
+    address: editableUser.value.address
+  }
+  emit("saveUser", cleanUser)
 }
 
 function handleLogout() {
