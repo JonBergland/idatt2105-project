@@ -3,7 +3,8 @@ defineProps<{
   firstName: string | undefined,
   lastName: string | undefined,
   email: string | undefined,
-  phoneNumber: string | undefined,
+  countryCode: number | undefined,
+  phoneNumber: number | undefined,
   location: string | undefined,
   isEditing: boolean
 }>();
@@ -19,7 +20,7 @@ defineEmits([
         <h3>{{ "First name: " + firstName }}</h3>
         <h3>{{ "Last name: " + lastName }}</h3>
         <h3>{{ "Email: " + email }}</h3>
-        <h3>{{ "Phone number: " + phoneNumber }}</h3>
+        <h3>{{ "Phone number: +" + countryCode + " " + phoneNumber }}</h3>
         <h3>{{ "Location: " + location }}</h3>
   </div>
   <div v-else-if="isEditing" class="user-info-container">
@@ -62,13 +63,22 @@ defineEmits([
 
       <div class="form-group">
         <label for="phoneNumber">Phone Number</label>
-        <input
-          type="tel"
-          id="phoneNumber"
-          class="form-input"
-          :value="phoneNumber"
-          @input="$emit('update:phoneNumber', ($event.target as HTMLInputElement).value)"
-        />
+        <div class="phone-group">
+          <input
+            type="tel"
+            id="countryCode"
+            class="form-input"
+            :value="countryCode"
+            @input="$emit('update:countryCode', ($event.target as HTMLInputElement).value)"
+          />
+          <input
+            type="tel"
+            id="phoneNumber"
+            class="form-input"
+            :value="phoneNumber"
+            @input="$emit('update:phoneNumber', ($event.target as HTMLInputElement).value)"
+          />
+        </div>
       </div>
 
       <div class="form-group">
@@ -120,6 +130,12 @@ defineEmits([
   outline: none;
   border-color: var(--color-primary);
   box-shadow: 0 0 0 2px rgba(13, 94, 1, 0.1);
+}
+
+.phone-group {
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  gap: 0;
 }
 </style>
 
