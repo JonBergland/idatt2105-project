@@ -47,15 +47,16 @@ function handleCancel() {
 <template>
   <div class="profile-info-wrapper">
     <div class="profile-image">
-      <img :src="profileImage" alt="profileImage" />
+      <img id="profile-image" :src="profileImage" alt="profileImage" />
     </div>
     <div class="profile-details">
       <UserInfoComponent
-        :first-name="user?.name"
-        :last-name="user?.surname"
-        :email="user?.email"
-        :phoneNumber="'+' + user?.countryCode + ' ' + user?.phoneNumber"
-        :location="user?.city"
+      id="user-info-component"
+      :first-name="user?.name"
+      :last-name="user?.surname"
+      :email="user?.email"
+      :phoneNumber="'+' + user?.countryCode + ' ' + user?.phoneNumber"
+      :location="user?.city"
       />
       <ProfileButtonsComponent
       :editMode = isEditing
@@ -73,9 +74,68 @@ function handleCancel() {
 <style scoped>
 .profile-info-wrapper {
   display: flex;
+  flex-wrap: wrap;
   gap: 20px;
   align-items: flex-start;
   width: 100%;
   margin-top: 20px;
+}
+
+.profile-image {
+  flex: 1;
+  display: flex;
+  justify-content: right;
+  align-items: center;
+  max-width: 50%;
+  margin-right: 50px;
+  margin-top: 25px;
+}
+
+.profile-image img {
+  width: 100%;
+  max-width: 275px;
+  height: auto;
+  object-fit: contain;
+}
+
+.profile-details {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  max-width: 50%;
+}
+
+#user-info-component {
+  margin-top: 25px;
+}
+
+@media (max-width: 768px) {
+  .profile-info-wrapper {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .profile-image {
+    max-width: 100%;
+    justify-content: center;
+    margin-right: 0;
+    margin-bottom: 20px;
+  }
+
+  .profile-image img {
+    max-width: 180px;
+  }
+
+  .profile-details {
+    max-width: 100%;
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-image img {
+    max-width: 140px;
+  }
 }
 </style>
