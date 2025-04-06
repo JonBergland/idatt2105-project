@@ -5,6 +5,19 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import ResultView from '@/views/Result/ResultView.vue';
 import { useResultStore } from '@/stores/resultStore';
 import { nextTick } from 'vue';
+import type { ItemsRequestDTO } from '@/models/item';
+
+interface ResultViewInstance {
+  itemsRequest: ItemsRequestDTO;
+  currentPage: number;
+  hasMoreItems: boolean;
+  getSortLabel: (sortValue: string | null) => string;
+  handleSearch: (query: string) => void;
+  handleCategoryClick: (category: string) => void;
+  handlePriceRangeUpdated: (priceRange: { min: number | null; max: number | null }) => void;
+  handleSort: (sortMode: string) => void;
+  loadMoreItems: () => Promise<void>;
+}
 
 vi.mock('@/components/Result/ToggleGroup.vue', () => ({
   default: {
@@ -70,7 +83,7 @@ describe('ResultView.vue', () => {
         }
       });
 
-      const { getSortLabel } = wrapper.vm as any;
+      const { getSortLabel } = wrapper.vm as ResultViewInstance;
 
       expect(getSortLabel('published_DESC')).toBe('New');
       expect(getSortLabel('price_ASC')).toBe('Price Up');
@@ -91,7 +104,7 @@ describe('ResultView.vue', () => {
 
       await wrapper.vm.$nextTick();
 
-      const { itemsRequest } = wrapper.vm as any;
+      const { itemsRequest } = wrapper.vm as ResultViewInstance;
       expect(itemsRequest.searchWord).toBe('laptop');
       expect(itemsRequest.category).toBe('Electronics');
       expect(itemsRequest.sort).toBe('price_ASC');
@@ -126,7 +139,7 @@ describe('ResultView.vue', () => {
         }
       });
 
-      const { handleSearch, itemsRequest } = wrapper.vm as any;
+      const { handleSearch, itemsRequest } = wrapper.vm as ResultViewInstance;
 
       handleSearch('test query');
       expect(itemsRequest.searchWord).toBe('test query');
@@ -143,7 +156,7 @@ describe('ResultView.vue', () => {
         }
       });
 
-      const { handleCategoryClick, itemsRequest } = wrapper.vm as any;
+      const { handleCategoryClick, itemsRequest } = wrapper.vm as ResultViewInstance;
 
       handleCategoryClick('Electronics');
       expect(itemsRequest.category).toBe('Electronics');
@@ -157,7 +170,7 @@ describe('ResultView.vue', () => {
         }
       });
 
-      const { handlePriceRangeUpdated, itemsRequest } = wrapper.vm as any;
+      const { handlePriceRangeUpdated, itemsRequest } = wrapper.vm as ResultViewInstance;
 
       handlePriceRangeUpdated({ min: 50, max: 200 });
       expect(itemsRequest.priceMinMax).toEqual([50, 200]);
@@ -174,7 +187,7 @@ describe('ResultView.vue', () => {
         }
       });
 
-      const { handleSort, itemsRequest } = wrapper.vm as any;
+      const { handleSort, itemsRequest } = wrapper.vm as ResultViewInstance;
 
       handleSort('Price Up');
       expect(itemsRequest.sort).toBe('price_ASC');
@@ -195,7 +208,7 @@ describe('ResultView.vue', () => {
       }
     });
 
-    const { loadMoreItems } = wrapper.vm as any;
+    const { loadMoreItems } = wrapper.vm as ResultViewInstance;
 
     expect(wrapper.vm.currentPage).toBe(0);
 
@@ -227,7 +240,7 @@ describe('ResultView.vue', () => {
       return Promise.resolve();
     });
 
-    const { loadMoreItems } = wrapper.vm as any;
+    const { loadMoreItems } = wrapper.vm as ResultViewInstance;
 
     expect(wrapper.vm.hasMoreItems).toBe(true);
 
