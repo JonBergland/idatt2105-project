@@ -1,6 +1,7 @@
 package edu.ntnu.idatt2105.backend.bid;
 
 import edu.ntnu.idatt2105.backend.bid.model.Bid;
+import edu.ntnu.idatt2105.backend.user.dto.GetBidItemResponse;
 import edu.ntnu.idatt2105.backend.user.dto.PlaceBidRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -13,5 +14,11 @@ public interface BidMapper {
   @Mapping(source = "itemID", target = "itemID")
   @Mapping(source = "askingPrice", target = "askingPrice")
   Bid placeBidReqeustToBid(PlaceBidRequest placeBidRequest);
+
+  @Mapping(source = "itemID", target = "itemID")
+  @Mapping(source = "userID", target = "userID")
+  GetBidItemResponse bidToGetBidItemResponse(Bid bid);
+
+  GetBidItemResponse[] bidArrayToGetBidItemResponseArray(Bid[] bid);
 
 }
