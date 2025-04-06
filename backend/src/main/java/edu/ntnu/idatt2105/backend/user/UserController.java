@@ -60,7 +60,7 @@ public class UserController {
 
     // Check if no user is logged in
     if ("anonymousUser".equals(userID)) {
-        return ResponseEntity.ok(null);
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
     try {
