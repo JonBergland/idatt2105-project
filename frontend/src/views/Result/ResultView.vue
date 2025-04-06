@@ -130,7 +130,7 @@ function handlePriceRangeUpdated(priceRange: { min: number | null; max: number |
     </div>
       <div class="search-toggle-items-container">
         <div class="search-toggle-container">
-            <SearchBar @search="handleSearch" />
+            <SearchBar @search-input="handleSearch" />
           <div class="toggle-container">
             <div class="filter-display-container">
               <CategoryButton class="filter-toggle-button" @clicked-category="toggleFilterVisibility" :name="isFilterVisible ? 'Hide Filter' : 'Show Filter'"/>

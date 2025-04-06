@@ -82,7 +82,7 @@ onMounted(() => {
   <div class="home-container">
     <h1>Welcome to the Yard!</h1>
     <div class="search-category-container">
-      <SearchBar @search="handleSearch"/>
+      <SearchBar @search-triggered="handleSearch"/>
       <CategoryGrid :categories="categories" @category-clicked="handleCategoryClick"/>
     </div>
     <h3>Recommendations</h3>
