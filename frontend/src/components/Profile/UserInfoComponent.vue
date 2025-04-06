@@ -9,7 +9,7 @@ defineProps<{
 </script>
 
 <template>
-  <div class="user-info">
+  <div class="user-info-container">
         <h1>{{ firstName + " " + lastName }}</h1>
         <h3>{{ "First name: " + firstName }}</h3>
         <h3>{{ "Last name: " + lastName }}</h3>
@@ -18,5 +18,15 @@ defineProps<{
         <h3>{{ "Location: " + location }}</h3>
       </div>
 </template>
+
+<style scoped>
+.user-info-container {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  gap: 20px;
+  width: 100%;
+}
+</style>
 
 
