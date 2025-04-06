@@ -118,7 +118,7 @@ function handleScroll() {
  *
  * @throws Will log errors to console but won't throw to UI
  */
-async function loadMoreItems() {
+ async function loadMoreItems() {
   if (isLoadingMore.value || !hasMoreItems.value) return;
 
   isLoadingMore.value = true;
@@ -272,31 +272,12 @@ function handlePriceRangeUpdated(priceRange: { min: number | null; max: number |
 };
 
 /**
- * Watches for changes to the entire itemsRequest object and performs two operations:
- * 1. Fetches updated items from the API with the current filter criteria
- * 2. Updates the URL query parameters to reflect the current search state
- *
- * The deep:true option ensures that changes to nested properties (like priceMinMax[0])
- * will also trigger the watcher.
+ * Watches for filter changes (excluding pagination changes) and:
+ * 1. Resets pagination state when filters change
+ * 2. Fetches items with the updated filter criteria
+ * 3. Updates URL parameters to reflect current search state
  */
-watch(itemsRequest, () => {
-  resultStore.fetchItems(itemsRequest.value);
-  updateUrlParams();
-}, { deep: true });
-
-/**
- * Watches for filter changes specifically (not pagination changes) and resets
- * the pagination state whenever a filter is modified.
- *
- * This ensures that:
- * 1. When a user changes any filter, they see results from the beginning
- * 2. The infinite scroll starts fresh with each new filter combination
- * 3. hasMoreItems is reset to allow loading more results
- *
- * Note: This watcher specifically excludes the segmentOffset property to avoid
- * creating an infinite loop when loadMoreItems() updates the segmentOffset.
- */
-watch([
+ watch([
   () => itemsRequest.value.category,
   () => itemsRequest.value.searchWord,
   () => itemsRequest.value.priceMinMax,
@@ -304,8 +285,17 @@ watch([
 ], () => {
   currentPage.value = 0;
   hasMoreItems.value = true;
+
+  const resetRequest: ItemsRequestDTO = {
+      ...itemsRequest.value,
+      segmentOffset: [0, itemsPerPage.value] as [number, number]
+    };
+
   itemsRequest.value.segmentOffset = [0, itemsPerPage.value];
-});
+
+  resultStore.fetchItems(resetRequest);
+  updateUrlParams();
+}, { deep: true });
 
 </script>
 <template>
