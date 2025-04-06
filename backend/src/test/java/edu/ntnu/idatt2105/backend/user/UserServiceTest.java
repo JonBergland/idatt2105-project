@@ -3,6 +3,8 @@ package edu.ntnu.idatt2105.backend.user;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import edu.ntnu.idatt2105.backend.bookmark.BookmarkRepository;
+import edu.ntnu.idatt2105.backend.bookmark.model.Bookmark;
 import edu.ntnu.idatt2105.backend.item.ItemRepository;
 import edu.ntnu.idatt2105.backend.item.dto.ItemsResponse;
 import edu.ntnu.idatt2105.backend.item.model.Item;
@@ -11,6 +13,7 @@ import edu.ntnu.idatt2105.backend.security.dto.SignupRequest;
 import edu.ntnu.idatt2105.backend.user.dto.AddItemRequest;
 import edu.ntnu.idatt2105.backend.user.dto.EditItemRequest;
 import edu.ntnu.idatt2105.backend.user.dto.GetUserInfoResponse;
+import edu.ntnu.idatt2105.backend.user.dto.ToggleBookmarkRequest;
 import edu.ntnu.idatt2105.backend.user.dto.UpdateUserInfoRequest;
 import edu.ntnu.idatt2105.backend.user.model.User;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,6 +33,9 @@ class UserServiceTest {
 
   @Mock
   private ItemRepository itemRepository;
+
+  @Mock
+  private BookmarkRepository bookmarkRepository;
 
   @Mock
   private PasswordEncoder passwordEncoder;
@@ -163,5 +169,35 @@ class UserServiceTest {
     assertNotNull(response);
     assertEquals(1, response.getItems().length);
     assertEquals(mockItem.getName(), response.getItems()[0].getName());
+  }
+
+  @Test
+  void toggleBookmark_ShouldAddBookmark_WhenNotSet() {
+    ToggleBookmarkRequest request = new ToggleBookmarkRequest();
+    request.setItemID(1);
+    when(securityContext.getAuthentication()).thenReturn(authentication);
+    when(authentication.getName()).thenReturn("1");
+    SecurityContextHolder.setContext(securityContext);
+    when(bookmarkRepository.checkBookmark(any(Bookmark.class))).thenReturn(false);
+
+    userService.toggleBookmark(request);
+
+    verify(bookmarkRepository, times(1)).addBookmark(any(Bookmark.class));
+    verify(bookmarkRepository, never()).deleteBookmark(any(Bookmark.class));
+  }
+
+  @Test
+  void toggleBookmark_ShouldDeleteBookmark_WhenSet() {
+    ToggleBookmarkRequest request = new ToggleBookmarkRequest();
+    request.setItemID(1);
+    when(securityContext.getAuthentication()).thenReturn(authentication);
+    when(authentication.getName()).thenReturn("1");
+    SecurityContextHolder.setContext(securityContext);
+    when(bookmarkRepository.checkBookmark(any(Bookmark.class))).thenReturn(true);
+
+    userService.toggleBookmark(request);
+
+    verify(bookmarkRepository, times(1)).deleteBookmark(any(Bookmark.class));
+    verify(bookmarkRepository, never()).addBookmark(any(Bookmark.class));
   }
 }
