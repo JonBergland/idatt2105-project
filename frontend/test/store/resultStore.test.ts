@@ -7,6 +7,7 @@ vi.mock('@/services/item/resultService', () => ({
   default: {
     getItems: vi.fn(),
     getCategories: vi.fn(),
+    getItemDetails: vi.fn()
   },
 }));
 
@@ -82,11 +83,11 @@ describe('Result Store', () => {
         segmentOffset: [0, 10],
       });
 
-      expect(store.isLoading).toBe(true);
+      expect(store.isItemsLoading).toBe(true);
 
       await fetchPromise;
 
-      expect(store.isLoading).toBe(false);
+      expect(store.isItemsLoading).toBe(false);
     });
 
     it('should update items on successful fetch', async () => {
@@ -107,7 +108,7 @@ describe('Result Store', () => {
       });
 
       expect(store.items).toEqual(mockItems);
-      expect(store.error).toBeNull();
+      expect(store.itemsError).toBeNull();
     });
 
     it('should handle errors correctly', async () => {
@@ -123,7 +124,7 @@ describe('Result Store', () => {
         segmentOffset: [0, 10],
       });
 
-      expect(store.error).toBe("Failed to fetch items.");
+      expect(store.itemsError).toBe("Failed to fetch items.");
       expect(store.items).toEqual([]);
     });
   });
@@ -267,6 +268,69 @@ describe('Result Store', () => {
 
       expect(store.moreItemsError).toBe("Failed to load more items.");
       expect(store.isLoadingMore).toBe(false);
+    });
+  });
+
+  describe('fetchItemDetails', () => {
+    it('should set loading state while fetching item details', async () => {
+      const store = useResultStore();
+
+      vi.mocked(resultService.getItemDetails).mockImplementation(() => {
+        return new Promise(resolve => {
+          setTimeout(() => resolve({
+            itemID: 1,
+            name: 'Test Item',
+            price: 1000,
+            category: 'Electronics',
+            seller: 'John Doe',
+            description: 'Great item!',
+            published: '2023-04-01',
+            state: 'available',
+            images: []
+          }), 100);
+        });
+      });
+
+      const fetchPromise = store.fetchItemDetails({ itemID: 1 });
+
+      expect(store.isItemLoading).toBe(true);
+
+      await fetchPromise;
+
+      expect(store.isItemLoading).toBe(false);
+    });
+
+    it('should update item on successful fetch', async () => {
+      const store = useResultStore();
+      const mockItem = {
+        itemID: 1,
+        name: 'Test Item',
+        price: 1000,
+        category: 'Electronics',
+        seller: 'John Doe',
+        description: 'Great item!',
+        published: '2023-04-01',
+        state: 'available',
+        images: []
+      };
+
+      vi.mocked(resultService.getItemDetails).mockResolvedValue(mockItem);
+
+      await store.fetchItemDetails({ itemID: 1 });
+
+      expect(store.item).toEqual(mockItem);
+      expect(store.itemError).toBeNull();
+    });
+
+    it('should handle errors correctly', async () => {
+      const store = useResultStore();
+
+      vi.mocked(resultService.getItemDetails).mockRejectedValue(new Error('API error'));
+
+      await store.fetchItemDetails({ itemID: 999 });
+
+      expect(store.itemError).toBe("Failed to fetch item.");
+      expect(store.item).toBeNull();
     });
   });
 });
