@@ -8,7 +8,9 @@ const props = defineProps<{
   email: string | undefined,
   countryCode: number | undefined,
   phoneNumber: number | undefined,
-  location: string | undefined,
+  address: string | undefined,
+  postalCode: number | undefined,
+  city: string | undefined,
   isEditing: boolean
 }>();
 
@@ -17,7 +19,9 @@ const localLastName = ref(props.lastName || "");
 const localEmail = ref(props.email || "");
 const localCountryCode = ref(String(props.countryCode || ""));
 const localPhoneNumber = ref(String(props.phoneNumber || ""));
-const localLocation = ref(props.location || "");
+const localAddress = ref(props.address || "");
+const localPostalCode = ref(String(props.postalCode || ""));
+const localCity = ref(props.city || "");
 
 const validFirstName = computed(() =>
   stringVerificationUtils.verifyStringForLetters(localFirstName.value));
@@ -37,8 +41,12 @@ const validCountryCode = computed(() => {
 });
 const validPhoneNumber = computed(() =>
   stringVerificationUtils.verifyStringForNumbers(localPhoneNumber.value));
-const validLocation = computed(() =>
-  stringVerificationUtils.verifyStringNotEmpty(localLocation.value));
+const validAddress = computed(() =>
+  stringVerificationUtils.verifyStringNotEmpty(localAddress.value));
+const validPostalCode = computed(() =>
+  stringVerificationUtils.verifyStringForNumbers(localPostalCode.value));
+const validCity = computed(() =>
+  stringVerificationUtils.verifyStringNotEmpty(localCity.value));
 
 const validForm = computed(() => {
   return validFirstName.value &&
@@ -46,17 +54,20 @@ const validForm = computed(() => {
     validEmail.value &&
     validCountryCode.value &&
     validPhoneNumber.value &&
-    validLocation.value;
+    validAddress.value &&
+    validPostalCode.value &&
+    validCity.value;
 });
 
-// Emit events for two-way binding and save
 const emit = defineEmits([
   "update:firstName",
   "update:lastName",
   "update:email",
   "update:countryCode",
   "update:phoneNumber",
-  "update:location",
+  "update:address",
+  "update:postalCode",
+  "update:city",
   "update"
 ]);
 
@@ -67,7 +78,9 @@ function handleUpdate() {
     emit("update:email", localEmail.value);
     emit("update:countryCode", parseInt(localCountryCode.value.replace("+", "")));
     emit("update:phoneNumber", parseInt(localPhoneNumber.value));
-    emit("update:location", localLocation.value);
+    emit("update:address", localAddress.value);
+    emit("update:postalCode", parseInt(localPostalCode.value));
+    emit("update:city", localCity.value);
   }
   emit("update", validForm.value)
 }
@@ -77,7 +90,9 @@ watch(() => props.lastName, (newVal) => localLastName.value = newVal || "");
 watch(() => props.email, (newVal) => localEmail.value = newVal || "");
 watch(() => props.countryCode, (newVal) => localCountryCode.value = String(newVal || ""));
 watch(() => props.phoneNumber, (newVal) => localPhoneNumber.value = String(newVal || ""));
-watch(() => props.location, (newVal) => localLocation.value = newVal || "");
+watch(() => props.address, (newVal) => localAddress.value = newVal || "");
+watch(() => props.postalCode, (newVal) => localPostalCode.value = String(newVal || ""));
+watch(() => props.city, (newVal) => localCity.value = newVal || "");
 </script>
 
 <template>
@@ -87,7 +102,9 @@ watch(() => props.location, (newVal) => localLocation.value = newVal || "");
     <h3>{{ "Last name: " + lastName }}</h3>
     <h3>{{ "Email: " + email }}</h3>
     <h3>{{ "Phone number: +" + countryCode + " " + phoneNumber }}</h3>
-    <h3>{{ "Location: " + location }}</h3>
+    <h3>{{ "Address: " + address }}</h3>
+    <h3>{{ "Postal Code: " + postalCode }}</h3>
+    <h3>{{ "Location: " + city }}</h3>
   </div>
   <div v-else-if="isEditing" class="user-info-container">
     <form>
@@ -156,16 +173,42 @@ watch(() => props.location, (newVal) => localLocation.value = newVal || "");
       </div>
 
       <div class="form-group">
-        <label for="location">Location</label>
+        <label for="address">Address</label>
         <input
           type="text"
-          id="location"
+          id="address"
           class="form-input"
-          v-model="localLocation"
+          v-model="localAddress"
           @input="handleUpdate"
           required
         />
-        <p v-if="!validLocation" class="error-msg">Location cannot be empty.</p>
+        <p v-if="!validAddress" class="error-msg">Address cannot be empty.</p>
+      </div>
+
+      <div class="form-group">
+        <label for="postalCode">Postal Code</label>
+        <input
+          type="text"
+          id="postalCode"
+          class="form-input"
+          v-model="localPostalCode"
+          @input="handleUpdate"
+          required
+        />
+        <p v-if="!validPostalCode" class="error-msg">Please enter a valid postal code.</p>
+      </div>
+
+      <div class="form-group">
+        <label for="city">City</label>
+        <input
+          type="text"
+          id="city"
+          class="form-input"
+          v-model="localCity"
+          @input="handleUpdate"
+          required
+        />
+        <p v-if="!validCity" class="error-msg">City cannot be empty.</p>
       </div>
     </form>
   </div>

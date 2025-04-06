@@ -86,7 +86,9 @@ function handleUpdate(validForm: boolean) {
         v-model:email="editableUser.email"
         v-model:countryCode="editableUser.countryCode"
         v-model:phoneNumber="editableUser.phoneNumber"
-        v-model:location="editableUser.city"
+        v-model:address="editableUser.address"
+        v-model:postalCode="editableUser.postalCode"
+        v-model:city="editableUser.city"
         :isEditing="isEditing"
         @update="handleUpdate"
       />
