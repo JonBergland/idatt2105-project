@@ -125,7 +125,6 @@ function handleSort(sortMode: string) {
     default:
       itemsRequest.value.sort = null;
   }
-  updateUrlParams();
 };
 
 /**
@@ -135,7 +134,6 @@ function handleSort(sortMode: string) {
  */
  function handleSearch(query: string) {
   itemsRequest.value.searchWord = query || null;
-  updateUrlParams();
 }
 
 /**
@@ -144,7 +142,6 @@ function handleSort(sortMode: string) {
  */
  function handleCategoryClick(category: string) {
   itemsRequest.value.category = category;
-  updateUrlParams();
 }
 
 /**
@@ -156,7 +153,6 @@ function handleSort(sortMode: string) {
  */
 function handlePriceRangeUpdated(priceRange: { min: number | null; max: number | null }): void {
   itemsRequest.value.priceMinMax = [priceRange.min, priceRange.max];
-  updateUrlParams();
 }
 
 /**
