@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { ItemsRequestDTO } from '@/models/item';
-import { ref, onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { ref, onMounted, watch} from 'vue';
 import { useResultStore } from '@/stores/resultStore';
 import ToggleGroup from '@/components/Result/ToggleGroup.vue';
 import SearchBar from '@/components/Home/SearchBar.vue';
@@ -18,6 +19,8 @@ window.addEventListener('resize', () => {
   screenWidth.value = window.innerWidth;
 });
 
+const route = useRoute();
+const router = useRouter();
 const resultStore = useResultStore();
 
 const itemsRequest = ref<ItemsRequestDTO>({
@@ -29,16 +32,51 @@ const itemsRequest = ref<ItemsRequestDTO>({
 });
 
 onMounted(() => {
+  if (route.query.search) {
+    itemsRequest.value.searchWord = route.query.search as string;
+  }
+
+  if (route.query.category) {
+    itemsRequest.value.category = route.query.category as string;
+  }
+
+  if (route.query.sort) {
+    itemsRequest.value.sort = route.query.sort as string;
+  }
+
+  if (route.query.minPrice && route.query.maxPrice) {
+    itemsRequest.value.priceMinMax = [
+      Number(route.query.minPrice),
+      Number(route.query.maxPrice)
+    ];
+  }
+
   resultStore.fetchCategories();
   resultStore.fetchItems(itemsRequest.value);
 });
+
+function updateUrlParams() {
+  const query: Record<string, string> = {};
+
+  if (itemsRequest.value.searchWord) query.search = itemsRequest.value.searchWord;
+  if (itemsRequest.value.category) query.category = itemsRequest.value.category;
+  if (itemsRequest.value.sort) query.sort = itemsRequest.value.sort;
+  if (itemsRequest.value.priceMinMax) {
+    const [min, max] = itemsRequest.value.priceMinMax;
+    if (min !== null) query.minPrice = min.toString();
+    if (max !== null) query.maxPrice = max.toString();
+  }
+
+  if (JSON.stringify(query) !== JSON.stringify(route.query)) {
+    router.replace({ query });
+  }
+}
 
 /**
  * Toggles the visibility of the filter container.
  */
  function toggleFilterVisibility() {
   isFilterVisible.value = !isFilterVisible.value;
-  console.log(isFilterVisible.value)
 }
 
 /**
@@ -48,7 +86,6 @@ onMounted(() => {
  */
 function handleDisplay(displayMode: string) {
   currentDisplayMode.value = displayMode;
-  console.log(displayMode);
 }
 
 /**
@@ -70,7 +107,7 @@ function handleSort(sortMode: string) {
     default:
       itemsRequest.value.sort = null;
   }
-  resultStore.fetchItems(itemsRequest.value);
+  updateUrlParams();
 };
 
 /**
@@ -80,7 +117,7 @@ function handleSort(sortMode: string) {
  */
  function handleSearch(query: string) {
   itemsRequest.value.searchWord = query;
-  resultStore.fetchItems(itemsRequest.value)
+  updateUrlParams();
 }
 
 /**
@@ -89,7 +126,7 @@ function handleSort(sortMode: string) {
  */
  function handleCategoryClick(category: string) {
   itemsRequest.value.category = category;
-  resultStore.fetchItems(itemsRequest.value)
+  updateUrlParams();
 }
 
 /**
@@ -101,7 +138,7 @@ function handleSort(sortMode: string) {
  */
 function handlePriceRangeUpdated(priceRange: { min: number | null; max: number | null }): void {
   itemsRequest.value.priceMinMax = [priceRange.min, priceRange.max];
-  resultStore.fetchItems(itemsRequest.value)
+  updateUrlParams();
 }
 
 /**
@@ -112,6 +149,11 @@ function handlePriceRangeUpdated(priceRange: { min: number | null; max: number |
   console.log('Clicked Item: ', itemId);
   //TODO: implement
 };
+
+watch(itemsRequest, () => {
+  resultStore.fetchItems(itemsRequest.value);
+  updateUrlParams();
+}, { deep: true });
 
 </script>
 <template>
