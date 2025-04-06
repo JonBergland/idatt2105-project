@@ -28,6 +28,7 @@ public interface ItemMapper {
   @Mapping(source = "published", target = "published")
   @Mapping(source = "price", target = "price")
   @Mapping(source = "description", target = "description")
+  @Mapping(source = "state", target = "state")
   ItemResponse itemToItemResponse(Item item);
 
   /**
