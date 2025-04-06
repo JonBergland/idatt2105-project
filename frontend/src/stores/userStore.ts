@@ -44,16 +44,18 @@ export const useUserStore = defineStore('user', {
      */
     async postUserInfo(user: User): Promise<boolean> {
       try {
-        if (user != null && user != undefined) {
+        if (user) {
           await userService.updateUserInfo(user);
 
-          let newUser = await this.getUserInfo()
+          const newUser = await this.getUserInfo()
 
-          if (user === newUser) {
-            return true
-          } else {
-            return false
-          }
+          const success = newUser &&
+            user.id === newUser.id &&
+            user.name === newUser.name &&
+            user.surname === newUser.surname &&
+            user.email === newUser.email;
+
+          return success
         } else {
           return false
         }
