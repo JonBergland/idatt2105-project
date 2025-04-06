@@ -346,7 +346,7 @@ function handlePriceRangeUpdated(priceRange: { min: number | null; max: number |
           </div>
         </div>
         <div class="item-group-warpper">
-          <p v-if="resultStore.error"> {{ resultStore.error }}</p>
+          <p v-if="resultStore.itemsError"> {{ resultStore.itemsError }}</p>
           <ItemGroup :items="resultStore.items" @item-clicked="handleItemClick" :mode="currentDisplayMode" />
           <div v-if="isLoadingMore" class="loading-more">Loading more items...</div>
           <div v-if="!hasMoreItems && resultStore.items.length > 0" class="end-of-results">No more items to display</div>
