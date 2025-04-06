@@ -10,6 +10,7 @@ defineProps<{
 }>()
 
 const emit = defineEmits(["saveUser", "logoutUser"])
+const editableUser = ref(user)
 
 const isEditing = ref(false)
 const isLoggingOut = ref(false)
@@ -35,12 +36,14 @@ function handleLogout() {
   isEditing.value = false
   isLoggingOut.value = false
 
-  emit("logout")
+  emit("logoutUser")
 }
 
 function handleCancel() {
   isEditing.value = false
   isLoggingOut.value = false
+
+  editableUser.value = user
 }
 
 </script>
@@ -51,12 +54,13 @@ function handleCancel() {
     </div>
     <div class="profile-details">
       <UserInfoComponent
-      id="user-info-component"
-      :first-name="user?.name"
-      :last-name="user?.surname"
-      :email="user?.email"
-      :phoneNumber="'+' + user?.countryCode + ' ' + user?.phoneNumber"
-      :location="user?.city"
+        v-model:firstName="editableUser.firstName"
+        v-model:lastName="editableUser.lastName"
+        v-model:email="editableUser.email"
+        v-model:phoneNumber="editableUser.phoneNumber"
+        v-model:location="editableUser.location"
+        :isEditing="isEditing"
+        @save="handleSave"
       />
       <ProfileButtonsComponent
       :editMode = isEditing
