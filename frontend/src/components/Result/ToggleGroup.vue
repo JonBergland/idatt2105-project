@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import ToggleButton from './ToggleButton.vue';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 
 const props = defineProps({
   label: {
@@ -21,6 +21,11 @@ const props = defineProps({
     default: false,
     required: false
   },
+  initialSelected: {
+    type: String,
+    default: null,
+    required: false
+  },
   allowDeselect: {
     type: Boolean,
     default: false,
@@ -30,7 +35,7 @@ const props = defineProps({
 
 const emit = defineEmits(['toggle-selected']);
 
-const selectedToggle = ref<string | null>(null);
+const selectedToggle = ref<string | null>(props.initialSelected);
 
 /**
  * Handles toggle button clicks with optional deselection.
@@ -49,6 +54,11 @@ const selectedToggle = ref<string | null>(null);
   }
 }
 
+watch([() => props.initialSelected, () => props.names], ([newSelected, newNames]) => {
+  if (newSelected && newNames.includes(newSelected)) {
+    selectedToggle.value = newSelected;
+  }
+}, { immediate: true });
 
 /**
  * Selects the first toggle when the component is mounted if autoSelectFirst is true.
