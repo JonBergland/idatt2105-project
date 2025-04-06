@@ -39,7 +39,7 @@ const emit = defineEmits(['editMode', 'logoutMode', 'save', 'logout', 'cancel'])
 
 </template>
 
-<style>
+<style scoped>
 .profile-buttons {
   display: flex;
   flex-direction: column;
@@ -48,9 +48,12 @@ const emit = defineEmits(['editMode', 'logoutMode', 'save', 'logout', 'cancel'])
 }
 
 .profile-buttons p {
-  height: 24px;
-  margin: 0 0 10px 0;
+  height: 15px;
   text-align: center;
+}
+
+.profile-buttons button {
+  width: 83px;
 }
 
 .buttons-container {
