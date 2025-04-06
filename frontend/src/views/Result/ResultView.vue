@@ -41,6 +41,26 @@ window.addEventListener('resize', () => {
   screenWidth.value = window.innerWidth;
 });
 
+/**
+ * Initializes the component when mounted.
+ * This function:
+ *
+ * 1. Populates filter values from URL query parameters
+ *    - Extracts search term, category, sort order, and price range
+ *    - Updates both the request object and UI state variables
+ *
+ * 2. Fetches initial data
+ *    - Loads available categories from the API
+ *    - Loads the first page of items based on URL parameters
+ *
+ * 3. Sets up event listeners
+ *    - Adds scroll event handler for infinite scrolling
+ *
+ * This allows users to:
+ *   - Navigate directly to specific search results via URL
+ *   - Share or bookmark specific filter combinations
+ *   - Return to previous searches via browser history
+ */
 onMounted(() => {
   if (route.query.search) {
     itemsRequest.value.searchWord = route.query.search as string;
