@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import "@/assets/color.css"
+import "@/assets/main.css"
+
 defineProps<{
   editMode: boolean,
   logoutMode: boolean
@@ -37,9 +40,62 @@ const emit = defineEmits(['editMode', 'logoutMode', 'save', 'logout', 'cancel'])
 </template>
 
 <style>
-.profile-buttons-container {
+.profile-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.profile-buttons p {
+  height: 24px;
+  margin: 0 0 10px 0;
+  text-align: center;
+}
+
+.buttons-container {
   display: flex;
   gap: 20px;
   margin-top: 10px;
+  justify-content: center;
+}
+
+.edit-info-button {
+  background-color: var(--color-primary);
+  color: #FFFFFF;
+}
+
+.edit-info-button:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.logout-button,
+.cancel-button {
+  background-color: var(--color-background-mute);
+  color: var(--color-button-disabled);
+  border-color: var(--color-border);
+}
+
+.logout-button:hover,
+.cancel-button:hover {
+  background-color: var(--color-background-soft)
+}
+
+.save-info {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+.save-info:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.logout {
+  background-color: var(--color-danger-muted);
+  color: white;
+}
+
+.logout:hover {
+  background-color: var(--color-danger-muted-hover);
 }
 </style>
