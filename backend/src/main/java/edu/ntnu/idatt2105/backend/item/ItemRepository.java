@@ -59,7 +59,7 @@ public class ItemRepository {
         """
             SELECT Item.*, Item.id AS itemID, User.email AS seller, Categories.category_name AS category FROM Item
             LEFT JOIN User ON Item.user_id = User.id
-            LEFT JOIN Categories ON Item.category_id = Categories.id WHERE 1=1""");
+            LEFT JOIN Categories ON Item.category_id = Categories.id WHERE state_id = 1""");
     if (itemsRequest.getCategory() != null) {
       sb.append(" AND Categories.category_name = ?");
     }
@@ -136,9 +136,9 @@ public class ItemRepository {
    */
   public void editItem(Item item) {
     jdbcTemplate.update(
-        "UPDATE Item " +
-        "SET name = ?, description = ?, price = ?, category_id = (SELECT id FROM Categories WHERE category_name = ?) " +
-        "WHERE id = ? AND user_id = ?",
+        "UPDATE Item "
+        + "SET name = ?, description = ?, price = ?, category_id = (SELECT id FROM Categories WHERE category_name = ?) "
+        + "WHERE id = ? AND user_id = ?",
         item.getName(),
         item.getDescription(),
         item.getPrice(),
