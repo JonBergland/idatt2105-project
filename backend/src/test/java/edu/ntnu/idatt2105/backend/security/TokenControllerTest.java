@@ -17,6 +17,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataAccessException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.server.ResponseStatusException;
 
 @ExtendWith(MockitoExtension.class)
@@ -108,5 +109,15 @@ class TokenControllerTest {
     doThrow(new DataAccessException("DB Error") {}).when(userService).createUser(signupRequest);
 
     assertThrows(ResponseStatusException.class, () -> tokenController.registerAccount(signupRequest, response));
+  }
+
+  @Test
+  void logout_ShouldSetLogoutCookieAndReturnSuccessMessage() {
+      ResponseEntity<?> responseEntity = tokenController.logout(response);
+
+      assertEquals("Logged out successfully", responseEntity.getBody());
+      assertEquals(200, responseEntity.getStatusCodeValue());
+      verify(jwtUtils).setLogOutJWTCookie(response);
+      verifyNoMoreInteractions(jwtUtils);
   }
 }

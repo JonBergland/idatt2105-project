@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useAuthStore } from '@/stores/authStore';
 
 const route = useRoute();
 const authStore = useAuthStore();
+const isAuthenticated = ref(false)
 
 const pageName = computed(() => route.name);
 
@@ -12,17 +13,19 @@ const isListingPage = computed(() => pageName.value === "listing");
 const isFavoritesPage = computed(() => pageName.value === "favorites");
 const isMessagePage = computed(() => pageName.value === "messages");
 const isProfilePage = computed(() => pageName.value === "profile");
-const isLoginPage = computed(() => pageName.value === "login")
-const isSignupPage = computed(() => pageName.value === "signup")
-const isLoggedIn = computed(() => authStore.isAuth)
+const isLoginPage = computed(() => pageName.value === "login");
+const isSignupPage = computed(() => pageName.value === "signup");
 
 //TODO: implement logic for notifications
 const hasNotifications = ref(true)
 
 onMounted(async () => {
-  await authStore.checkIfAuth()
-})
+  isAuthenticated.value = await authStore.checkIfAuth();
+});
 
+watch(() => authStore.isAuth, (newValue) => {
+  isAuthenticated.value = newValue;
+});
 </script>
 
 <template>
@@ -31,7 +34,7 @@ onMounted(async () => {
      <img src="@/assets/logos/logo.svg" alt="Yard logo" id="desktopLogo" />
      <img src="@/assets/logos/logo3.svg" alt="Yard logo mobile" id="mobileLogo" />
     </router-link>
-    <div class="buttonWrapper" v-if="!isLoginPage && !isSignupPage && isLoggedIn">
+    <div class="buttonWrapper" v-if="!isLoginPage && !isSignupPage && isAuthenticated">
       <router-link
       to="/listing"
       class="routerLink"
