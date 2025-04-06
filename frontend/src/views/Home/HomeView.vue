@@ -1,47 +1,28 @@
 <script setup lang="ts">
-import type { ItemResponseDTO } from '@/models/item';
+import type { ItemsRequestDTO } from '@/models/item';
 import CategoryGrid from '@/components/Home/CategoryGrid.vue';
 import RecommendationGrid from '@/components/Home/ItemGroup.vue';
 import SearchBar from '@/components/Home/SearchBar.vue';
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { useResultStore } from '@/stores/resultStore';
 
 const router = useRouter();
 
+const resultStore = useResultStore();
 
-const items = ref<ItemResponseDTO[]>([
-  {itemID: 1, name: 'Playstation 5', category: 'Gaming', seller: 'Ola nordmann', description: 'Nice playstation', published: '2020', price: 2},
-  {itemID: 1, name: 'Playstation 5', category: 'Gaming', seller: 'Ola nordmann', description: 'Nice playstation', published: '2020', price: 2},
-  {itemID: 1, name: 'Playstation 5', category: 'Gaming', seller: 'Ola nordmann', description: 'Nice playstation', published: '2020', price: 2},
-]);
+const newItemsRequest = ref<ItemsRequestDTO>({
+    category: null,
+    searchWord: null,
+    priceMinMax: null,
+    sort: 'published_DESC',
+    segmentOffset: [0, 10],
+});
 
-const categories = ref([
-  'category 1',
-  'category 2',
-  'category 3',
-]);
-
-/**
- * Fetches the categories from service
- */
- async function loadCategories() {
-  try {
-    //TODO: implement call from service to fetch categories
-  } catch (error) {
-    console.error('Failed to fetch categories:', error);
-  }
-}
-
-/**
- * Fetches the recommended items from service
- */
-async function loadRecommendations() {
-  try {
-    //TODO: implement call from service to fetch items
-  } catch (error) {
-    console.error('Failed to fetch recommendations:', error);
-  }
-}
+onMounted(() => {
+  resultStore.fetchCategories();
+  resultStore.fetchItems(newItemsRequest.value);
+})
 
 /**
  * Handles the search event emitted by the SearchBar component.
@@ -68,14 +49,10 @@ async function loadRecommendations() {
  * @param {number} itemId - The unique identifier of the clicked item
  */
  function handleItemClick(itemId: number) {
-  //router.push({ name: 'item', params: { id: itemId } });
+  router.push({ name: 'items', params: { id: itemId } });
   console.log('Clicked Item: ', itemId)
 }
 
-onMounted(() => {
-  loadCategories();
-  loadRecommendations();
-});
 </script>
 
 <template>
@@ -83,10 +60,10 @@ onMounted(() => {
     <h1>Welcome to the Yard!</h1>
     <div class="search-category-container">
       <SearchBar @search-triggered="handleSearch"/>
-      <CategoryGrid :categories="categories" @category-clicked="handleCategoryClick"/>
+      <CategoryGrid :categories="resultStore.categories" @category-clicked="handleCategoryClick"/>
     </div>
     <h3>Recommendations</h3>
-    <RecommendationGrid :items="items" @item-clicked="handleItemClick"/>
+    <RecommendationGrid :items="resultStore.items" @item-clicked="handleItemClick"/>
   </div>
 </template>
 
