@@ -268,11 +268,10 @@ function handlePriceRangeUpdated(priceRange: { min: number | null; max: number |
 
 /**
  * Handles the 'item-clicked' event emitted by the RecommendationGrid component
- * @param {number} itemId - The unique identifier of the clicked item
+ * @param {number} itemID - The unique identifier of the clicked item
  */
- function handleItemClick(itemId: number) {
-  console.log('Clicked Item: ', itemId);
-  //TODO: implement
+ function handleItemClick(itemID: number) {
+  router.push({ name: 'product', query: { id: itemID } });
 };
 
 /**
