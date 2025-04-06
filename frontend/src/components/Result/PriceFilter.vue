@@ -7,7 +7,6 @@ const maxPrice = ref<string | null>(null);
 const isRangeValid = ref(false);
 const isNumberNegative = ref(false);
 
-
 const emit = defineEmits(['price-range-updated']);
 
 /**
@@ -26,8 +25,8 @@ function handlePriceChange() {
     maxPrice.value = null;
   }
 
-  const min = minPrice.value ? parseFloat(minPrice.value) : null;
-  const max = maxPrice.value ? parseFloat(maxPrice.value) : null;
+  const min = minPrice.value === null ? null : parseInt(minPrice.value);
+  const max = maxPrice.value === null ? null : parseInt(maxPrice.value);
 
   if (min !== null && max !== null && min > max) {
     isRangeValid.value = true;

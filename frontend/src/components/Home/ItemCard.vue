@@ -1,13 +1,10 @@
 <script setup lang="ts">
+import type { ItemResponseDTO } from '@/models/item';
+import placholderImage from '@/assets/images/placeholder-image.png'
+
 const props = defineProps({
   item: {
-    type: Object as () => {
-      id: number;
-      name: string;
-      location: string;
-      price: number;
-      img: string;
-    },
+    type: Object as () => ItemResponseDTO,
     required: true,
   },
   size: {
@@ -24,15 +21,15 @@ const emit = defineEmits(['clicked-item'])
  * Emits 'clicked-item' used to navigate to a product page
  */
 function handleClick() {
-  emit('clicked-item', props.item.id)
+  emit('clicked-item', props.item.itemID)
 }
 </script>
 
 <template>
   <div class="item-card"  :class="size === 'narrow' ? 'narrow' : 'full'" @click="handleClick">
-    <img :src="item.img" alt="" draggable="false" class="item-image" :class="size === 'narrow' ? 'narrow' : 'full'">
+    <img :src="placholderImage" alt="" draggable="false" class="item-image" :class="size === 'narrow' ? 'narrow' : 'full'">
     <div class="item-info">
-      <p>{{ item.location }}</p>
+      <p>{{ item.seller }}</p>
       <h3>{{ item.name  }}</h3>
       <p>{{ item.price }} kr</p>
     </div>
