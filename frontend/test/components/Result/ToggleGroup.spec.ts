@@ -153,10 +153,8 @@ describe('ToggleGroup.vue', () => {
       },
     });
 
-    const vm = wrapper.vm as any;
-
-    expect(vm.direction).toBe('row');
-    expect(vm.autoSelectFirst).toBe(false);
-    expect(vm.allowDeselect).toBe(false);
+    expect(wrapper.props('direction')).toBe('row');
+    expect(wrapper.props('autoSelectFirst')).toBe(false);
+    expect(wrapper.props('allowDeselect')).toBe(false);
   });
 });
