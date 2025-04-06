@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * A model representing a bookmark.
+ */
 @Getter
 @Setter
 @AllArgsConstructor
