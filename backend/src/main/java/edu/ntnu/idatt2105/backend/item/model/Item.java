@@ -12,6 +12,7 @@ public class Item {
   private String name;
   private int itemID;
   private String category;
+  private String state;
   private String seller;
   private String description;
   private String published;
