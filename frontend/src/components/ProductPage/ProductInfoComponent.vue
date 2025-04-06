@@ -1,22 +1,20 @@
 <script setup lang="ts">
+import type { ItemResponseDTO } from '@/models/item';
 import { onMounted, ref } from 'vue';
 import "@/assets/color.css"
 import "@/assets/main.css"
 
 
 const props = defineProps<{
-  isAvailable: boolean
-  price: number
-  state: string
-  comment: string
-  location: string
-  sellerName: string
+  item: ItemResponseDTO,
 }>()
 
 const available = ref("")
 
 onMounted(() => {
-  available.value = props.isAvailable ? "Available" : "Not available"
+  //TODO: impement availability from backend
+
+  available.value = true ? "Available" : "Not available"
 })
 
 </script>
@@ -24,18 +22,19 @@ onMounted(() => {
 <template>
   <div class="product-info-container">
     <h2 class="product-center-header"><strong>{{ available }}</strong></h2>
-    <h2 class="product-center-header"><strong>{{ props.price }} kr</strong></h2>
+    <h2 class="product-center-header"><strong>{{ props.item.price }} kr</strong></h2>
     <div class="product-buttons">
       <button class="give-bid-button">Give a bid</button>
       <button class="vipps-button">Pay with vipps</button>
     </div>
     <div class="product-information-box">
       <h3><strong>Product information:</strong></h3>
-      <p><strong>State:</strong> {{ props.state }}</p>
-      <p><strong>Comment from seller:</strong> {{ props.comment }}</p>
+      <p><strong>Published:</strong> {{ props.item.published}}</p>
+      <p><strong>Category:</strong> {{ props.item.category}}</p>
+      <p><strong>Description:</strong> {{ props.item.description}}</p>
       <h3><strong>Seller information:</strong></h3>
-      <p><strong>Location:</strong> {{ props.location }}</p>
-      <p><strong>Name of seller:</strong> {{ props.sellerName }}</p>
+      <p><strong>Location:</strong></p>
+      <p><strong>Name of seller:</strong> {{ props.item.seller }}</p>
     </div>
   </div>
 </template>
