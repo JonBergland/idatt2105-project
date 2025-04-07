@@ -12,7 +12,7 @@ const props = defineProps<{
 const emit = defineEmits(["saveUser", "logoutUser"])
 
 const editableUser = ref<User | null>(null)
-const validUser = ref(false)
+const validUser = ref(true)
 
 watch(() => props.user, (newUser) => {
   if (newUser) {
