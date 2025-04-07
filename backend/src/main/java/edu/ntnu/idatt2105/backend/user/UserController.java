@@ -4,6 +4,8 @@ import edu.ntnu.idatt2105.backend.item.dto.ItemRequest;
 import edu.ntnu.idatt2105.backend.item.dto.ItemsResponse;
 import edu.ntnu.idatt2105.backend.user.dto.AddItemRequest;
 import edu.ntnu.idatt2105.backend.user.dto.GetBidItemResponse;
+import edu.ntnu.idatt2105.backend.user.dto.GetBidsRequest;
+import edu.ntnu.idatt2105.backend.user.dto.GetBidsResponse;
 import edu.ntnu.idatt2105.backend.user.dto.GetStoreItemResponse;
 import edu.ntnu.idatt2105.backend.user.dto.PlaceBidRequest;
 import edu.ntnu.idatt2105.backend.user.dto.ToggleBookmarkRequest;
@@ -116,8 +118,13 @@ public class UserController {
   }
 
   @GetMapping("/item/bid")
-  public GetBidItemResponse[] answerBid() {
+  public GetBidItemResponse[] getUniqueBids() {
     return userService.getUniqueBids();
+  }
+
+  @PostMapping("/item/bids")
+  public GetBidsResponse[] getBidsOnItem(@RequestBody GetBidsRequest getBidsRequest) {
+    return userService.getItemBids(getBidsRequest);
   }
 
   /**
