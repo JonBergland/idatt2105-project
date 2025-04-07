@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import ItemGroup from "@/components/Home/ItemGroup.vue";
 import ProfileInfoComponent from "@/components/Profile/ProfileInfoComponent.vue";
+import type { ItemsResponseDTO } from "@/models/item";
 import type { User } from "@/models/user";
 import { useAuthStore } from "@/stores/authStore";
 import { useUserStore } from "@/stores/userStore";
@@ -10,6 +12,7 @@ const authStore = useAuthStore();
 const userStore = useUserStore();
 const router = useRouter();
 const user = ref<User | null>(null);
+const userItems = ref<ItemsResponseDTO | null>(null);
 
 onMounted(async () => {
   if (!authStore.isAuth) {
@@ -19,6 +22,9 @@ onMounted(async () => {
         router.push({ name: 'login' })
         return;
       }
+      userItems.value = await userStore.getUserItems();
+      console.log("Items gathered from the user: ", userItems.value);
+
     } catch (error) {
       console.error("Error checking authentication:", error);
       router.push({ name: 'login' })
@@ -58,9 +64,21 @@ async function handleLogout() {
    />
 
   <!-- User or Admin profile specific  -->
-   <div v-if="user?.role=== 'ROLE_USER'">
-
+   <div v-if="user?.role === 'ROLE_USER' && userItems?.items" class="profile-specifics">
+    <h1>Your listings: </h1>
+    <ItemGroup
+    :items="userItems.items"
+    mode="Grid"
+    />
    </div>
 </div>
-
 </template>
+
+<style scoped>
+
+.profile-specifics {
+  margin-top: 20px;
+  padding: 10px;
+  border-top: 2px solid black;
+}
+</style>
