@@ -1,18 +1,20 @@
 <script setup lang="ts">
 import ItemGroup from "@/components/Home/ItemGroup.vue";
 import ProfileInfoComponent from "@/components/Profile/ProfileInfoComponent.vue";
-import type { ItemsResponseDTO } from "@/models/item";
+import type { ItemResponseDTO } from "@/models/item";
 import type { User } from "@/models/user";
 import { useAuthStore } from "@/stores/authStore";
 import { useUserStore } from "@/stores/userStore";
-import { onMounted, ref, watch } from "vue";
+import { computed, onMounted } from "vue";
 import { useRouter } from 'vue-router';
 
 const authStore = useAuthStore();
 const userStore = useUserStore();
 const router = useRouter();
-const user = ref<User | null>(null);
-const userItems = ref<ItemsResponseDTO | null>(null);
+
+const flattenedItems = computed((): ItemResponseDTO[] => {
+  return (userStore.userItems.items).map(item => item);
+});
 
 onMounted(async () => {
   if (!authStore.isAuth) {
@@ -22,8 +24,8 @@ onMounted(async () => {
         router.push({ name: 'login' })
         return;
       }
-      userItems.value = await userStore.getUserItems();
-      console.log("Items gathered from the user: ", userItems.value);
+      await userStore.updateUserItems();
+      console.log("Items gathered from the user: ", userStore.userItems);
 
     } catch (error) {
       console.error("Error checking authentication:", error);
@@ -31,18 +33,7 @@ onMounted(async () => {
       return;
     }
   }
-
-    // Set user data from auth store
-    user.value = authStore.userData
 });
-
-watch(
-  () => authStore.userData,
-  (newUserData) => {
-    user.value = newUserData
-  },
-  { deep: true }
-);
 
 async function handleSaveUser(user: User) {
   await userStore.postUserInfo(user)
@@ -58,16 +49,16 @@ async function handleLogout() {
 <div class="user-profile-wrapper">
   <!-- Profile info -->
    <ProfileInfoComponent
-   :user = user
+   :user = userStore.user
    @saveUser="handleSaveUser"
    @logoutUser="handleLogout"
    />
 
   <!-- User or Admin profile specific  -->
-   <div v-if="user?.role === 'ROLE_USER' && userItems?.items" class="profile-specifics">
+   <div v-if="userStore.user?.role === 'ROLE_USER'" class="profile-specifics">
     <h1>Your listings: </h1>
     <ItemGroup
-    :items="userItems.items"
+    :items="flattenedItems"
     mode="Grid"
     />
    </div>
