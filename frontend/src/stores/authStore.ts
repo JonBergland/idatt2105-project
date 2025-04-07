@@ -1,4 +1,4 @@
-import type { User, UserLoginDTO, UserRegistrationDTO } from "@/models/user";
+import type { UserLoginDTO, UserRegistrationDTO } from "@/models/user";
 import { defineStore } from "pinia";
 import userService from "@/services/user/userService"
 import { useUserStore } from "@/stores/userStore";
