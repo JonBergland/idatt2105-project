@@ -38,7 +38,7 @@ class UserService {
     }
   }
 
-  async getUserItems(user: User): Promise<ItemsResponseDTO | null> {
+  async getUserItems(): Promise<ItemsResponseDTO | null> {
     try {
       const response = await axiosInstance.get<ItemsResponseDTO>('/user/item');
       return response.data;
