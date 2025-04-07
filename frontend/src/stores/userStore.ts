@@ -1,3 +1,4 @@
+import type { ItemsResponseDTO } from "@/models/item";
 import type { User } from "@/models/user";
 import { defineStore } from "pinia";
 import userService from "@/services/user/userService"
@@ -62,6 +63,30 @@ export const useUserStore = defineStore('user', {
       } catch (error) {
         console.log("Error when updating user information: ", error);
         return false;
+      }
+    },
+
+    async getUserItems() {
+      try {
+        if (this.user) {
+          const resp: ItemsResponseDTO | null = await userService.getUserItems(this.user);
+
+          if (resp !== null) {
+            return resp
+          } else {
+            throw new Error("Response was null");
+          }
+        } else {
+          throw new Error("User not logged in");
+        }
+
+      } catch (error) {
+        console.log("Unexpected error from trying to retrieve user items: ", error);
+        // Return no items when there is an error
+        let items: ItemsResponseDTO = {
+          items: []
+        }
+        return items
       }
     }
   }
