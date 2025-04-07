@@ -6,6 +6,10 @@ export interface ItemsRequestDTO {
   segmentOffset: [number, number] | null;
 }
 
+export interface ItemRequestDTO {
+  itemID: number;
+}
+
 export interface ItemResponseDTO {
   itemID: number;
   name: string;
@@ -14,6 +18,7 @@ export interface ItemResponseDTO {
   description: string;
   published: string;
   price: number;
+  state: string;
 }
 
 export interface ItemsResponseDTO {

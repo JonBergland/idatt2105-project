@@ -1,9 +1,20 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 
-const emit = defineEmits(['search-triggered', 'search-input']);
+const props = defineProps({
+  modelValue: {
+    type: String,
+    default: ''
+  }
+});
+
+const emit = defineEmits(['search-triggered', 'search-input', 'update:modelValue']);
 
 const searchInput = ref('');
+
+watch(() => props.modelValue, (newValue) => {
+  searchInput.value = newValue;
+});
 
 /**
  * Emits the search query to the parent component

@@ -26,10 +26,11 @@ public class ItemRepository {
    */
   public Item getItem(int id) {
     return jdbcTemplate.queryForObject(
-        "SELECT Item.*, Item.id AS itemID, User.email AS seller, Categories.category_name AS category FROM Item "
+        "SELECT Item.*, Item.id AS itemID, User.email AS seller, Categories.category_name AS category, State.state_name AS state FROM Item "
             + "LEFT JOIN User ON Item.user_id = User.id "
             + "LEFT JOIN Categories ON Item.category_id = Categories.id "
-            + " WHERE Item.id = ?",
+            + "LEFT JOIN State ON Item.state_id = State.id "
+            + "WHERE Item.id = ?",
         new Object[]{id},
         new BeanPropertyRowMapper<>(Item.class)
     );

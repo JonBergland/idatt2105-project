@@ -1,46 +1,21 @@
 <script setup lang="ts">
+import type { ItemResponseDTO, ItemRequestDTO } from '@/models/item';
 import ProductImageComponent from '@/components/ProductPage/ProductImageComponent.vue';
 import ProductNameComponent from '@/components/ProductPage/ProductNameComponent.vue'
 import placeholderImage from '@/assets/images/placeholder-image.png'
 import { onMounted, ref,  } from 'vue';
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import ProductInfoComponent from '@/components/ProductPage/ProductInfoComponent.vue';
+import { useResultStore } from '@/stores/resultStore';
 
-const props = defineProps<{
-  productId: string
-}>()
-
+const route = useRoute()
 const router = useRouter()
+const resultStore = useResultStore();
 
-const productName = ref("")
-const productAvailability = ref(true)
-const productPrice = ref(0)
-const productState = ref("")
-const productComment = ref("")
-const sellerName = ref("")
-const sellerLocation = ref("")
-
-async function loadProduct(productId:string) {
-  console.log("Product ID: ", productId);
-
-  // Retrive information from API-call
-  // TODO: Fix api-call, use service
-
-  // Imitate API-call
-  productName.value = "Product name"
-  productAvailability.value = true
-  productPrice.value = 300
-  productState.value = "Good"
-  productComment.value = "In a good condition. Hardly used"
-  sellerName.value = "Ola Nordman"
-  sellerLocation.value = "Bloksberg"
-
-}
+const itemRequest = ref<ItemRequestDTO>({itemID: -1})
 
 function handleBackClick() {
-  console.log("Back clicked");
-
-  router.push({ name:'home'}) // Adjust as needed
+  router.back();
 }
 
 function handleFavorite(isFavorited: boolean) {
@@ -50,15 +25,19 @@ function handleFavorite(isFavorited: boolean) {
 }
 
 onMounted(() => {
-  loadProduct(props.productId)
+  if (route.query.id) {
+    console.log('Product: ', route.query.id)
+    itemRequest.value.itemID = typeof route.query.id === 'string' ? parseInt(route.query.id, 10) : -1;
+    resultStore.fetchItemDetails(itemRequest.value);
+  }
 })
 
 </script>
 
 <template>
-  <div class="product-page-wrapper">
+  <div v-if="!resultStore.isItemLoading" class="product-page-wrapper">
     <ProductNameComponent
-    :product-name="productName"
+    :product-name="resultStore.item?.name || ''"
     @back-click="handleBackClick"
     />
     <div class="product-info-wrapper">
@@ -71,12 +50,7 @@ onMounted(() => {
      </div>
      <div class="product-info-component-wrapper">
         <ProductInfoComponent
-        :is-available="productAvailability"
-        :price="productPrice"
-        :state="productState"
-        :comment="productComment"
-        :location="sellerLocation"
-        :seller-name="sellerName"
+        :item="resultStore.item || {} as ItemResponseDTO"
         />
       </div>
     </div>

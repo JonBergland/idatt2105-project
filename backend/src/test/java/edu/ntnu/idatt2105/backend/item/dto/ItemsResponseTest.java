@@ -7,8 +7,8 @@ class ItemsResponseTest {
 
   @Test
   void testItemsResponseConstructorAndGetters() {
-    ItemResponse item1 = new ItemResponse(1, "Laptop", "Electronics","Available", "Alice", "A gaming laptop", "2024-03-15", 1500);
-    ItemResponse item2 = new ItemResponse(2, "Phone", "Electronics","Available","Bob", "A smartphone", "2024-03-16", 800);
+    ItemResponse item1 = new ItemResponse(1, "Laptop", "Electronics", "available", "Alice", "A gaming laptop", "2024-03-15", 1500);
+    ItemResponse item2 = new ItemResponse(2, "Phone", "Electronics", "available", "Bob", "A smartphone", "2024-03-16", 800);
     ItemResponse[] itemsArray = {item1, item2};
 
     ItemsResponse itemsResponse = new ItemsResponse(itemsArray);
@@ -19,7 +19,7 @@ class ItemsResponseTest {
 
   @Test
   void testSetItems() {
-    ItemResponse item1 = new ItemResponse(1, "Tablet", "Electronics","Available","Charlie", "A new tablet", "2024-03-17", 600);
+    ItemResponse item1 = new ItemResponse(1, "Tablet", "Electronics", "available", "Charlie", "A new tablet", "2024-03-17", 600);
     ItemResponse[] itemsArray = {item1};
 
     ItemsResponse itemsResponse = new ItemsResponse();
