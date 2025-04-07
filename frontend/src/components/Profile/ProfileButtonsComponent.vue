@@ -6,6 +6,7 @@ defineProps<{
   editMode: boolean,
   logoutMode: boolean,
   activeSaveButton: boolean
+  errorMessage: string
 }>()
 
 const emit = defineEmits(['editMode', 'logoutMode', 'save', 'logout', 'cancel'])
@@ -13,7 +14,7 @@ const emit = defineEmits(['editMode', 'logoutMode', 'save', 'logout', 'cancel'])
 
 <template>
   <div v-if="!editMode && !logoutMode" class="profile-buttons">
-    <p></p>
+    <p v-if="(errorMessage.trim().length > 0)" class="error-message">{{ errorMessage }}</p>
     <div class="buttons-container">
       <button class="edit-info-button" @click="emit('editMode')">Edit info</button>
       <button class="logout-button" @click="emit('logoutMode')">Log Out</button>
@@ -21,7 +22,7 @@ const emit = defineEmits(['editMode', 'logoutMode', 'save', 'logout', 'cancel'])
   </div>
 
   <div v-else-if="editMode && !logoutMode" class="profile-buttons">
-    <p></p>
+    <p v-if="(errorMessage.trim().length > 0)" class="error-message">{{ errorMessage }}</p>
     <div class="buttons-container">
       <button :disabled="!activeSaveButton" class="save-info" @click="emit('save')">Save</button>
       <button class="cancel-button" @click="emit('cancel')">Cancel</button>
@@ -29,7 +30,7 @@ const emit = defineEmits(['editMode', 'logoutMode', 'save', 'logout', 'cancel'])
   </div>
 
   <div v-else-if="!editMode && logoutMode" class="profile-buttons">
-    <p>Are you sure you want to sign out?</p>
+    <p class="logout-confirmation">Are you sure you want to sign out?</p>
     <div class="buttons-container">
       <button class="logout" @click="emit('logout')">Yes</button>
       <button class="cancel-button" @click="emit('cancel')">Cancel</button>
@@ -37,7 +38,6 @@ const emit = defineEmits(['editMode', 'logoutMode', 'save', 'logout', 'cancel'])
   </div>
 
   <div v-else class="profile-buttons"></div>
-
 </template>
 
 <style scoped>
@@ -51,6 +51,17 @@ const emit = defineEmits(['editMode', 'logoutMode', 'save', 'logout', 'cancel'])
 .profile-buttons p {
   height: 15px;
   text-align: center;
+}
+
+.profile-buttons .error-message {
+  color: var(--color-danger-muted);
+  margin-bottom: 5px;
+}
+
+.profile-buttons .logout-confirmation {
+  font-weight: 500;
+  height: auto;
+  margin-bottom: 10px;
 }
 
 .profile-buttons button {

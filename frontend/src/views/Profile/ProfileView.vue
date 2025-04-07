@@ -12,11 +12,11 @@ const authStore = useAuthStore();
 const userStore = useUserStore();
 const router = useRouter();
 const isLoading = ref(true);
+const userError = ref("")
 
 const flattenedItems = computed((): ItemResponseDTO[] => {
   return (userStore.userItems?.items || []).map(item => item);
 });
-
 
 /**
  * Asynchronously loads user data and items from the server.
@@ -25,6 +25,7 @@ const flattenedItems = computed((): ItemResponseDTO[] => {
  */
 async function loadUserData() {
   isLoading.value = true;
+  userError.value = "";
 
   try {
     if (!authStore.isAuth) {
@@ -34,7 +35,6 @@ async function loadUserData() {
         return;
       }
     }
-
     await userStore.updateUserItems();
     console.log("Items gathered from the user: ", userStore.userItems);
   } catch (error) {
@@ -47,14 +47,38 @@ async function loadUserData() {
 
 onMounted(loadUserData);
 
+/**
+ * Handles saving the user data.
+ *
+ * @param {User} user - The user object containing the data to be saved.
+ * @returns {Promise<void>} A promise that resolves when the user data is successfully saved.
+ */
 async function handleSaveUser(user: User) {
-  await userStore.postUserInfo(user);
-  await loadUserData();
+  try {
+    const userUpdated = await userStore.postUserInfo(user);
+  if (userUpdated) {
+    await loadUserData();
+  } else {
+    userError.value = "User was not updated";
+  }
+  } catch (error) {
+    userError.value = "Error while updating user"
+    console.log("Error while updating user: ", error);
+  }
 }
 
+/**
+ * Handles the user logout process.
+ */
 async function handleLogout() {
-  await authStore.logout();
-  router.push({ name: 'home' });
+  try {
+    await authStore.logout();
+    router.push({ name: 'home' });
+  } catch (error) {
+    userError.value = "Error while logging out the user"
+    console.log("Error while logging out the user: ", error);
+  }
+
 }
 </script>
 
@@ -63,6 +87,7 @@ async function handleLogout() {
   <!-- Profile info -->
    <ProfileInfoComponent
    :user="userStore.user"
+   :errorMessage="userError"
    @saveUser="handleSaveUser"
    @logoutUser="handleLogout"
    />
