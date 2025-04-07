@@ -1,4 +1,4 @@
-import type { User } from "@/models/user";
+import type { User, AddItemRequest } from "@/models/user";
 import { defineStore } from "pinia";
 import userService from "@/services/user/userService"
 
@@ -61,6 +61,16 @@ export const useUserStore = defineStore('user', {
         }
       } catch (error) {
         console.log("Error when updating user information: ", error);
+        return false;
+      }
+    },
+
+    async postItem(request: AddItemRequest): Promise<boolean> {
+      try {
+        await userService.postItem(request);
+        return true;
+      } catch (error) {
+        console.log("Error when getting user information: ", error)
         return false;
       }
     }
