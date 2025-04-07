@@ -51,6 +51,11 @@ function handleSave() {
   isEditing.value = false
   isLoggingOut.value = false
 
+  if (!editableUser.value) {
+    console.error("Editable user is null");
+    return;
+  }
+
   const cleanUser: User = {
     userID: editableUser.value.userID,
     name: editableUser.value.name,
