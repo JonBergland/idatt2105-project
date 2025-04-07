@@ -10,4 +10,5 @@ public class Bid {
   private int userID;
   private int askingPrice;
   private String status;
+  private String published;
 }
