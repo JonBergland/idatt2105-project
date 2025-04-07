@@ -5,7 +5,8 @@ import ProfileButtonsComponent from '@/components/Profile/ProfileButtonsComponen
 describe('ProfileButtonsComponent', () => {
   const defaultProps = {
     editMode: false,
-    logoutMode: false
+    logoutMode: false,
+    activeSaveButton: true
   }
 
   it('renders correctly with default props', () => {
@@ -53,7 +54,8 @@ describe('ProfileButtonsComponent', () => {
     const wrapper = mount(ProfileButtonsComponent, {
       props: {
         editMode: true,
-        logoutMode: false
+        logoutMode: false,
+        activeSaveButton: true
       }
     })
 
@@ -65,7 +67,8 @@ describe('ProfileButtonsComponent', () => {
     const wrapper = mount(ProfileButtonsComponent, {
       props: {
         editMode: false,
-        logoutMode: true
+        logoutMode: true,
+        activeSaveButton: true
       }
     })
 
@@ -78,13 +81,28 @@ describe('ProfileButtonsComponent', () => {
     const wrapper = mount(ProfileButtonsComponent, {
       props: {
         editMode: true,
-        logoutMode: false
+        logoutMode: false,
+        activeSaveButton: true
       },
     })
 
     await wrapper.find('.save-info').trigger('click')
+
     expect(wrapper.emitted('save')).toBeTruthy()
     expect(wrapper.emitted('save')).toHaveLength(1)
+  })
+
+  it('does not emit save event when save button is disabled', async () => {
+    const wrapper = mount(ProfileButtonsComponent, {
+      props: {
+        editMode: true,
+        logoutMode: false,
+        activeSaveButton: false
+      },
+    })
+
+    await wrapper.find('.save-info').trigger('click')
+    expect(wrapper.emitted('save')).toBeFalsy()
   })
 
   it('emits cancel event when cancel button in editMode is clicked', async () => {
@@ -92,7 +110,8 @@ describe('ProfileButtonsComponent', () => {
     const wrapper = mount(ProfileButtonsComponent, {
       props: {
         editMode: true,
-        logoutMode: false
+        logoutMode: false,
+        activeSaveButton: true
       },
     })
 
@@ -105,7 +124,8 @@ describe('ProfileButtonsComponent', () => {
     const wrapper = mount(ProfileButtonsComponent, {
       props: {
         editMode: false,
-        logoutMode: true
+        logoutMode: true,
+        activeSaveButton: true
       },
     })
 
@@ -119,7 +139,8 @@ describe('ProfileButtonsComponent', () => {
     const wrapper = mount(ProfileButtonsComponent, {
       props: {
         editMode: false,
-        logoutMode: true
+        logoutMode: true,
+        activeSaveButton: true
       },
     })
 
@@ -133,7 +154,8 @@ describe('ProfileButtonsComponent', () => {
     const wrapper = mount(ProfileButtonsComponent, {
       props: {
         editMode: true,
-        logoutMode: true
+        logoutMode: true,
+        activeSaveButton: true
       },
     })
 
