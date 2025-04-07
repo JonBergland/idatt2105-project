@@ -147,7 +147,6 @@ describe('UserInfoComponent', () => {
     expect(verifyNumbersSpy).toHaveBeenCalledWith('87654321')
   })
 
-  // Testing address field (line 169)
   it('validates address field correctly', async () => {
     const verifyNotEmptySpy = vi.spyOn(stringVerificationUtils, 'verifyStringNotEmpty')
     verifyNotEmptySpy.mockClear()
@@ -166,7 +165,6 @@ describe('UserInfoComponent', () => {
     expect(verifyNotEmptySpy).toHaveBeenCalledWith('New Street 42')
   })
 
-  // Testing postal code field (line 176)
   it('validates postal code field correctly', async () => {
     const verifyNumbersSpy = vi.spyOn(stringVerificationUtils, 'verifyStringForNumbers')
     verifyNumbersSpy.mockClear()
@@ -185,7 +183,6 @@ describe('UserInfoComponent', () => {
     expect(verifyNumbersSpy).toHaveBeenCalledWith('12345')
   })
 
-  // Testing city field (line 185)
   it('validates city field correctly', async () => {
     const verifyNotEmptySpy = vi.spyOn(stringVerificationUtils, 'verifyStringNotEmpty')
     verifyNotEmptySpy.mockClear()
@@ -204,7 +201,6 @@ describe('UserInfoComponent', () => {
     expect(verifyNotEmptySpy).toHaveBeenCalledWith('New York')
   })
 
-  // Testing error messages (lines 134, 198, 211)
   it('shows and hides error messages based on validation state', async () => {
     vi.spyOn(stringVerificationUtils, 'verifyStringForLetters').mockReturnValue(false)
     vi.spyOn(stringVerificationUtils, 'verifyStringForEmail').mockReturnValue(false)
