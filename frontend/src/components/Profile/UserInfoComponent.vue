@@ -71,6 +71,12 @@ const emit = defineEmits([
   "update"
 ]);
 
+
+/**
+ * Handles the update operation for the user information.
+ * This function is triggered when the user initiates an update action.
+ * It is responsible for processing and applying the changes to the user's profile data.
+ */
 function handleUpdate() {
   if (validForm.value) {
     emit("update:firstName", localFirstName.value);
@@ -93,6 +99,10 @@ watch(() => props.phoneNumber, (newVal) => localPhoneNumber.value = String(newVa
 watch(() => props.address, (newVal) => localAddress.value = newVal || "");
 watch(() => props.postalCode, (newVal) => localPostalCode.value = String(newVal || ""));
 watch(() => props.city, (newVal) => localCity.value = newVal || "");
+
+defineExpose({
+  validForm
+})
 </script>
 
 <template>
