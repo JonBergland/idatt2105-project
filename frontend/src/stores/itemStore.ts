@@ -1,13 +1,13 @@
 import type { ItemsResponseDTO, ItemsRequestDTO, CategoriesResponseDTO, ItemRequestDTO, ItemResponseDTO } from "@/models/item";
 import { defineStore } from "pinia";
-import resultService from "@/services/item/resultService";
+import itemService from "@/services/item/itemService";
 
 // Define constants for default values
 const DEFAULT_MIN_PRICE = 0;
 const DEFAULT_MAX_PRICE = 2147483647; // Maximum 32-bit integer
 const DEFAULT_SEGMENT_SIZE = 10;
 
-export const useResultStore = defineStore('result', {
+export const useItemStore = defineStore('result', {
   state: () => ({
     items: [] as ItemsResponseDTO['items'],
     isItemsLoading: false,
@@ -65,7 +65,7 @@ export const useResultStore = defineStore('result', {
 
       try {
         const normalizedRequest = this.normalizeRequest(itemRequest);
-        const response = await resultService.getItems(normalizedRequest);
+        const response = await itemService.getItems(normalizedRequest);
         this.items = response.items;
       } catch (error) {
         this.itemsError = "Failed to fetch items.";
@@ -87,7 +87,7 @@ export const useResultStore = defineStore('result', {
 
       try {
         const normalizedRequest = this.normalizeRequest(request);
-        const response = await resultService.getItems(normalizedRequest);
+        const response = await itemService.getItems(normalizedRequest);
         this.items = [...this.items, ...response.items];
         this.newItemsCount = response.items.length;
       } catch (error) {
@@ -106,7 +106,7 @@ export const useResultStore = defineStore('result', {
       this.categoriesError = null;
 
       try {
-        const response = await resultService.getCategories();
+        const response = await itemService.getCategories();
         this.categories = response.categories;
       } catch (error) {
         this.categoriesError = "Failed to fetch categories.";
@@ -124,7 +124,7 @@ export const useResultStore = defineStore('result', {
     this.itemError = null;
 
     try {
-      const response = await resultService.getItemDetails(request);
+      const response = await itemService.getItemDetails(request);
       this.item = response;
     } catch (error) {
       this.itemError = "Failed to fetch item.";
