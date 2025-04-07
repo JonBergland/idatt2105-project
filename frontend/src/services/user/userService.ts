@@ -1,4 +1,4 @@
-import type { User, UserLoginDTO, UserRegistrationDTO } from "@/models/user";
+import type { User, UserLoginDTO, UserRegistrationDTO, AddItemRequest } from "@/models/user";
 import axiosInstance from "@/services/axiosService";
 import axios from 'axios';
 
@@ -65,6 +65,11 @@ class UserService {
   async logoutUser(): Promise<void> {
     const resp = await axiosInstance.post('/token/logout')
     console.log(resp);
+  }
+
+  async postItem(request: AddItemRequest) {
+    const response = await axiosInstance.post('/user/item', request);
+    console.log(response);
   }
 }
 
