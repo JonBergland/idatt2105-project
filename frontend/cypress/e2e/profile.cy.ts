@@ -125,22 +125,24 @@ describe('Profile Page', () => {
     cy.get('.profile-buttons button.edit-info-button').click();
 
     // Enter invalid data for first name
-    cy.get('input#firstName').clear().type('123');
+    cy.get('input#firstName').clear();
+    cy.get('input#firstName').type('123');
     cy.contains('Only letters allowed.').should('be.visible');
 
     // Enter invalid email
-    cy.get('input#email').clear().type('invalid-email');
+    cy.get('input#email').clear();
+    cy.get('input#email').type('invalid-email');
     cy.contains('Please enter a valid email.').should('be.visible');
 
     // Save button should be disabled
     cy.get('.profile-buttons button.save-info').should('be.disabled');
 
     // Fix the inputs
-    cy.get('input#firstName').clear().type('Jane');
-    cy.get('input#email').clear().type('jane.doe@example.com');
+    cy.get('input#firstName').clear();
+    cy.get('input#email').clear();
 
-    // Wait for validation to update
-    cy.wait(300);
+    cy.get('input#firstName').type('Jane');
+    cy.get('input#email').type('jane.doe@example.com');
 
     // Save button should be enabled
     cy.get('.profile-buttons button.save-info').should('not.be.disabled');
@@ -171,8 +173,11 @@ describe('Profile Page', () => {
     cy.get('.profile-buttons button.edit-info-button').click();
 
     // Change user data
-    cy.get('input#firstName').clear().type('Jane');
-    cy.get('input#lastName').clear().type('Smith');
+    cy.get('input#firstName').clear();
+    cy.get('input#lastName').clear();
+
+    cy.get('input#firstName').type('Jane');
+    cy.get('input#lastName').type('Smith');
 
     // Save changes
     cy.get('.profile-buttons button.save-info').click();
@@ -192,8 +197,12 @@ describe('Profile Page', () => {
     cy.get('.profile-buttons button.edit-info-button').click();
 
     // Change user data
-    cy.get('input#firstName').clear().type('Jane');
-    cy.get('input#lastName').clear().type('Smith');
+
+    cy.get('input#firstName').clear();
+    cy.get('input#lastName').clear();
+
+    cy.get('input#firstName').type('Jane');
+    cy.get('input#lastName').type('Smith');
 
     // Cancel changes
     cy.get('.profile-buttons button.cancel-button').click();
