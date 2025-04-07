@@ -10,5 +10,9 @@ EXPOSE 8080
 # Set JVM options
 ENV JAVA_OPTS="-Xms256m -Xmx512m"
 
+COPY pom.xml .
+
+RUN mvn dependency:go-offline
+
 # Default command uses Spring Boot's dev mode
-CMD ["./mvnw", "spring-boot:run", "-DskipTests"]
+CMD ["./mvnw", "spring-boot:run", "-DskipTests", "-Dspring-boot.run.jvmArguments='-XX:TieredStopAtLevel=1 -Dspring.devtools.restart.enabled=true -Dspring.output.ansi.enabled=always'"]
