@@ -64,7 +64,3 @@ async function handleLogout() {
 </div>
 
 </template>
-
-<script>
-
-</script>

@@ -292,7 +292,7 @@ describe('UserInfoComponent', () => {
     expect(wrapper.emitted('update:postalCode')).toBeTruthy()
     expect(wrapper.emitted('update:city')).toBeTruthy()
 
-    const lastIndex = (arr: any[]) => arr.length - 1
+    const lastIndex = <T>(arr: T[]): number => arr.length - 1
 
     expect(wrapper.emitted('update:firstName')![lastIndex(wrapper.emitted('update:firstName')!)]).toEqual(['Jane'])
     expect(wrapper.emitted('update:lastName')![lastIndex(wrapper.emitted('update:lastName')!)]).toEqual(['Smith'])

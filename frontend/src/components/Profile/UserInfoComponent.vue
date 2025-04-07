@@ -45,10 +45,8 @@ const validLastName = computed(() =>
   stringVerificationUtils.verifyStringForLetters(localLastName.value));
 const validEmail = computed(() =>
   stringVerificationUtils.verifyStringForEmail(localEmail.value));
-const validCountryCode = computed(() => {
-  localCountryCode.value = formatCountryCode(localCountryCode.value)
-  return stringVerificationUtils.verifyStringForNumbers(localCountryCode.value.split("+")[1] || "");
-});
+const validCountryCode = computed(() =>
+  stringVerificationUtils.verifyStringForNumbers(localCountryCode.value.split("+")[1] || ""));
 const validPhoneNumber = computed(() =>
   stringVerificationUtils.verifyStringForNumbers(localPhoneNumber.value));
 const validAddress = computed(() =>
@@ -88,6 +86,8 @@ const emit = defineEmits([
  * It is responsible for processing and applying the changes to the user's profile data.
  */
 function handleUpdate() {
+  localCountryCode.value = formatCountryCode(localCountryCode.value)
+
   if (validForm.value) {
     emit("update:firstName", localFirstName.value);
     emit("update:lastName", localLastName.value);
