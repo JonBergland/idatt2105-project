@@ -58,7 +58,7 @@ describe('UserInfoComponent', () => {
     expect(wrapper.find('input#firstName').element.value).toBe(defaultProps.firstName)
     expect(wrapper.find('input#lastName').element.value).toBe(defaultProps.lastName)
     expect(wrapper.find('input#email').element.value).toBe(defaultProps.email)
-    expect(wrapper.find('input#countryCode').element.value).toBe(defaultProps.countryCode.toString())
+    expect(wrapper.find('input#countryCode').element.value).toBe("+" + defaultProps.countryCode.toString())
   })
 
   it('validates form fields correctly', async () => {
