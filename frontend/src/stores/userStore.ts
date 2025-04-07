@@ -60,7 +60,7 @@ export const useUserStore = defineStore('user', {
           return false
         }
       } catch (error) {
-        console.log("Error when updating user information");
+        console.log("Error when updating user information: ", error);
         return false;
       }
     }
