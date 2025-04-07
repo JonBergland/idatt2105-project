@@ -1,23 +1,43 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 
-const emit = defineEmits(['search']);
+const props = defineProps({
+  modelValue: {
+    type: String,
+    default: ''
+  }
+});
+
+const emit = defineEmits(['search-triggered', 'search-input', 'update:modelValue']);
 
 const searchInput = ref('');
+
+watch(() => props.modelValue, (newValue) => {
+  searchInput.value = newValue;
+});
 
 /**
  * Emits the search query to the parent component
  */
- function handleSearch() {
-  emit('search', searchInput.value);
+ function handleSearchTriggered() {
+  emit('search-triggered', searchInput.value);
+}
+
+function handleSearchInput() {
+  emit('search-input', searchInput.value)
 }
 </script>
 
 <template>
   <div class="search-bar">
     <div class="input-container ">
-      <input type="text" v-model="searchInput" placeholder="Search for anything..." />
-      <button @click="handleSearch">
+      <input
+      type="text"
+      v-model="searchInput"
+      @input="handleSearchInput"
+      @keyup.enter="handleSearchTriggered"
+      placeholder="Search for anything..." />
+      <button @click="handleSearchTriggered">
         <img src="@/assets/icons/search.svg" alt="Search">
       </button>
     </div>

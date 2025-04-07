@@ -26,10 +26,11 @@ public class ItemRepository {
    */
   public Item getItem(int id) {
     return jdbcTemplate.queryForObject(
-        "SELECT Item.*, Item.id AS itemID, User.email AS seller, Categories.category_name AS category FROM Item "
+        "SELECT Item.*, Item.id AS itemID, User.email AS seller, Categories.category_name AS category, State.state_name AS state FROM Item "
             + "LEFT JOIN User ON Item.user_id = User.id "
             + "LEFT JOIN Categories ON Item.category_id = Categories.id "
-            + " WHERE Item.id = ?",
+            + "LEFT JOIN State ON Item.state_id = State.id "
+            + "WHERE Item.id = ?",
         new Object[]{id},
         new BeanPropertyRowMapper<>(Item.class)
     );
@@ -59,7 +60,7 @@ public class ItemRepository {
         """
             SELECT Item.*, Item.id AS itemID, User.email AS seller, Categories.category_name AS category FROM Item
             LEFT JOIN User ON Item.user_id = User.id
-            LEFT JOIN Categories ON Item.category_id = Categories.id WHERE 1=1""");
+            LEFT JOIN Categories ON Item.category_id = Categories.id WHERE state_id = 1""");
     if (itemsRequest.getCategory() != null) {
       sb.append(" AND Categories.category_name = ?");
     }
@@ -136,9 +137,9 @@ public class ItemRepository {
    */
   public void editItem(Item item) {
     jdbcTemplate.update(
-        "UPDATE Item " +
-        "SET name = ?, description = ?, price = ?, category_id = (SELECT id FROM Categories WHERE category_name = ?) " +
-        "WHERE id = ? AND user_id = ?",
+        "UPDATE Item "
+        + "SET name = ?, description = ?, price = ?, category_id = (SELECT id FROM Categories WHERE category_name = ?) "
+        + "WHERE id = ? AND user_id = ?",
         item.getName(),
         item.getDescription(),
         item.getPrice(),
@@ -155,9 +156,10 @@ public class ItemRepository {
    */
   public Item[] getItemsFromUserID(int userID) {
     List<Item> itemList = jdbcTemplate.query(
-        "SELECT Item.*, Item.id AS itemID, User.email AS seller, Categories.category_name AS category FROM Item "
+        "SELECT Item.*, Item.id AS itemID, User.email AS seller, Categories.category_name AS category, State.state_name AS state FROM Item "
             + "LEFT JOIN User ON Item.user_id = User.id "
             + "LEFT JOIN Categories ON Item.category_id = Categories.id "
+            + "LEFT JOIN State ON Item.state_id = State.id "
             + "WHERE user_id = ?",
         new Object[]{userID},
         new BeanPropertyRowMapper<>(Item.class));

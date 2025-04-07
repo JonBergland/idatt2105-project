@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import ToggleButton from './ToggleButton.vue';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 
 const props = defineProps({
   label: {
@@ -16,29 +16,55 @@ const props = defineProps({
     default: 'row',
     validator: (value: string) => ['row', 'column'].includes(value),
   },
+  autoSelectFirst: {
+    type: Boolean,
+    default: false,
+    required: false
+  },
+  initialSelected: {
+    type: String,
+    default: null,
+    required: false
+  },
+  allowDeselect: {
+    type: Boolean,
+    default: false,
+    required: false
+  }
 });
 
 const emit = defineEmits(['toggle-selected']);
 
-const selectedToggle = ref<string | null>(null);
+const selectedToggle = ref<string | null>(props.initialSelected);
 
 /**
- * Emits the 'toggle-clicked' event to the parent component.
- *
+ * Handles toggle button clicks with optional deselection.
+ * If allowDeselect is true and clicking an already selected toggle,
+ * it will deselect it. Otherwise, it just selects the clicked toggle.
  *
  * @param {string} name - The name of the clicked toggle
  */
-function handleToggleClick(name: string) {
-  selectedToggle.value = name;
-  emit('toggle-selected', name);
+ function handleToggleClick(name: string) {
+  if (props.allowDeselect && selectedToggle.value === name) {
+    selectedToggle.value = null;
+    emit('toggle-selected', null);
+  } else if (selectedToggle.value !== name) {
+    selectedToggle.value = name;
+    emit('toggle-selected', name);
+  }
 }
 
+watch([() => props.initialSelected, () => props.names], ([newSelected, newNames]) => {
+  if (newSelected && newNames.includes(newSelected)) {
+    selectedToggle.value = newSelected;
+  }
+}, { immediate: true });
 
 /**
- * Selects the first toggle when the component is mounted.
+ * Selects the first toggle when the component is mounted if autoSelectFirst is true.
  */
-onMounted(() => {
-  if (props.names.length > 0) {
+ onMounted(() => {
+  if (props.autoSelectFirst && props.names.length > 0) {
     handleToggleClick(props.names[0]);
   }
 });
