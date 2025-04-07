@@ -79,7 +79,7 @@ export const useUserStore = defineStore('user', {
     async updateUserItems(): Promise<void> {
       try {
         if (this.user) {
-          const resp = await userService.getUserItems(this.user);
+          const resp = await userService.getUserItems();
 
           if (resp !== null) {
             this.userItems = resp
