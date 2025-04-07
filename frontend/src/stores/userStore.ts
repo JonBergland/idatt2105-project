@@ -49,13 +49,13 @@ export const useUserStore = defineStore('user', {
 
           const newUser = await this.getUserInfo()
 
-          const success = newUser &&
+          const success = newUser !== null &&
             user.userID === newUser.userID &&
             user.name === newUser.name &&
             user.surname === newUser.surname &&
             user.email === newUser.email;
 
-          return success
+          return success;
         } else {
           return false
         }
