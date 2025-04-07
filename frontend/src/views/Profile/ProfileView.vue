@@ -57,8 +57,10 @@ async function handleLogout() {
    @logoutUser="handleLogout"
    />
 
-
   <!-- User or Admin profile specific  -->
+   <div v-if="user?.role=== 'ROLE_USER'">
+
+   </div>
 </div>
 
 </template>
