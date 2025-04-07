@@ -17,6 +17,8 @@ import edu.ntnu.idatt2105.backend.security.dto.SigninRequest;
 import edu.ntnu.idatt2105.backend.security.dto.SignupRequest;
 import edu.ntnu.idatt2105.backend.user.dto.AddItemRequest;
 import edu.ntnu.idatt2105.backend.user.dto.GetBidItemResponse;
+import edu.ntnu.idatt2105.backend.user.dto.GetBidsRequest;
+import edu.ntnu.idatt2105.backend.user.dto.GetBidsResponse;
 import edu.ntnu.idatt2105.backend.user.dto.GetStoreItemResponse;
 import edu.ntnu.idatt2105.backend.user.dto.PlaceBidRequest;
 import edu.ntnu.idatt2105.backend.user.dto.ToggleBookmarkRequest;
@@ -190,6 +192,16 @@ public class UserService {
     String userID = SecurityContextHolder.getContext().getAuthentication().getName();
     Bid[] bids = bidRepository.getUniqueBids(Integer.parseInt(userID));
     return BidMapper.INSTANCE.bidArrayToGetBidItemResponseArray(bids);
+  }
+
+  public GetBidsResponse[] getItemBids(GetBidsRequest getBidsRequest) {
+    String userID = SecurityContextHolder.getContext().getAuthentication().getName();
+    Bid[] bids = bidRepository.getItemBids(Integer.parseInt(userID), getBidsRequest);
+    return BidMapper.INSTANCE.bidArrayToGetBidsResponseArray(bids);
+  }
+
+  public void answerBid() {
+
   }
 
   private String encodePassword(String password) {
