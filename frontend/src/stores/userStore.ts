@@ -8,10 +8,20 @@ import userService from "@/services/user/userService"
  */
 export const useUserStore = defineStore('user', {
   state: () => ({
-    user: null as User | null
+    user: null as User | null,
+    userItems: { items: [] } as ItemsResponseDTO
   }),
 
   actions: {
+    /**
+     * Setter for the user state.
+     *
+     * @param user - The user object to set as the current user.
+     */
+    setUser(user: User | null): void {
+      this.user = user;
+    },
+
     /**
      * Retrieves the user information from the user service and updates the store's user state.
      *
@@ -66,27 +76,22 @@ export const useUserStore = defineStore('user', {
       }
     },
 
-    async getUserItems() {
+    async updateUserItems(): Promise<void> {
       try {
         if (this.user) {
-          const resp: ItemsResponseDTO | null = await userService.getUserItems(this.user);
+          const resp = await userService.getUserItems(this.user);
 
           if (resp !== null) {
-            return resp
+            this.userItems = resp
           } else {
             throw new Error("Response was null");
           }
         } else {
           throw new Error("User not logged in");
         }
-
       } catch (error) {
         console.log("Unexpected error from trying to retrieve user items: ", error);
-        // Return no items when there is an error
-        let items: ItemsResponseDTO = {
-          items: []
-        }
-        return items
+        this.userItems =  { items: [] }
       }
     }
   }

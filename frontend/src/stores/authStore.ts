@@ -1,6 +1,7 @@
 import type { User, UserLoginDTO, UserRegistrationDTO } from "@/models/user";
 import { defineStore } from "pinia";
 import userService from "@/services/user/userService"
+import { useUserStore } from "@/stores/userStore";
 
 
 /**
@@ -9,7 +10,7 @@ import userService from "@/services/user/userService"
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     isAuth: false,
-    userData: null as User | null
+    userStore: useUserStore()
   }),
 
   actions: {
@@ -23,23 +24,23 @@ export const useAuthStore = defineStore('auth', {
      */
     async checkIfAuth() {
       try {
-        this.userData = await userService.getUserInfo();
+        this.userStore.setUser(await userService.getUserInfo());
 
-        if (this.userData) {
+        if (this.userStore.user) {
           this.isAuth = true;
           return true;
         } else {
           throw new Error("User data is empty");
         }
       } catch (error) {
-        if (this.userData == null) {
+        if (this.userStore.user == null) {
           this.isAuth = false;
           return false;
         }
 
         console.error("Unexpected error during auth check:", error);
         this.isAuth = false;
-        this.userData = null;
+        this.userStore.setUser(null);
         return false;
       }
     },
@@ -60,7 +61,7 @@ export const useAuthStore = defineStore('auth', {
         // Test to see if the user is authenticated
         if (resp) {
           await this.checkIfAuth();
-          if (this.userData) {
+          if (this.userStore.user) {
             return true;
           }
         } else {
@@ -89,7 +90,7 @@ export const useAuthStore = defineStore('auth', {
 
           if (resp) {
             await this.checkIfAuth()
-            if (this.userData) {
+            if (this.userStore.user) {
               return true
             }
           } else {
@@ -109,7 +110,7 @@ export const useAuthStore = defineStore('auth', {
     async logout() {
       await userService.logoutUser()
       this.isAuth = false
-      this.userData = null
+      this.userStore.setUser(null)
     }
   }
 })
