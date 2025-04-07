@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import profileImage from '@/assets/icons/profile-avatar.svg'
 import type { User } from '@/models/user';
-import { ref, watch, onMounted } from 'vue';
+import { ref, watch } from 'vue';
 import UserInfoComponent from '@/components/Profile/UserInfoComponent.vue';
 import ProfileButtonsComponent from '@/components/Profile/ProfileButtonsComponent.vue';
 
