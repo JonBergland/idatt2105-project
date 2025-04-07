@@ -6,11 +6,11 @@ import placeholderImage from '@/assets/images/placeholder-image.png'
 import { onMounted, ref,  } from 'vue';
 import { useRoute, useRouter } from 'vue-router'
 import ProductInfoComponent from '@/components/ProductPage/ProductInfoComponent.vue';
-import { useResultStore } from '@/stores/resultStore';
+import { useItemStore } from '@/stores/itemStore';
 
 const route = useRoute()
 const router = useRouter()
-const resultStore = useResultStore();
+const itemStore = useItemStore();
 
 const itemRequest = ref<ItemRequestDTO>({itemID: -1})
 
@@ -28,16 +28,16 @@ onMounted(() => {
   if (route.query.id) {
     console.log('Product: ', route.query.id)
     itemRequest.value.itemID = typeof route.query.id === 'string' ? parseInt(route.query.id, 10) : -1;
-    resultStore.fetchItemDetails(itemRequest.value);
+    itemStore.fetchItemDetails(itemRequest.value);
   }
 })
 
 </script>
 
 <template>
-  <div v-if="!resultStore.isItemLoading" class="product-page-wrapper">
+  <div v-if="!itemStore.isItemLoading" class="product-page-wrapper">
     <ProductNameComponent
-    :product-name="resultStore.item?.name || ''"
+    :product-name="itemStore.item?.name || ''"
     @back-click="handleBackClick"
     />
     <div class="product-info-wrapper">
@@ -50,7 +50,7 @@ onMounted(() => {
      </div>
      <div class="product-info-component-wrapper">
         <ProductInfoComponent
-        :item="resultStore.item || {} as ItemResponseDTO"
+        :item="itemStore.item || {} as ItemResponseDTO"
         />
       </div>
     </div>

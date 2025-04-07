@@ -2,7 +2,7 @@
 import type { ItemsRequestDTO } from '@/models/item';
 import { useRoute, useRouter } from 'vue-router';
 import { ref, onMounted, watch} from 'vue';
-import { useResultStore } from '@/stores/resultStore';
+import { useItemStore } from '@/stores/itemStore';
 import ToggleGroup from '@/components/Result/ToggleGroup.vue';
 import SearchBar from '@/components/Home/SearchBar.vue';
 import ItemGroup from '@/components/Home/ItemGroup.vue';
@@ -31,7 +31,7 @@ const hasMoreItems = ref(true);
 
 const route = useRoute();
 const router = useRouter();
-const resultStore = useResultStore();
+const itemStore = useItemStore();
 
 const itemsRequest = ref<ItemsRequestDTO>({
     category: null,
@@ -88,8 +88,8 @@ onMounted(() => {
     ];
   }
 
-  resultStore.fetchCategories();
-  resultStore.fetchItems(itemsRequest.value);
+  itemStore.fetchCategories();
+  itemStore.fetchItems(itemsRequest.value);
 
   window.addEventListener('scroll', handleScroll);
 });
@@ -134,9 +134,9 @@ function handleScroll() {
       segmentOffset: [currentPage.value, itemsPerPage.value] as [number, number]
     };
 
-    await resultStore.loadMoreItems(nextPageRequest);
+    await itemStore.loadMoreItems(nextPageRequest);
 
-    if (resultStore.newItemsCount < itemsPerPage.value) {
+    if (itemStore.newItemsCount < itemsPerPage.value) {
       hasMoreItems.value = false;
     }
   } catch (error) {
@@ -296,7 +296,7 @@ function handlePriceRangeUpdated(priceRange: { min: number | null; max: number |
 
   itemsRequest.value.segmentOffset = [0, itemsPerPage.value];
 
-  resultStore.fetchItems(resetRequest);
+  itemStore.fetchItems(resetRequest);
   updateUrlParams();
 }, { deep: true });
 
@@ -307,10 +307,10 @@ function handlePriceRangeUpdated(priceRange: { min: number | null; max: number |
       <h3>Filter</h3>
       <div class="filter-wrapper">
         <p>Category:</p>
-        <p v-if="resultStore.categoriesError"> {{ resultStore.categoriesError }}</p>
+        <p v-if="itemStore.categoriesError"> {{ itemStore.categoriesError }}</p>
         <ToggleGroup
           v-else
-          :names="resultStore.categories"
+          :names="itemStore.categories"
           :initial-selected="categorySelected"
           @toggle-selected="handleCategoryClick"
           direction="column"
@@ -345,11 +345,11 @@ function handlePriceRangeUpdated(priceRange: { min: number | null; max: number |
             />
           </div>
         </div>
-        <div v-if="!resultStore.isItemsLoading" class="item-group-warpper">
-          <p v-if="resultStore.itemsError"> {{ resultStore.itemsError }}</p>
-          <ItemGroup :items="resultStore.items" @item-clicked="handleItemClick" :mode="currentDisplayMode" />
+        <div v-if="!itemStore.isItemsLoading" class="item-group-warpper">
+          <p v-if="itemStore.itemsError"> {{ itemStore.itemsError }}</p>
+          <ItemGroup :items="itemStore.items" @item-clicked="handleItemClick" :mode="currentDisplayMode" />
           <div v-if="isLoadingMore" class="loading-more">Loading more items...</div>
-          <div v-if="!hasMoreItems && resultStore.items.length > 0" class="end-of-results">No more items to display</div>
+          <div v-if="!hasMoreItems && itemStore.items.length > 0" class="end-of-results">No more items to display</div>
         </div>
       </div>
     </div>
