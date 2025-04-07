@@ -23,6 +23,22 @@ const localAddress = ref(props.address || "");
 const localPostalCode = ref(String(props.postalCode || ""));
 const localCity = ref(props.city || "");
 
+/**
+ * Formats a given country code for the phone number.
+ *
+ * @param {string} code - The country code to format (e.g., "+1", "+46").
+ * @returns {string} - The formatted country code.
+ */
+function formatCountryCode(code: string): string {
+  code = code.trim();
+  if (code.charAt(0) !== "+") {
+    code = "+" + code;
+  } else {
+    code = "+" + code.split("+").join("");
+  }
+  return code;
+}
+
 const validFirstName = computed(() =>
   stringVerificationUtils.verifyStringForLetters(localFirstName.value));
 const validLastName = computed(() =>
@@ -30,14 +46,8 @@ const validLastName = computed(() =>
 const validEmail = computed(() =>
   stringVerificationUtils.verifyStringForEmail(localEmail.value));
 const validCountryCode = computed(() => {
-  let code = localCountryCode.value.trim();
-  if (code.charAt(0) !== "+") {
-    code = "+" + code;
-  } else {
-    code = "+" + code.split("+").join("");
-  }
-  localCountryCode.value = code;
-  return stringVerificationUtils.verifyStringForNumbers(code.split("+")[1] || "");
+  localCountryCode.value = formatCountryCode(localCountryCode.value)
+  return stringVerificationUtils.verifyStringForNumbers(localCountryCode.value.split("+")[1] || "");
 });
 const validPhoneNumber = computed(() =>
   stringVerificationUtils.verifyStringForNumbers(localPhoneNumber.value));
