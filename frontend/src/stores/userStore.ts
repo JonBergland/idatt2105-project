@@ -50,7 +50,7 @@ export const useUserStore = defineStore('user', {
           const newUser = await this.getUserInfo()
 
           const success = newUser &&
-            user.id === newUser.id &&
+            user.userID === newUser.userID &&
             user.name === newUser.name &&
             user.surname === newUser.surname &&
             user.email === newUser.email;
