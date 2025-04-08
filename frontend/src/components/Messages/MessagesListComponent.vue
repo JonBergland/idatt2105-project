@@ -24,6 +24,10 @@ const activeChatId = ref<number | null>(null);
 function handleMessageItemClick(chat: ChatResponseDTO) {
   activeChatId.value = chat.item.itemID;
 
+  chat.messages.forEach(messsage => {
+    messsage.notSeenByUser = false
+  });
+
   emit('chat-selected', chat);
 }
 
@@ -39,7 +43,6 @@ function isUserSeller(sellerID: number) {
 
 /**
  * Determines the role of the messaging contact based on the chat.
- * If the user is not the seller, 
  *
  * @param chat The chat to analyze
  * @returns "Buyer" or "Seller" based on who is the contact
