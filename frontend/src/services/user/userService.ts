@@ -67,7 +67,14 @@ class UserService {
     console.log(resp);
   }
 
-  async postItem(request: AddItemRequest) {
+
+  /**
+   * Sends a POST request to create a new user item.
+   *
+   * @param request - The payload containing the details of the item to be added.
+   * @returns A promise that resolves to the response of the POST request.
+   */
+  async postItem(request: AddItemRequest): Promise<void>{
     const response = await axiosInstance.post('/user/item', request);
     console.log(response);
   }
