@@ -1,6 +1,7 @@
 package edu.ntnu.idatt2105.backend.bid;
 
 import edu.ntnu.idatt2105.backend.bid.model.Bid;
+import edu.ntnu.idatt2105.backend.user.dto.AnswerBidRequest;
 import edu.ntnu.idatt2105.backend.user.dto.GetBidItemResponse;
 import edu.ntnu.idatt2105.backend.user.dto.GetBidsResponse;
 import edu.ntnu.idatt2105.backend.user.dto.PlaceBidRequest;
@@ -22,6 +23,7 @@ public interface BidMapper {
 
   GetBidItemResponse[] bidArrayToGetBidItemResponseArray(Bid[] bid);
 
+  @Mapping(source = "bidID", target = "bidID")
   @Mapping(source = "itemID", target = "itemID")
   @Mapping(source = "askingPrice", target = "askingPrice")
   @Mapping(source = "status", target = "status")
@@ -30,4 +32,9 @@ public interface BidMapper {
 
   GetBidsResponse[] bidArrayToGetBidsResponseArray(Bid[] bid);
 
+  @Mapping(source = "bidID", target = "bidID")
+  @Mapping(source = "itemID", target = "itemID")
+  @Mapping(source = "userID", target = "userID")
+  @Mapping(source = "status", target = "status")
+  Bid answerBidRequestToBid(AnswerBidRequest answerBidRequest);
 }
