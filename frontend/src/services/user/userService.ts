@@ -1,5 +1,5 @@
 import type { ItemsResponseDTO } from "@/models/item";
-import type { User, UserLoginDTO, UserRegistrationDTO } from "@/models/user";
+import type { User, UserLoginDTO, UserRegistrationDTO, AddItemRequest } from "@/models/user";
 import axiosInstance from "@/services/axiosService";
 import axios from 'axios';
 
