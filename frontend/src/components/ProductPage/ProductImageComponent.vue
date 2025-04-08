@@ -11,10 +11,6 @@ const props = defineProps({
     type: Array,
     required: true
   },
-  imageNr: {
-    type: Number,
-    default: 0
-  }
 });
 
 const imageNr = ref(0)
@@ -49,7 +45,7 @@ function toggleFavorite() {
 }
 
 const currentImageUrl = computed(() => {
-  const image = props.images && props.images.length > props.imageNr ? props.images[props.imageNr] : null;
+  const image = props.images && props.images.length > imageNr.value ? props.images[imageNr.value] : null;
 
   // Return placeholderImage if image is empty
   return image || placeholderImage;
