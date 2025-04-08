@@ -1,4 +1,4 @@
-import type { ItemsResponseDTO } from "@/models/item";
+import type { ItemsResponseDTO, ItemRequestDTO, ItemResponseDTO } from "@/models/item";
 import type { User, UserLoginDTO, UserRegistrationDTO, AddItemRequest } from "@/models/user";
 import axiosInstance from "@/services/axiosService";
 import axios from 'axios';
@@ -78,7 +78,6 @@ class UserService {
     console.log(resp);
   }
 
-
   /**
    * Sends a POST request to create a new user item.
    *
@@ -88,6 +87,11 @@ class UserService {
   async postItem(request: AddItemRequest): Promise<void>{
     const response = await axiosInstance.post('/user/item', request);
     console.log(response);
+  }
+
+  async getUserItemDetails(request: ItemRequestDTO): Promise<ItemResponseDTO> {
+    const response = await axiosInstance.post<ItemResponseDTO>('/user/item/store', request);
+    return response.data;
   }
 }
 
