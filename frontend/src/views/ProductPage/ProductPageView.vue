@@ -25,13 +25,39 @@ const itemId = computed(() => {
   return typeof id === 'string' ? parseInt(id, 10) : -1;
 });
 
+// Computed property to track bookmark status
+const isBookmarked = computed(() => {
+  return !!itemResponse.value?.bookmark;
+});
+
 function handleBackClick() {
   router.back();
 }
 
-function handleFavorite(isFavorited: boolean) {
-  console.log("Favorite clicked:", isFavorited);
-  // TODO: Add functionality for favorite to backend
+async function handleFavorite(isFavorited: boolean) {
+  if (!authStore.isAuth) {
+    router.push('/login');
+    return;
+  }
+
+  try {
+    // Update local state immediately for responsive UI
+    itemResponse.value = {
+      ...itemResponse.value,
+      bookmark: isFavorited
+    };
+
+    // TODO: API call to toogle the
+
+    console.log(`Item ${itemId.value} bookmark status set to ${isFavorited}`);
+  } catch (err) {
+    console.error('Error updating bookmark status:', err);
+    // Revert UI if API call fails
+    itemResponse.value = {
+      ...itemResponse.value,
+      bookmark: !isFavorited
+    };
+  }
 }
 
 /**
@@ -85,6 +111,7 @@ onMounted(fetchItemDetails);
         <ProductImageComponent
           id="product-image-component"
           :images="[placeholderImage, placeholderImage]"
+          :isFavorited="isBookmarked"
           @favorite="handleFavorite"
         />
       </div>
