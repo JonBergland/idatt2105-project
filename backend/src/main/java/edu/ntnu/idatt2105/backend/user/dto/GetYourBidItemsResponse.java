@@ -9,5 +9,5 @@ public class GetYourBidItemsResponse {
   int itemID;
   int userID;
   String itemName;
-  String email;
+  String buyer;
 }
