@@ -19,6 +19,7 @@ export interface ItemResponseDTO {
   published: string;
   price: number;
   state: string;
+  bookmark: boolean;
 }
 
 export interface ItemsResponseDTO {
