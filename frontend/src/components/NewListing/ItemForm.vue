@@ -1,6 +1,14 @@
 <script setup lang="ts">
-import { ref } from 'vue';
 import type { AddItemRequest } from '@/models/item.ts';
+import { ref, onMounted } from 'vue';
+import { useItemStore } from '@/stores/itemStore.ts'
+import ToggleGroup from '@/components/Result/ToggleGroup.vue';
+
+const itemStore = useItemStore();
+
+const emit = defineEmits<{
+  submit: [item: AddItemRequest]
+}>();
 
 const item = ref<AddItemRequest>({
   name: '',
@@ -9,13 +17,18 @@ const item = ref<AddItemRequest>({
   category: ''
 });
 
-const submitForm = async () => {
-  try {
-    //TODO: call on user store to submit item
-  } catch (error) {
-    console.error('Failed to submit item:', error);
-  }
-};
+function handleCategoryClick(categoryName: string) {
+  item.value.category = categoryName;
+}
+
+function submitForm() {
+  // Emit the current form data to parent
+  emit('submit', item.value);
+}
+
+onMounted(() => {
+  itemStore.fetchCategories();
+})
 </script>
 
 <template>
@@ -34,7 +47,16 @@ const submitForm = async () => {
     </div>
     <div class="form-group">
       <label for="category">Category:</label>
-      <CategorySelect v-model="item.category" />
+      <p v-if="itemStore.categoriesError"> {{ itemStore.categoriesError }}</p>
+      <ToggleGroup
+          v-else
+          :names="itemStore.categories"
+          :auto-select-first="true"
+          @toggle-selected="handleCategoryClick"
+          direction="row"
+          :allow-deselect="false"
+          id="category"
+          />
     </div>
     <button type="submit">Submit</button>
   </form>
