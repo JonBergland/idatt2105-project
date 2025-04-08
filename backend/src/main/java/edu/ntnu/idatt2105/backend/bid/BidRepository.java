@@ -105,6 +105,23 @@ public class BidRepository {
     return bidList.toArray(new Bid[0]);
   }
 
+  public Bid[] getBidsByUserOnItem(Bid bid, int userID, int[] segmentOffset) {
+    List<Bid> bidList = jdbcTemplate.query(
+        "SELECT Bids.id AS bidID, Bids.item_id AS itemID, Bids.asking_price, Bids.status, Bids.published FROM Bids "
+            + "JOIN Item On Bids.item_id = Item.id "
+            + "WHERE Bids.item_id = ? AND Bids.user_id = ? AND Item.user_id = ? "
+            + "ORDER BY published DESC "
+            + "LIMIT ? OFFSET ? ",
+        new Object[]{
+            bid.getItemID(),
+            bid.getUserID(),
+            userID,
+            segmentOffset[1],
+            segmentOffset[0] * segmentOffset[1]},
+        new BeanPropertyRowMapper<>(Bid.class));
+    return bidList.toArray(new Bid[0]);
+  }
+
   /**
    * check if a user owns the item that is bid on.
    *
