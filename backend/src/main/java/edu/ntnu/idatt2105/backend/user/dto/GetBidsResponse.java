@@ -6,6 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class GetBidsResponse {
+  int bidID;
   int itemID;
   int askingPrice;
   String status;
