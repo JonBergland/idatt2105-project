@@ -4,6 +4,8 @@ import edu.ntnu.idatt2105.backend.item.dto.ItemRequest;
 import edu.ntnu.idatt2105.backend.item.dto.ItemsResponse;
 import edu.ntnu.idatt2105.backend.user.dto.AddItemRequest;
 import edu.ntnu.idatt2105.backend.user.dto.AnswerBidRequest;
+import edu.ntnu.idatt2105.backend.user.dto.GetBidsOnItemByUserRequest;
+import edu.ntnu.idatt2105.backend.user.dto.GetBidsOnItemByUserResponse;
 import edu.ntnu.idatt2105.backend.user.dto.GetYourBidItemsResponse;
 import edu.ntnu.idatt2105.backend.user.dto.GetYourUniqueBidsResponse;
 import edu.ntnu.idatt2105.backend.user.dto.GetYourItemBidsRequest;
@@ -122,7 +124,11 @@ public class UserController {
    */
   @PostMapping("/item/bid")
   public void placeBid(@RequestBody PlaceBidRequest placeBidRequest) {
-    userService.placeBid(placeBidRequest);
+    try {
+      userService.placeBid(placeBidRequest);
+    } catch (Exception e) {
+
+    }
   }
 
   /**
@@ -157,6 +163,8 @@ public class UserController {
       userService.answerBid(answerBidRequest);
     } catch (AccessDeniedException e) {
       logger.warn("permission denied: {}", e.getMessage());
+    } catch (Exception e) {
+
     }
   }
 
@@ -166,8 +174,13 @@ public class UserController {
    * @return the users
    */
   @GetMapping("/item/bid/your")
-  public GetYourBidItemsResponse[] getBidsOnYourItem() {
+  public GetYourBidItemsResponse[] getBidsOnYourItems() {
     return userService.getBids();
+  }
+
+  @PostMapping("/item/bid/youritem")
+  public GetBidsOnItemByUserResponse[] getBidsOnYourItem(@RequestBody GetBidsOnItemByUserRequest getBidsOnItemByUserRequest) {
+    return userService.getBidsOnYourItem(getBidsOnItemByUserRequest);
   }
 
   /**
