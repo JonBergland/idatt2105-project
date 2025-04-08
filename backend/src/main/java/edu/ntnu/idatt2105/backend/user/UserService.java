@@ -17,6 +17,8 @@ import edu.ntnu.idatt2105.backend.security.dto.SigninRequest;
 import edu.ntnu.idatt2105.backend.security.dto.SignupRequest;
 import edu.ntnu.idatt2105.backend.user.dto.AddItemRequest;
 import edu.ntnu.idatt2105.backend.user.dto.AnswerBidRequest;
+import edu.ntnu.idatt2105.backend.user.dto.GetBidsOnItemByUserRequest;
+import edu.ntnu.idatt2105.backend.user.dto.GetBidsOnItemByUserResponse;
 import edu.ntnu.idatt2105.backend.user.dto.GetYourBidItemsResponse;
 import edu.ntnu.idatt2105.backend.user.dto.GetYourUniqueBidsResponse;
 import edu.ntnu.idatt2105.backend.user.dto.GetYourItemBidsRequest;
@@ -189,10 +191,15 @@ public class UserService {
    *
    * @param placeBidRequest the request info
    */
-  public void placeBid(PlaceBidRequest placeBidRequest) {
+  public void placeBid(PlaceBidRequest placeBidRequest) throws Exception {
     Bid bid = BidMapper.INSTANCE.placeBidReqeustToBid(placeBidRequest);
     String userID = SecurityContextHolder.getContext().getAuthentication().getName();
     bid.setUserID(Integer.parseInt(userID));
+
+    String itemState = itemRepository.getItem(bid.getItemID()).getState();
+    if (itemState.equals("Sold") || itemState.equals("Archived")) {
+      throw new Exception("Item sold or archived");
+    }
     bidRepository.placeBid(bid);
   }
 
@@ -225,9 +232,14 @@ public class UserService {
    * @param answerBidRequest the request info
    * @throws AccessDeniedException if user don't own item
    */
-  public void answerBid(AnswerBidRequest answerBidRequest) throws AccessDeniedException {
+  public void answerBid(AnswerBidRequest answerBidRequest) throws Exception {
     Bid bid = BidMapper.INSTANCE.answerBidRequestToBid(answerBidRequest);
     String userID = SecurityContextHolder.getContext().getAuthentication().getName();
+
+    String itemState = itemRepository.getItem(bid.getItemID()).getState();
+    if (itemState.equals("Sold")) {
+      throw new Exception("Item already sold");
+    }
     bidRepository.setBidStatus(bid, Integer.parseInt(userID));
   }
 
@@ -240,6 +252,13 @@ public class UserService {
     String userID = SecurityContextHolder.getContext().getAuthentication().getName();
     Bid[] bids = bidRepository.getUniqueBids(Integer.parseInt(userID));
     return BidMapper.INSTANCE.bidArrayToGetYourBidItemsResponseArray(bids);
+  }
+
+  public GetBidsOnItemByUserResponse[] getBidsOnYourItem(GetBidsOnItemByUserRequest getBidsOnItemByUserRequest) {
+    String userID = SecurityContextHolder.getContext().getAuthentication().getName();
+    Bid bid = BidMapper.INSTANCE.getBidsOnItemByUserRequestToBid(getBidsOnItemByUserRequest);
+    Bid[] bids = bidRepository.getBidsByUserOnItem(bid, Integer.parseInt(userID), getBidsOnItemByUserRequest.getSegmentOffset());
+    return BidMapper.INSTANCE.bidArrayToGetBidsOnItemByUserResponseArray(bids);
   }
 
   private String encodePassword(String password) {
