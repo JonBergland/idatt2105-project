@@ -5,7 +5,10 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class GetBidItemResponse {
+public class GetYourItemBidsResponse {
+  int bidID;
   int itemID;
-  int userID;
+  int askingPrice;
+  String status;
+  String published;
 }

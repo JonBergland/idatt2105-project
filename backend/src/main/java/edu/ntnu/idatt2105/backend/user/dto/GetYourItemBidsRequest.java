@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class GetBidsRequest {
+public class GetYourItemBidsRequest {
   int itemID;
   int[] segmentOffset;
 }
