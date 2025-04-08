@@ -65,6 +65,14 @@ export const useUserStore = defineStore('user', {
       }
     },
 
+    /**
+     * Sends a request to post an item using the provided `AddItemRequest` object.
+     *
+     * @param request - The request object containing the details of the item to be posted.
+     * @returns A promise that resolves to `true` if the item was successfully posted,
+     *          or `false` if an error occurred during the operation.
+     * @throws Logs an error message to the console if the operation fails.
+     */
     async postItem(request: AddItemRequest): Promise<boolean> {
       try {
         await userService.postItem(request);
