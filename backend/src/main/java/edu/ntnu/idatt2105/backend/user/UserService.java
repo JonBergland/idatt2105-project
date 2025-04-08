@@ -17,9 +17,10 @@ import edu.ntnu.idatt2105.backend.security.dto.SigninRequest;
 import edu.ntnu.idatt2105.backend.security.dto.SignupRequest;
 import edu.ntnu.idatt2105.backend.user.dto.AddItemRequest;
 import edu.ntnu.idatt2105.backend.user.dto.AnswerBidRequest;
-import edu.ntnu.idatt2105.backend.user.dto.GetBidItemResponse;
-import edu.ntnu.idatt2105.backend.user.dto.GetBidsRequest;
-import edu.ntnu.idatt2105.backend.user.dto.GetBidsResponse;
+import edu.ntnu.idatt2105.backend.user.dto.GetYourBidItemsResponse;
+import edu.ntnu.idatt2105.backend.user.dto.GetYourUniqueBidsResponse;
+import edu.ntnu.idatt2105.backend.user.dto.GetYourItemBidsRequest;
+import edu.ntnu.idatt2105.backend.user.dto.GetYourItemBidsResponse;
 import edu.ntnu.idatt2105.backend.user.dto.GetStoreItemResponse;
 import edu.ntnu.idatt2105.backend.user.dto.PlaceBidRequest;
 import edu.ntnu.idatt2105.backend.user.dto.ToggleBookmarkRequest;
@@ -190,15 +191,15 @@ public class UserService {
     bidRepository.placeBid(bid);
   }
 
-  public GetBidItemResponse[] getUniqueBids() {
+  public GetYourUniqueBidsResponse[] getYourBids() {
     String userID = SecurityContextHolder.getContext().getAuthentication().getName();
-    Bid[] bids = bidRepository.getUniqueBids(Integer.parseInt(userID));
+    Bid[] bids = bidRepository.getYourUniqueBids(Integer.parseInt(userID));
     return BidMapper.INSTANCE.bidArrayToGetBidItemResponseArray(bids);
   }
 
-  public GetBidsResponse[] getItemBids(GetBidsRequest getBidsRequest) {
+  public GetYourItemBidsResponse[] getYourItemBids(GetYourItemBidsRequest getYourItemBidsRequest) {
     String userID = SecurityContextHolder.getContext().getAuthentication().getName();
-    Bid[] bids = bidRepository.getItemBids(Integer.parseInt(userID), getBidsRequest);
+    Bid[] bids = bidRepository.getItemBids(Integer.parseInt(userID), getYourItemBidsRequest);
     return BidMapper.INSTANCE.bidArrayToGetBidsResponseArray(bids);
   }
 
@@ -206,6 +207,12 @@ public class UserService {
     Bid bid = BidMapper.INSTANCE.answerBidRequestToBid(answerBidRequest);
     String userID = SecurityContextHolder.getContext().getAuthentication().getName();
     bidRepository.setBidStatus(bid, Integer.parseInt(userID));
+  }
+
+  public GetYourBidItemsResponse[] getBids() {
+    String userID = SecurityContextHolder.getContext().getAuthentication().getName();
+    Bid[] bids = bidRepository.getUniqueBids(Integer.parseInt(userID));
+    return BidMapper.INSTANCE.bidArrayToGetYourBidItemsResponseArray(bids);
   }
 
   private String encodePassword(String password) {
