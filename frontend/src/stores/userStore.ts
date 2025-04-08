@@ -1,4 +1,4 @@
-import type { ItemsResponseDTO } from "@/models/item";
+import type { ItemRequestDTO, ItemsResponseDTO, ItemResponseDTO } from "@/models/item";
 import type { User, AddItemRequest } from "@/models/user";
 import { defineStore } from "pinia";
 import userService from "@/services/user/userService"
@@ -9,7 +9,10 @@ import userService from "@/services/user/userService"
 export const useUserStore = defineStore('user', {
   state: () => ({
     user: null as User | null,
-    userItems: { items: [] } as ItemsResponseDTO
+    userItems: { items: [] } as ItemsResponseDTO,
+    item: null as ItemResponseDTO | null,
+    isItemLoading: false,
+    itemError: null as string | null,
   }),
 
   actions: {
@@ -110,6 +113,24 @@ export const useUserStore = defineStore('user', {
       } catch (error) {
         console.log("Error when getting user information: ", error)
         return false;
+      }
+    },
+
+    /**
+     * Fetches user spesific details about an item.
+     */
+    async fetchUserItemDetails(request: ItemRequestDTO) {
+      this.isItemLoading = true;
+      this.itemError = null;
+
+      try {
+        const response = await userService.getUserItemDetails(request);
+        this.item = response;
+      } catch (error) {
+        this.itemError = "Failed to fetch item.";
+        console.error("Error fetching item:", error);
+      } finally {
+        this.isItemLoading = false;
       }
     }
   }
