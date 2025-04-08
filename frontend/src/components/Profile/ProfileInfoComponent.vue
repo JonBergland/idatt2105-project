@@ -7,12 +7,13 @@ import ProfileButtonsComponent from '@/components/Profile/ProfileButtonsComponen
 
 const props = defineProps<{
   user: User | null
+  errorMessage: string
 }>()
 
 const emit = defineEmits(["saveUser", "logoutUser"])
 
 const editableUser = ref<User | null>(null)
-const validUser = ref(false)
+const validUser = ref(true)
 
 watch(() => props.user, (newUser) => {
   if (newUser) {
@@ -133,6 +134,7 @@ function handleUpdate(validForm: boolean) {
       :editMode = isEditing
       :logoutMode = isLoggingOut
       :activeSaveButton = validUser
+      :errorMessage = errorMessage
       @edit-mode="handleEditMode"
       @logout-mode="handleLogoutMode"
       @save="handleSave"

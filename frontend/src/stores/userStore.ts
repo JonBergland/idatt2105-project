@@ -1,4 +1,5 @@
-import type { User } from "@/models/user";
+import type { ItemsResponseDTO } from "@/models/item";
+import type { User, AddItemRequest } from "@/models/user";
 import { defineStore } from "pinia";
 import userService from "@/services/user/userService"
 
@@ -7,10 +8,20 @@ import userService from "@/services/user/userService"
  */
 export const useUserStore = defineStore('user', {
   state: () => ({
-    user: null as User | null
+    user: null as User | null,
+    userItems: { items: [] } as ItemsResponseDTO
   }),
 
   actions: {
+    /**
+     * Setter for the user state.
+     *
+     * @param user - The user object to set as the current user.
+     */
+    setUser(user: User | null): void {
+      this.user = user;
+    },
+
     /**
      * Retrieves the user information from the user service and updates the store's user state.
      *
@@ -61,6 +72,43 @@ export const useUserStore = defineStore('user', {
         }
       } catch (error) {
         console.log("Error when updating user information: ", error);
+        return false;
+      }
+    },
+
+    async updateUserItems(): Promise<void> {
+      try {
+        if (this.user) {
+          const resp = await userService.getUserItems();
+
+          if (resp !== null) {
+            this.userItems = resp
+          } else {
+            throw new Error("Response was null");
+          }
+        } else {
+          throw new Error("User not logged in");
+        }
+      } catch (error) {
+        console.log("Unexpected error from trying to retrieve user items: ", error);
+        this.userItems =  { items: [] }
+      }
+    },
+
+    /**
+     * Sends a request to post an item using the provided `AddItemRequest` object.
+     *
+     * @param request - The request object containing the details of the item to be posted.
+     * @returns A promise that resolves to `true` if the item was successfully posted,
+     *          or `false` if an error occurred during the operation.
+     * @throws Logs an error message to the console if the operation fails.
+     */
+    async postItem(request: AddItemRequest): Promise<boolean> {
+      try {
+        await userService.postItem(request);
+        return true;
+      } catch (error) {
+        console.log("Error when getting user information: ", error)
         return false;
       }
     }

@@ -1,7 +1,7 @@
 import type { ItemsRequestDTO, ItemsResponseDTO, CategoriesResponseDTO, ItemRequestDTO, ItemResponseDTO } from '@/models/item.ts';
 import axiosInstance from "@/services/axiosService";
 
-class ResultService {
+class ItemService {
   /**
    * Fetches items from the backend based on the provided filters.
    * @param request The filter request object.
@@ -32,5 +32,5 @@ class ResultService {
   }
 }
 
-const resultService = new ResultService();
+const resultService = new ItemService();
 export default resultService;

@@ -1,9 +1,9 @@
 import { setActivePinia, createPinia } from 'pinia';
-import { useResultStore } from '@/stores/resultStore';
-import resultService from '@/services/item/resultService';
+import { useItemStore } from '@/stores/itemStore';
+import itemService from '@/services/item/itemService';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
-vi.mock('@/services/item/resultService', () => ({
+vi.mock('@/services/item/itemService', () => ({
   default: {
     getItems: vi.fn(),
     getCategories: vi.fn(),
@@ -19,7 +19,7 @@ describe('Result Store', () => {
 
   describe('normalizeRequest', () => {
     it('should keep null priceMinMax as null', () => {
-      const store = useResultStore();
+      const store = useItemStore();
       const request = {
         category: null,
         searchWord: null,
@@ -34,7 +34,7 @@ describe('Result Store', () => {
     });
 
     it('should apply default values to null price range values', () => {
-      const store = useResultStore();
+      const store = useItemStore();
       const request = {
         category: 'Electronics',
         searchWord: null,
@@ -50,7 +50,7 @@ describe('Result Store', () => {
     });
 
     it('should apply default segment offset when null', () => {
-      const store = useResultStore();
+      const store = useItemStore();
       const request = {
         category: null,
         searchWord: null,
@@ -67,9 +67,9 @@ describe('Result Store', () => {
 
   describe('fetchItems', () => {
     it('should set loading state while fetching', async () => {
-      const store = useResultStore();
+      const store = useItemStore();
 
-      vi.mocked(resultService.getItems).mockImplementation(() => {
+      vi.mocked(itemService.getItems).mockImplementation(() => {
         return new Promise(resolve => {
           setTimeout(() => resolve({ items: [] }), 100);
         });
@@ -91,13 +91,13 @@ describe('Result Store', () => {
     });
 
     it('should update items on successful fetch', async () => {
-      const store = useResultStore();
+      const store = useItemStore();
       const mockItems = [
         { itemID: 1, name: 'Test Item 1', price: 100, category: 'Electronics', seller: 'User1', description: 'Test', published: '2023-04-01' },
         { itemID: 2, name: 'Test Item 2', price: 200, category: 'Books', seller: 'User2', description: 'Test', published: '2023-04-02' }
       ];
 
-      vi.mocked(resultService.getItems).mockResolvedValue({ items: mockItems });
+      vi.mocked(itemService.getItems).mockResolvedValue({ items: mockItems });
 
       await store.fetchItems({
         category: null,
@@ -112,9 +112,9 @@ describe('Result Store', () => {
     });
 
     it('should handle errors correctly', async () => {
-      const store = useResultStore();
+      const store = useItemStore();
 
-      vi.mocked(resultService.getItems).mockRejectedValue(new Error('API error'));
+      vi.mocked(itemService.getItems).mockRejectedValue(new Error('API error'));
 
       await store.fetchItems({
         category: null,
@@ -131,12 +131,12 @@ describe('Result Store', () => {
 
   describe('fetchCategories', () => {
     it('should update categories on successful fetch', async () => {
-      const store = useResultStore();
+      const store = useItemStore();
       const mockCategories = {
         categories: ['Electronics', 'Books', 'Clothing']
       };
 
-      vi.mocked(resultService.getCategories).mockResolvedValue(mockCategories);
+      vi.mocked(itemService.getCategories).mockResolvedValue(mockCategories);
 
       await store.fetchCategories();
 
@@ -145,9 +145,9 @@ describe('Result Store', () => {
     });
 
     it('should handle errors correctly', async () => {
-      const store = useResultStore();
+      const store = useItemStore();
 
-      vi.mocked(resultService.getCategories).mockRejectedValue(new Error('API error'));
+      vi.mocked(itemService.getCategories).mockRejectedValue(new Error('API error'));
 
       await store.fetchCategories();
 
@@ -158,9 +158,9 @@ describe('Result Store', () => {
 
   describe('loadMoreItems', () => {
     it('should set loading state while fetching more items', async () => {
-      const store = useResultStore();
+      const store = useItemStore();
 
-      vi.mocked(resultService.getItems).mockImplementation(() => {
+      vi.mocked(itemService.getItems).mockImplementation(() => {
         return new Promise(resolve => {
           setTimeout(() => resolve({ items: [] }), 100);
         });
@@ -182,7 +182,7 @@ describe('Result Store', () => {
     });
 
     it('should append new items to existing items', async () => {
-      const store = useResultStore();
+      const store = useItemStore();
 
       const initialItems = [
         { itemID: 1, name: 'Initial Item 1', price: 100, category: 'Electronics', seller: 'User1', description: 'Test', published: '2023-04-01' },
@@ -196,7 +196,7 @@ describe('Result Store', () => {
 
       store.items = initialItems;
 
-      vi.mocked(resultService.getItems).mockResolvedValue({ items: moreItems });
+      vi.mocked(itemService.getItems).mockResolvedValue({ items: moreItems });
 
       await store.loadMoreItems({
         category: null,
@@ -213,13 +213,13 @@ describe('Result Store', () => {
     });
 
     it('should set newItemsCount to the number of items received', async () => {
-      const store = useResultStore();
+      const store = useItemStore();
 
       const moreItems = [
         { itemID: 5, name: 'More Item 3', price: 500, category: 'Home', seller: 'User5', description: 'Test', published: '2023-04-05' }
       ];
 
-      vi.mocked(resultService.getItems).mockResolvedValue({ items: moreItems });
+      vi.mocked(itemService.getItems).mockResolvedValue({ items: moreItems });
 
       await store.loadMoreItems({
         category: null,
@@ -233,13 +233,13 @@ describe('Result Store', () => {
     });
 
     it('should handle empty response correctly', async () => {
-      const store = useResultStore();
+      const store = useItemStore();
 
       store.items = [
         { itemID: 1, name: 'Initial Item', price: 100, category: 'Electronics', seller: 'User1', description: 'Test', published: '2023-04-01' }
       ];
 
-      vi.mocked(resultService.getItems).mockResolvedValue({ items: [] });
+      vi.mocked(itemService.getItems).mockResolvedValue({ items: [] });
 
       await store.loadMoreItems({
         category: null,
@@ -254,9 +254,9 @@ describe('Result Store', () => {
     });
 
     it('should handle errors correctly when loading more items', async () => {
-      const store = useResultStore();
+      const store = useItemStore();
 
-      vi.mocked(resultService.getItems).mockRejectedValue(new Error('API error'));
+      vi.mocked(itemService.getItems).mockRejectedValue(new Error('API error'));
 
       await store.loadMoreItems({
         category: null,
@@ -273,9 +273,9 @@ describe('Result Store', () => {
 
   describe('fetchItemDetails', () => {
     it('should set loading state while fetching item details', async () => {
-      const store = useResultStore();
+      const store = useItemStore();
 
-      vi.mocked(resultService.getItemDetails).mockImplementation(() => {
+      vi.mocked(itemService.getItemDetails).mockImplementation(() => {
         return new Promise(resolve => {
           setTimeout(() => resolve({
             itemID: 1,
@@ -301,7 +301,7 @@ describe('Result Store', () => {
     });
 
     it('should update item on successful fetch', async () => {
-      const store = useResultStore();
+      const store = useItemStore();
       const mockItem = {
         itemID: 1,
         name: 'Test Item',
@@ -314,7 +314,7 @@ describe('Result Store', () => {
         images: []
       };
 
-      vi.mocked(resultService.getItemDetails).mockResolvedValue(mockItem);
+      vi.mocked(itemService.getItemDetails).mockResolvedValue(mockItem);
 
       await store.fetchItemDetails({ itemID: 1 });
 
@@ -323,9 +323,9 @@ describe('Result Store', () => {
     });
 
     it('should handle errors correctly', async () => {
-      const store = useResultStore();
+      const store = useItemStore();
 
-      vi.mocked(resultService.getItemDetails).mockRejectedValue(new Error('API error'));
+      vi.mocked(itemService.getItemDetails).mockRejectedValue(new Error('API error'));
 
       await store.fetchItemDetails({ itemID: 999 });
 

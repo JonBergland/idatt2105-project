@@ -3,7 +3,7 @@ import { setActivePinia, createPinia } from 'pinia';
 import { createRouter, createWebHistory } from 'vue-router';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import ResultView from '@/views/Result/ResultView.vue';
-import { useResultStore } from '@/stores/resultStore';
+import { useItemStore } from '@/stores/itemStore';
 import { nextTick } from 'vue';
 import type { ItemsRequestDTO } from '@/models/item';
 
@@ -62,7 +62,7 @@ describe('ResultView.vue', () => {
       ]
     });
 
-    store = useResultStore();
+    store = useItemStore();
 
     vi.spyOn(store, 'fetchItems').mockImplementation(() => Promise.resolve());
     vi.spyOn(store, 'fetchCategories').mockImplementation(() => Promise.resolve());
