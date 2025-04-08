@@ -42,6 +42,11 @@ const validForm = computed(() => {
          validCategory.value;
 });
 
+/**
+ * Handles the click event for a category.
+ *
+ * @param {string} categoryName - The name of the category that was clicked.
+ */
 function handleCategoryClick(categoryName: string) {
   item.value.category = categoryName;
   categoryTouched.value = true;
@@ -59,6 +64,11 @@ function setErrorLabel(errorMsg: string) {
   console.log("Submission failed: ", errorMsg);
 }
 
+/**
+ * Handles the submission of the new item listing form.
+ * Validates form data and submits it to create a new listing.
+ * Triggers form validation before submission and handles any errors.
+ */
 function submitForm() {
   nameTouched.value = true;
   descriptionTouched.value = true;
