@@ -16,18 +16,21 @@ const mockChats: ChatsResponseDTO = {
       messages: [
         {
           messageID: 1,
+          senderID: 101,
           message: "Hi there! Is the vintage sofa still available?",
           notSeenByUser: false,
           published: "2023-04-10T14:30:00"
         },
         {
           messageID: 2,
+          senderID: 31,
           message: "Yes, it's available. Would you like to come see it?",
           notSeenByUser: false,
           published: "2023-04-10T15:10:00"
         },
         {
           messageID: 3,
+          senderID: 101,
           message: "Great! What time works for you?",
           notSeenByUser: true,
           published: "2023-04-10T15:30:00"
@@ -48,7 +51,7 @@ const mockChats: ChatsResponseDTO = {
         longitude: 5.3221
       },
       seller: {
-        userID: 1,
+        userID: 31,
         name: "John",
         surname: "Doe",
         email: "john.doe@example.com",
@@ -77,24 +80,28 @@ const mockChats: ChatsResponseDTO = {
       messages: [
         {
           messageID: 11,
+          senderID: 102,
           message: "Hi, I'm interested in your mountain bike. Does it have front suspension?",
           notSeenByUser: false,
           published: "2023-04-11T09:20:00"
         },
         {
           messageID: 12,
+          senderID: 31,
           message: "Yes, it has front suspension and disc brakes.",
           notSeenByUser: false,
           published: "2023-04-11T09:45:00"
         },
         {
           messageID: 13,
+          senderID: 102,
           message: "Great, would you consider a lower price?",
           notSeenByUser: false,
           published: "2023-04-11T10:10:00"
         },
         {
           messageID: 14,
+          senderID: 31,
           message: "I could go down to 3800 kr.",
           notSeenByUser: true,
           published: "2023-04-11T10:25:00"
@@ -115,7 +122,7 @@ const mockChats: ChatsResponseDTO = {
         longitude: 10.3951
       },
       seller: {
-        userID: 1,
+        userID: 31,
         name: "John",
         surname: "Doe",
         email: "john.doe@example.com",
@@ -144,12 +151,14 @@ const mockChats: ChatsResponseDTO = {
       messages: [
         {
           messageID: 21,
+          senderID: 31,
           message: "Hello, I saw your iPhone listing. What's the battery health?",
           notSeenByUser: false,
           published: "2023-04-12T18:15:00"
         },
         {
           messageID: 22,
+          senderID: 103,
           message: "Hi! The battery health is at 89%.",
           notSeenByUser: true,
           published: "2023-04-12T18:30:00"
@@ -170,7 +179,7 @@ const mockChats: ChatsResponseDTO = {
         longitude: 5.7331
       },
       buyer: {
-        userID: 1,
+        userID: 31,
         name: "John",
         surname: "Doe",
         email: "john.doe@example.com",
