@@ -6,7 +6,8 @@ describe('ProfileButtonsComponent', () => {
   const defaultProps = {
     editMode: false,
     logoutMode: false,
-    activeSaveButton: true
+    activeSaveButton: true,
+    errorMessage: ''
   }
 
   it('renders correctly with default props', () => {
@@ -53,9 +54,9 @@ describe('ProfileButtonsComponent', () => {
   it('conditionally renders based on editMode prop', () => {
     const wrapper = mount(ProfileButtonsComponent, {
       props: {
+        ...defaultProps,
         editMode: true,
-        logoutMode: false,
-        activeSaveButton: true
+        logoutMode: false
       }
     })
 
@@ -66,23 +67,22 @@ describe('ProfileButtonsComponent', () => {
   it('conditionally renders based on logoutMode prop', () => {
     const wrapper = mount(ProfileButtonsComponent, {
       props: {
+        ...defaultProps,
         editMode: false,
-        logoutMode: true,
-        activeSaveButton: true
+        logoutMode: true
       }
     })
 
     expect(wrapper.find('.logout').exists()).toBe(true)
     expect(wrapper.find('.cancel-button').exists()).toBe(true)
-
   })
 
   it('emits save event when save button is clicked', async () => {
     const wrapper = mount(ProfileButtonsComponent, {
       props: {
+        ...defaultProps,
         editMode: true,
-        logoutMode: false,
-        activeSaveButton: true
+        logoutMode: false
       },
     })
 
@@ -95,6 +95,7 @@ describe('ProfileButtonsComponent', () => {
   it('does not emit save event when save button is disabled', async () => {
     const wrapper = mount(ProfileButtonsComponent, {
       props: {
+        ...defaultProps,
         editMode: true,
         logoutMode: false,
         activeSaveButton: false
@@ -106,12 +107,11 @@ describe('ProfileButtonsComponent', () => {
   })
 
   it('emits cancel event when cancel button in editMode is clicked', async () => {
-
     const wrapper = mount(ProfileButtonsComponent, {
       props: {
+        ...defaultProps,
         editMode: true,
-        logoutMode: false,
-        activeSaveButton: true
+        logoutMode: false
       },
     })
 
@@ -123,9 +123,9 @@ describe('ProfileButtonsComponent', () => {
   it('emits logout event when logout confirmation button is clicked', async () => {
     const wrapper = mount(ProfileButtonsComponent, {
       props: {
+        ...defaultProps,
         editMode: false,
-        logoutMode: true,
-        activeSaveButton: true
+        logoutMode: true
       },
     })
 
@@ -135,12 +135,11 @@ describe('ProfileButtonsComponent', () => {
   })
 
   it('emits cancel event when cancel button in logoutMode is clicked', async () => {
-
     const wrapper = mount(ProfileButtonsComponent, {
       props: {
+        ...defaultProps,
         editMode: false,
-        logoutMode: true,
-        activeSaveButton: true
+        logoutMode: true
       },
     })
 
@@ -150,15 +149,27 @@ describe('ProfileButtonsComponent', () => {
   })
 
   it('conditionally renders based on editMode and logoutMode prop', async () => {
-
     const wrapper = mount(ProfileButtonsComponent, {
       props: {
+        ...defaultProps,
         editMode: true,
-        logoutMode: true,
-        activeSaveButton: true
+        logoutMode: true
       },
     })
 
     expect(wrapper.find('.profile-buttons').element.children.length).toBe(0)
   })
+
+  it('displays error message when provided', () => {
+    const errorMessage = 'This is an error message';
+    const wrapper = mount(ProfileButtonsComponent, {
+      props: {
+        ...defaultProps,
+        errorMessage
+      }
+    });
+
+    expect(wrapper.find('.error-message').exists()).toBe(true);
+    expect(wrapper.find('.error-message').text()).toBe(errorMessage);
+  });
 })
