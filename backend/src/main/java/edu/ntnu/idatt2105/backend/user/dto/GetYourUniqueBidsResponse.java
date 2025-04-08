@@ -8,4 +8,6 @@ import lombok.Setter;
 public class GetYourUniqueBidsResponse {
   int itemID;
   int userID;
+  String itemName;
+  String seller;
 }
