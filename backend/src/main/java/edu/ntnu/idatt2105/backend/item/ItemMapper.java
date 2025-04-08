@@ -79,5 +79,6 @@ public interface ItemMapper {
   @Mapping(source = "price", target = "price")
   @Mapping(source = "description", target = "description")
   @Mapping(source = "state", target = "state")
+  @Mapping(source = "bookmark", target = "bookmark")
   GetStoreItemResponse itemToGetStoreItemResponse(Item item);
 }

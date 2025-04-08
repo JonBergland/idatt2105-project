@@ -117,21 +117,21 @@ export const useItemStore = defineStore('result', {
     },
 
     /**
-     * Fetches the list of categories from the result service and updates the store state.
+     * Fetches info about an item.
      */
-  async fetchItemDetails(request: ItemRequestDTO) {
-    this.isItemLoading = true;
-    this.itemError = null;
+    async fetchItemDetails(request: ItemRequestDTO) {
+      this.isItemLoading = true;
+      this.itemError = null;
 
-    try {
-      const response = await itemService.getItemDetails(request);
-      this.item = response;
-    } catch (error) {
-      this.itemError = "Failed to fetch item.";
-      console.error("Error fetching item:", error);
-    } finally {
-      this.isItemLoading = false;
+      try {
+        const response = await itemService.getItemDetails(request);
+        this.item = response;
+      } catch (error) {
+        this.itemError = "Failed to fetch item.";
+        console.error("Error fetching item:", error);
+      } finally {
+        this.isItemLoading = false;
+      }
     }
-  }
   }
 });

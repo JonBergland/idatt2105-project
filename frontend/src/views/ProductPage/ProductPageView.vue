@@ -3,65 +3,143 @@ import type { ItemResponseDTO, ItemRequestDTO } from '@/models/item';
 import ProductImageComponent from '@/components/ProductPage/ProductImageComponent.vue';
 import ProductNameComponent from '@/components/ProductPage/ProductNameComponent.vue'
 import placeholderImage from '@/assets/images/placeholder-image.png'
-import { onMounted, ref,  } from 'vue';
+import { onMounted, ref, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router'
 import ProductInfoComponent from '@/components/ProductPage/ProductInfoComponent.vue';
 import { useItemStore } from '@/stores/itemStore';
+import { useAuthStore } from '@/stores/authStore';
+import { useUserStore } from '@/stores/userStore';
 
 const route = useRoute()
 const router = useRouter()
 const itemStore = useItemStore();
+const authStore = useAuthStore();
+const userStore = useUserStore();
 
-const itemRequest = ref<ItemRequestDTO>({itemID: -1})
+const itemResponse = ref<ItemResponseDTO>({});
+const error = ref('');
+
+// Extract ID from route query params
+const itemId = computed(() => {
+  const id = route.query.id;
+  return typeof id === 'string' ? parseInt(id, 10) : -1;
+});
+
+// Computed property to track bookmark status
+const isBookmarked = computed(() => {
+  return !!itemResponse.value?.bookmark;
+});
 
 function handleBackClick() {
   router.back();
 }
 
-function handleFavorite(isFavorited: boolean) {
-  console.log("Favorite clicked:", isFavorited);
+async function handleFavorite(isFavorited: boolean) {
+  if (!authStore.isAuth) {
+    router.push('/login');
+    return;
+  }
 
-  // TODO: Add functionality for favorite to backend
+  try {
+    // Update local state immediately for responsive UI
+    itemResponse.value = {
+      ...itemResponse.value,
+      bookmark: isFavorited
+    };
+
+    // TODO: API call to toogle the
+
+    console.log(`Item ${itemId.value} bookmark status set to ${isFavorited}`);
+  } catch (err) {
+    console.error('Error updating bookmark status:', err);
+    // Revert UI if API call fails
+    itemResponse.value = {
+      ...itemResponse.value,
+      bookmark: !isFavorited
+    };
+  }
 }
 
-onMounted(() => {
-  if (route.query.id) {
-    console.log('Product: ', route.query.id)
-    itemRequest.value.itemID = typeof route.query.id === 'string' ? parseInt(route.query.id, 10) : -1;
-    itemStore.fetchItemDetails(itemRequest.value);
+/**
+ * Fetches item details based on authentication status
+ */
+async function fetchItemDetails() {
+  if (itemId.value <= 0) {
+    error.value = 'Invalid item ID';
+    return;
   }
-})
 
+  try {
+
+    // Ensure auth state is current
+    const isAuthenticated = authStore.isAuth || await authStore.checkIfAuth();
+
+    // Create item request object
+    const request: ItemRequestDTO = { itemID: itemId.value };
+
+    if (isAuthenticated) {
+      // Fetch with user context
+      await userStore.fetchUserItemDetails(request);
+      itemResponse.value = userStore.item || {};
+    } else {
+      // Fetch without user context
+      await itemStore.fetchItemDetails(request);
+      itemResponse.value = itemStore.item || {};
+    }
+  } catch (err) {
+    console.error('Error fetching item details:', err);
+    error.value = 'Failed to load item details';
+  }
+}
+
+onMounted(fetchItemDetails);
 </script>
 
 <template>
-  <div v-if="!itemStore.isItemLoading" class="product-page-wrapper">
+
+  <div v-if="error" class="error-state">
+    {{ error }}
+  </div>
+
+  <div v-else class="product-page-wrapper">
     <ProductNameComponent
-    :product-name="itemStore.item?.name || ''"
-    @back-click="handleBackClick"
+      :product-name="itemResponse?.name || ''"
+      @back-click="handleBackClick"
     />
     <div class="product-info-wrapper">
       <div class="product-image-wrapper">
         <ProductImageComponent
-        id="product-image-component"
-        :images="[placeholderImage, placeholderImage]"
-        @favorite="handleFavorite"
+          id="product-image-component"
+          :images="[placeholderImage, placeholderImage]"
+          :isFavorited="isBookmarked"
+          @favorite="handleFavorite"
         />
-     </div>
-     <div class="product-info-component-wrapper">
+      </div>
+      <div class="product-info-component-wrapper">
         <ProductInfoComponent
-        :item="itemStore.item || {} as ItemResponseDTO"
+          :item="itemResponse"
         />
       </div>
     </div>
   </div>
-
 </template>
 
 <style scoped>
-
 .product-page-wrapper {
   margin: 10px;
+}
+
+.error-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+  font-size: 1.2rem;
+  color: var(--color-text-secondary);
+}
+
+.error-state {
+  color: var(--color-error, #dc3545);
 }
 
 .product-info-wrapper {
