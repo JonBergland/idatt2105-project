@@ -14,3 +14,7 @@ export interface ChatResponseDTO {
   seller: User;
   item: ItemResponseDTO; // The item the chat is about
 }
+
+export interface ChatsResponseDTO {
+  chats: ChatResponseDTO[]
+}
