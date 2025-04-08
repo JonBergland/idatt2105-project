@@ -2,6 +2,8 @@ package edu.ntnu.idatt2105.backend.bid;
 
 import edu.ntnu.idatt2105.backend.bid.model.Bid;
 import edu.ntnu.idatt2105.backend.user.dto.AnswerBidRequest;
+import edu.ntnu.idatt2105.backend.user.dto.GetBidsOnItemByUserRequest;
+import edu.ntnu.idatt2105.backend.user.dto.GetBidsOnItemByUserResponse;
 import edu.ntnu.idatt2105.backend.user.dto.GetYourBidItemsResponse;
 import edu.ntnu.idatt2105.backend.user.dto.GetYourItemBidsResponse;
 import edu.ntnu.idatt2105.backend.user.dto.GetYourUniqueBidsResponse;
@@ -42,8 +44,21 @@ public interface BidMapper {
   @Mapping(source = "itemID", target = "itemID")
   @Mapping(source = "userID", target = "userID")
   @Mapping(source = "itemName", target = "itemName")
-  @Mapping(source = "email", target = "email")
+  @Mapping(source = "email", target = "buyer")
   GetYourBidItemsResponse bidToGetYourBidItemsResponse(Bid bid);
 
   GetYourBidItemsResponse[] bidArrayToGetYourBidItemsResponseArray(Bid[] bid);
+
+  @Mapping(source = "itemID", target = "itemID")
+  @Mapping(source = "userID", target = "userID")
+  Bid getBidsOnItemByUserRequestToBid(GetBidsOnItemByUserRequest getBidsOnItemByUserRequest);
+
+  @Mapping(source = "bidID", target = "bidID")
+  @Mapping(source = "itemID", target = "itemID")
+  @Mapping(source = "published", target = "published")
+  @Mapping(source = "status", target = "status")
+  @Mapping(source = "askingPrice", target = "askingPrice")
+  GetBidsOnItemByUserResponse bidToGetBidsOnItemByUserResponse(Bid bid);
+
+  GetBidsOnItemByUserResponse[] bidArrayToGetBidsOnItemByUserResponseArray(Bid[] bid);
 }
