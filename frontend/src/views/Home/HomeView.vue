@@ -5,10 +5,10 @@ import RecommendationGrid from '@/components/Home/ItemGroup.vue';
 import SearchBar from '@/components/Home/SearchBar.vue';
 import { onMounted, ref, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { useResultStore } from '@/stores/resultStore';
+import { useItemStore } from '@/stores/itemStore';
 
 const router = useRouter();
-const resultStore = useResultStore();
+const itemStore = useItemStore();
 
 // Pagination variables
 const isLoadingMore = ref(false);
@@ -20,7 +20,7 @@ const newItemsRequest = ref<ItemsRequestDTO>({
     category: null,
     searchWord: null,
     priceMinMax: null,
-    sort: 'published_DESC',
+    sort: 'published_ASC',
     segmentOffset: [0, itemsPerPage.value],
 });
 
@@ -30,8 +30,8 @@ const newItemsRequest = ref<ItemsRequestDTO>({
  * - Sets up scroll event listener for infinite scrolling
  */
 onMounted(() => {
-  resultStore.fetchCategories();
-  resultStore.fetchItems(newItemsRequest.value);
+  itemStore.fetchCategories();
+  itemStore.fetchItems(newItemsRequest.value);
   window.addEventListener('scroll', handleScroll);
 });
 
@@ -72,9 +72,9 @@ async function loadMoreItems() {
       segmentOffset: [currentPage.value, itemsPerPage.value] as [number, number]
     };
 
-    await resultStore.loadMoreItems(nextPageRequest);
+    await itemStore.loadMoreItems(nextPageRequest);
 
-    if (resultStore.newItemsCount < itemsPerPage.value) {
+    if (itemStore.newItemsCount < itemsPerPage.value) {
       hasMoreItems.value = false;
     }
   } catch (error) {
@@ -116,12 +116,12 @@ function handleItemClick(itemID: number) {
     <h1>Welcome to the Yard!</h1>
     <div class="search-category-container">
       <SearchBar @search-triggered="handleSearch"/>
-      <CategoryGrid :categories="resultStore.categories" @category-clicked="handleCategoryClick"/>
+      <CategoryGrid :categories="itemStore.categories" @category-clicked="handleCategoryClick"/>
     </div>
     <h3>Recommendations</h3>
-    <RecommendationGrid :items="resultStore.items" @item-clicked="handleItemClick"/>
+    <RecommendationGrid :items="itemStore.items" @item-clicked="handleItemClick"/>
     <div v-if="isLoadingMore" class="loading-more">Loading more items...</div>
-    <div v-if="!hasMoreItems && resultStore.items.length > 0" class="end-of-results">No more items to display</div>
+    <div v-if="!hasMoreItems && itemStore.items.length > 0" class="end-of-results">No more items to display</div>
   </div>
 </template>
 
