@@ -9,10 +9,20 @@ import type { AddItemRequest } from '@/models/item.ts';
 const router = useRouter();
 const userStore = useUserStore();
 const authStore = useAuthStore();
+
+//User feedback
 const isSubmitting = ref(false);
 const errorMessage = ref('');
 const successMessage = ref('');
 
+/**
+ * Handles the submission of a new listing.
+ * Tries to post the items using the userStore.
+ * If sucessful if gives the user feedback and pushes to home page
+ * If not sucessful it show an error message.
+ *
+ * @param {AddItemRequest} request - The request object containing the details of the item to be added.
+ */
 async function handleSubmit(request: AddItemRequest) {
   console.log(request);
   isSubmitting.value = true;
@@ -40,6 +50,10 @@ async function handleSubmit(request: AddItemRequest) {
   }
 }
 
+/**
+ * Checks if the user is authenticated when the component is mounted.
+ * If not authenticated the user is pushed to the login page
+ */
 onMounted(async () => {
   if (!authStore.isAuth) {
     try {
