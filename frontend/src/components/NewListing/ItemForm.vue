@@ -90,18 +90,6 @@ function submitForm() {
 onMounted(() => {
   itemStore.fetchCategories();
 });
-
-// Expose for testing
-defineExpose({
-  item,
-  nameTouched,
-  descriptionTouched,
-  priceTouched,
-  categoryTouched,
-  validForm,
-  submitForm,
-  errorLabelEl
-});
 </script>
 
 <template>
