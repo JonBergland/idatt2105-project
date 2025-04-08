@@ -1,12 +1,10 @@
 package edu.ntnu.idatt2105.backend.bid;
 
 import edu.ntnu.idatt2105.backend.bid.model.Bid;
-import edu.ntnu.idatt2105.backend.item.model.Item;
-import edu.ntnu.idatt2105.backend.user.dto.GetBidsRequest;
+import edu.ntnu.idatt2105.backend.user.dto.GetYourItemBidsRequest;
 import java.nio.file.AccessDeniedException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -25,7 +23,7 @@ public class BidRepository {
           bid.getAskingPrice());
   }
 
-  public Bid[] getUniqueBids(int userID) {
+  public Bid[] getYourUniqueBids(int userID) {
     List<Bid> bidList = jdbcTemplate.query(
         "SELECT DISTINCT user_id AS userID, item_id AS itemID FROM Bids "
         + "WHERE user_id = ?",
@@ -34,16 +32,16 @@ public class BidRepository {
     return bidList.toArray(new Bid[0]);
   }
 
-  public Bid[] getItemBids(int userID, GetBidsRequest getBidsRequest) {
+  public Bid[] getItemBids(int userID, GetYourItemBidsRequest getYourItemBidsRequest) {
     List<Bid> bidList = jdbcTemplate.query(
         "SELECT *, item_id AS itemID, id AS bidID FROM Bids WHERE user_id = ? AND item_id = ? "
             + "ORDER BY published DESC "
             + "LIMIT ? OFFSET ?",
         new Object[]{
             userID,
-            getBidsRequest.getItemID(),
-            getBidsRequest.getSegmentOffset()[1],
-            getBidsRequest.getSegmentOffset()[0] * getBidsRequest.getSegmentOffset()[1]},
+            getYourItemBidsRequest.getItemID(),
+            getYourItemBidsRequest.getSegmentOffset()[1],
+            getYourItemBidsRequest.getSegmentOffset()[0] * getYourItemBidsRequest.getSegmentOffset()[1]},
         new BeanPropertyRowMapper<>(Bid.class));
     return bidList.toArray(new Bid[0]);
   }
@@ -59,6 +57,18 @@ public class BidRepository {
     } else {
       throw new AccessDeniedException("the user don't own this item");
     }
+  }
+
+  public Bid[] getUniqueBids(int userID) {
+    List<Bid> bidList = jdbcTemplate.query(
+        "SELECT DISTINCT Bids.item_id AS itemID, Bids.user_id AS userID, Item.name AS itemName, b.email FROM `Bids` "
+        + "JOIN Item ON Bids.item_id = Item.id "
+        + "JOIN User o ON Item.user_id = o.id "
+        + "JOIN User b ON Bids.user_id = b.id "
+        + "WHERE o.id = ?",
+        new Object[]{userID},
+        new BeanPropertyRowMapper<>(Bid.class));
+    return bidList.toArray(new Bid[0]);
   }
 
   private boolean ownsBidItem(int userID, int bidID) {
