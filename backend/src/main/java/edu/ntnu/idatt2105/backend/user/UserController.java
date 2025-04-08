@@ -4,9 +4,10 @@ import edu.ntnu.idatt2105.backend.item.dto.ItemRequest;
 import edu.ntnu.idatt2105.backend.item.dto.ItemsResponse;
 import edu.ntnu.idatt2105.backend.user.dto.AddItemRequest;
 import edu.ntnu.idatt2105.backend.user.dto.AnswerBidRequest;
-import edu.ntnu.idatt2105.backend.user.dto.GetBidItemResponse;
-import edu.ntnu.idatt2105.backend.user.dto.GetBidsRequest;
-import edu.ntnu.idatt2105.backend.user.dto.GetBidsResponse;
+import edu.ntnu.idatt2105.backend.user.dto.GetYourBidItemsResponse;
+import edu.ntnu.idatt2105.backend.user.dto.GetYourUniqueBidsResponse;
+import edu.ntnu.idatt2105.backend.user.dto.GetYourItemBidsRequest;
+import edu.ntnu.idatt2105.backend.user.dto.GetYourItemBidsResponse;
 import edu.ntnu.idatt2105.backend.user.dto.GetStoreItemResponse;
 import edu.ntnu.idatt2105.backend.user.dto.PlaceBidRequest;
 import edu.ntnu.idatt2105.backend.user.dto.ToggleBookmarkRequest;
@@ -120,13 +121,13 @@ public class UserController {
   }
 
   @GetMapping("/item/bid")
-  public GetBidItemResponse[] getUniqueBids() {
-    return userService.getUniqueBids();
+  public GetYourUniqueBidsResponse[] getUniqueBids() {
+    return userService.getYourBids();
   }
 
   @PostMapping("/item/bids")
-  public GetBidsResponse[] getBidsOnItem(@RequestBody GetBidsRequest getBidsRequest) {
-    return userService.getItemBids(getBidsRequest);
+  public GetYourItemBidsResponse[] getBidsOnItem(@RequestBody GetYourItemBidsRequest getYourItemBidsRequest) {
+    return userService.getYourItemBids(getYourItemBidsRequest);
   }
 
   @PostMapping("/item/bid/answer")
@@ -136,6 +137,11 @@ public class UserController {
     } catch (AccessDeniedException e) {
       logger.warn("permission denied: {}", e.getMessage());
     }
+  }
+
+  @GetMapping("/item/bid/your")
+  public GetYourBidItemsResponse[] getBidsOnYourItem() {
+    return userService.getBids();
   }
 
   /**
