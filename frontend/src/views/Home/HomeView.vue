@@ -20,7 +20,7 @@ const newItemsRequest = ref<ItemsRequestDTO>({
     category: null,
     searchWord: null,
     priceMinMax: null,
-    sort: 'published_DESC',
+    sort: 'published_ASC',
     segmentOffset: [0, itemsPerPage.value],
 });
 
