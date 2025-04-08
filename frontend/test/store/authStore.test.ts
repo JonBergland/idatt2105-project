@@ -1,7 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { setActivePinia, createPinia } from 'pinia';
 import { useAuthStore } from '@/stores/authStore';
-import { useUserStore } from '@/stores/userStore';
 import userService from '@/services/user/userService';
 import type { UserLoginDTO, UserRegistrationDTO } from '@/models/user';
 
@@ -24,12 +23,10 @@ vi.mock('@/stores/userStore', () => ({
 
 describe('AuthStore', () => {
   let authStore: ReturnType<typeof useAuthStore>;
-  let mockUserStore: ReturnType<typeof useUserStore>;
 
   beforeEach(() => {
     setActivePinia(createPinia());
     vi.resetAllMocks();
-    mockUserStore = useUserStore();
     authStore = useAuthStore();
   });
 
