@@ -12,4 +12,6 @@ public class Bid {
   private int askingPrice;
   private String status;
   private String published;
+  private String itemName;
+  private String email;
 }
