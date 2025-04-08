@@ -335,7 +335,8 @@ function handlePriceRangeUpdated(priceRange: { min: number | null; max: number |
                 label="Display: "
                 :names="displayModes"
                 @toggle-selected="handleDisplay"
-                :auto-select-first="true"/>
+                :auto-select-first="true"
+              />
             </div>
             <ToggleGroup
               label="Sort by: "
