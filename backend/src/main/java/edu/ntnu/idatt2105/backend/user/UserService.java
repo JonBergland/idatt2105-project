@@ -184,6 +184,11 @@ public class UserService {
     return ItemMapper.INSTANCE.itemToGetStoreItemResponse(item);
   }
 
+  /**
+   * place a bid on an item.
+   *
+   * @param placeBidRequest the request info
+   */
   public void placeBid(PlaceBidRequest placeBidRequest) {
     Bid bid = BidMapper.INSTANCE.placeBidReqeustToBid(placeBidRequest);
     String userID = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -191,24 +196,46 @@ public class UserService {
     bidRepository.placeBid(bid);
   }
 
+  /**
+   * Get bids you have placed on distinct items.
+   *
+   * @return the bids
+   */
   public GetYourUniqueBidsResponse[] getYourBids() {
     String userID = SecurityContextHolder.getContext().getAuthentication().getName();
     Bid[] bids = bidRepository.getYourUniqueBids(Integer.parseInt(userID));
     return BidMapper.INSTANCE.bidArrayToGetBidItemResponseArray(bids);
   }
 
+  /**
+   * get bids you have placed on one item.
+   *
+   * @param getYourItemBidsRequest the request info
+   * @return the bids
+   */
   public GetYourItemBidsResponse[] getYourItemBids(GetYourItemBidsRequest getYourItemBidsRequest) {
     String userID = SecurityContextHolder.getContext().getAuthentication().getName();
     Bid[] bids = bidRepository.getItemBids(Integer.parseInt(userID), getYourItemBidsRequest);
     return BidMapper.INSTANCE.bidArrayToGetBidsResponseArray(bids);
   }
 
+  /**
+   * answer a bid by setting the bid status.
+   *
+   * @param answerBidRequest the request info
+   * @throws AccessDeniedException if user don't own item
+   */
   public void answerBid(AnswerBidRequest answerBidRequest) throws AccessDeniedException {
     Bid bid = BidMapper.INSTANCE.answerBidRequestToBid(answerBidRequest);
     String userID = SecurityContextHolder.getContext().getAuthentication().getName();
     bidRepository.setBidStatus(bid, Integer.parseInt(userID));
   }
 
+  /**
+   * get users who have bid on your items.
+   *
+   * @return the bids
+   */
   public GetYourBidItemsResponse[] getBids() {
     String userID = SecurityContextHolder.getContext().getAuthentication().getName();
     Bid[] bids = bidRepository.getUniqueBids(Integer.parseInt(userID));
