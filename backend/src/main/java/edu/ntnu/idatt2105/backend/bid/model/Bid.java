@@ -6,6 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Bid {
+  private int bidID;
   private int itemID;
   private int userID;
   private int askingPrice;
