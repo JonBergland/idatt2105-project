@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import ChatViewComponent from '@/components/Messages/ChatViewComponent.vue';
 import MessagesListComponent from '@/components/Messages/MessagesListComponent.vue';
 import type { ChatsResponseDTO, ChatResponseDTO } from '@/models/message';
 import { useAuthStore } from '@/stores/authStore';
@@ -68,6 +69,7 @@ const mockChats: ChatsResponseDTO = {
         itemID: 1001,
         name: "Vintage Sofa",
         category: "Furniture",
+        sellerID: 31,
         seller: "John Doe",
         description: "Beautiful vintage sofa from the 1970s, good condition with minor wear.",
         published: "2023-04-01",
@@ -139,6 +141,7 @@ const mockChats: ChatsResponseDTO = {
         itemID: 1002,
         name: "Mountain Bike",
         category: "Sports",
+        sellerID: 31,
         seller: "John Doe",
         description: "High-quality mountain bike, used for 2 seasons. 27 gears, disc brakes.",
         published: "2023-04-05",
@@ -196,6 +199,7 @@ const mockChats: ChatsResponseDTO = {
         itemID: 1003,
         name: "iPhone 13",
         category: "Electronics",
+        sellerID: 103,
         seller: "Maria Hansen",
         description: "iPhone 13, 128GB, Blue, bought last year. Comes with original charger and box.",
         published: "2023-04-08",
@@ -250,6 +254,9 @@ onMounted(async () => {
     </div>
     <div class="chat-view">
       <!-- Chat view -->
+       <ChatViewComponent
+       :chat = "selectedChat"
+       />
     </div>
   </div>
 </template>
