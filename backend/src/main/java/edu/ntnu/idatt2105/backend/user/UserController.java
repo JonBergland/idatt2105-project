@@ -3,6 +3,7 @@ package edu.ntnu.idatt2105.backend.user;
 import edu.ntnu.idatt2105.backend.item.dto.ItemRequest;
 import edu.ntnu.idatt2105.backend.item.dto.ItemsResponse;
 import edu.ntnu.idatt2105.backend.user.dto.AddItemRequest;
+import edu.ntnu.idatt2105.backend.user.dto.AnswerBidRequest;
 import edu.ntnu.idatt2105.backend.user.dto.GetBidItemResponse;
 import edu.ntnu.idatt2105.backend.user.dto.GetBidsRequest;
 import edu.ntnu.idatt2105.backend.user.dto.GetBidsResponse;
@@ -12,6 +13,7 @@ import edu.ntnu.idatt2105.backend.user.dto.ToggleBookmarkRequest;
 import edu.ntnu.idatt2105.backend.user.dto.EditItemRequest;
 import edu.ntnu.idatt2105.backend.user.dto.GetUserInfoResponse;
 import edu.ntnu.idatt2105.backend.user.dto.UpdateUserInfoRequest;
+import java.nio.file.AccessDeniedException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -125,6 +127,15 @@ public class UserController {
   @PostMapping("/item/bids")
   public GetBidsResponse[] getBidsOnItem(@RequestBody GetBidsRequest getBidsRequest) {
     return userService.getItemBids(getBidsRequest);
+  }
+
+  @PostMapping("/item/bid/answer")
+  public void answerBid(@RequestBody AnswerBidRequest answerBidRequest) {
+    try {
+      userService.answerBid(answerBidRequest);
+    } catch (AccessDeniedException e) {
+      logger.warn("permission denied: {}", e.getMessage());
+    }
   }
 
   /**
