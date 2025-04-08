@@ -115,21 +115,42 @@ public class UserController {
     }
   }
 
+  /**
+   * endpoint for placing a bid.
+   *
+   * @param placeBidRequest the bid to place
+   */
   @PostMapping("/item/bid")
   public void placeBid(@RequestBody PlaceBidRequest placeBidRequest) {
     userService.placeBid(placeBidRequest);
   }
 
+  /**
+   * endpoint for getting distinct items you have placed bids on.
+   *
+   * @return the items
+   */
   @GetMapping("/item/bid")
   public GetYourUniqueBidsResponse[] getUniqueBids() {
     return userService.getYourBids();
   }
 
+  /**
+   * endpoint for getting bids you have placed on an item.
+   *
+   * @param getYourItemBidsRequest the item
+   * @return the bids
+   */
   @PostMapping("/item/bids")
   public GetYourItemBidsResponse[] getBidsOnItem(@RequestBody GetYourItemBidsRequest getYourItemBidsRequest) {
     return userService.getYourItemBids(getYourItemBidsRequest);
   }
 
+  /**
+   * accept or decline a bid placed on your item.
+   *
+   * @param answerBidRequest the item to answer
+   */
   @PostMapping("/item/bid/answer")
   public void answerBid(@RequestBody AnswerBidRequest answerBidRequest) {
     try {
@@ -139,6 +160,11 @@ public class UserController {
     }
   }
 
+  /**
+   * get users who have bid on your items.
+   *
+   * @return the users
+   */
   @GetMapping("/item/bid/your")
   public GetYourBidItemsResponse[] getBidsOnYourItem() {
     return userService.getBids();
