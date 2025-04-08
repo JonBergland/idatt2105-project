@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { ItemResponseDTO } from '@/models/item';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, computed } from 'vue';
 import "@/assets/color.css"
 import "@/assets/main.css"
 
@@ -9,13 +9,20 @@ const props = defineProps<{
   item: ItemResponseDTO,
 }>()
 
-const itemStatus = ref("")
-
-onMounted(() => {
-  if (props.item.state === 'available') itemStatus.value = "Available";
-  if (props.item.state === 'archived') itemStatus.value = "Not Available: Archived";
-  if (props.item.state === 'reserved') itemStatus.value = "Reserved";
-  if (props.item.state === 'sold') itemStatus.value = "Not Available: Sold";
+const itemStatus = computed(() => {
+  const state = props.item.state
+  switch (state) {
+    case 'available':
+      return 'Available';
+    case 'archived':
+      return 'Not Available: Archived';
+    case 'reserved':
+      return 'Reserved';
+    case 'sold':
+      return 'Not Available: Sold';
+    default:
+      return 'Unknown';
+  }
 })
 
 </script>
