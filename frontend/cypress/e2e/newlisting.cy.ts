@@ -56,25 +56,31 @@ describe('New Listing Page', () => {
   it('validates the name field', () => {
     cy.wait('@getCategories');
     // Test empty name validation
-    cy.get('#name').focus().blur();
+    cy.get('#name').focus();
+    cy.get('#name').blur();
     cy.get('.error-msg').should('contain', 'Name must be at least 3 characters');
 
     // Test too short name validation
-    cy.get('#name').type('ab').blur();
+    cy.get('#name').type('ab');
+    cy.get('#name').blur();
     cy.get('.error-msg').should('contain', 'Name must be at least 3 characters');
 
     // Test valid name
-    cy.get('#name').clear().type('Valid Item Name').blur();
+    cy.get('#name').clear();
+    cy.get('#name').type('Valid Item Name');
+    cy.get('#name').blur();
     cy.get('.error-msg').should('not.exist');
   });
 
   it('validates the description field', () => {
     // Test empty description validation
-    cy.get('#description').focus().blur();
+    cy.get('#description').focus();
+    cy.get('#description').blur();
     cy.get('.error-msg').should('contain', 'Description must be at least 3 characters');
 
     // Test valid description
-    cy.get('#description').type('This is a valid description for the item').blur();
+    cy.get('#description').type('This is a valid description for the item')
+    cy.get('#description').blur();
     cy.get('.error-msg').should('not.exist');
   });
 
