@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router';
 import { useUserStore } from "@/stores/userStore";
 import { useAuthStore } from "@/stores/authStore";
 import ItemForm from '@/components/NewListing/ItemForm.vue';
-import type { AddItemRequest } from '@/models/item.ts';
+import type { AddItemRequest } from '@/models/user.ts';
 
 const router = useRouter();
 const userStore = useUserStore();
