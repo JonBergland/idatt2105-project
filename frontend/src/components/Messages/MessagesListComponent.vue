@@ -28,23 +28,24 @@ function handleMessageItemClick(chat: ChatResponseDTO) {
 }
 
 /**
- * Determines if the current user is the buyer based on the provided buyer ID.
+ * Determines if the current user is the seller based on the provided seller ID.
  *
- * @param {number} buyerID - The ID of the buyer to check against the current user.
- * @returns {boolean} - Returns true if the current user is the buyer, otherwise false.
+ * @param {number} sellerID - The ID of the seller to check against the current user.
+ * @returns {boolean} - Returns true if the current user is the seller, otherwise false.
  */
-function isUserBuyer(buyerID: number) {
-  return buyerID === userStore.user?.userID
+function isUserSeller(sellerID: number) {
+  return sellerID === userStore.user?.userID
 }
 
 /**
- * Determines the role of the messaging contact based on the chat
+ * Determines the role of the messaging contact based on the chat.
+ * If the user is not the seller, 
  *
  * @param chat The chat to analyze
  * @returns "Buyer" or "Seller" based on who is the contact
  */
 function getMessagingContactRole(chat: ChatResponseDTO): string {
-  return isUserBuyer(chat.buyer.userID) ? "Buyer" : "Seller";
+  return isUserSeller(chat.item.sellerID) ?"Buyer" : "Seller";
 }
 
 /**
@@ -54,7 +55,7 @@ function getMessagingContactRole(chat: ChatResponseDTO): string {
  * @returns The name of the contact person
  */
 function getMessagingContactName(chat: ChatResponseDTO): string {
-  return isUserBuyer(chat.buyer.userID) ? `${chat.buyer.name} ${chat.buyer.surname}` : `${chat.seller.name} ${chat.seller.surname}`;
+  return isUserSeller(chat.item.sellerID) ? `${chat.buyer.name} ${chat.buyer.surname}` : `${chat.seller.name} ${chat.seller.surname}`;
 }
 
 /**
