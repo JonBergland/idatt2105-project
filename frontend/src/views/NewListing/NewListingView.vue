@@ -1,19 +1,26 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { useUserStore } from "@/stores/userStore";
 import ItemForm from '@/components/NewListing/ItemForm.vue';
 import type { AddItemRequest } from '@/models/item.ts';
 
 const router = useRouter();
+const userStore = useUserStore();
+const isSubmitting = ref(false);
 
-const handleSubmit = async (itemData: AddItemRequest) => {
+function handleSubmit(request: AddItemRequest) {
+  console.log(request)
+  isSubmitting.value = true;
   try {
-
-    router.back();
+    userStore.postItem(request);
   } catch (error) {
-    console.error('Failed to create item:', error);
+    console.error('Error posting item:', error);
+    // Add error handling UI as needed
+  } finally {
+    isSubmitting.value = false;
   }
-};
+}
 </script>
 
 <template>
