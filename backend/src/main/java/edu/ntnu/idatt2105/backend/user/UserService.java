@@ -16,6 +16,7 @@ import edu.ntnu.idatt2105.backend.item.model.Item;
 import edu.ntnu.idatt2105.backend.security.dto.SigninRequest;
 import edu.ntnu.idatt2105.backend.security.dto.SignupRequest;
 import edu.ntnu.idatt2105.backend.user.dto.AddItemRequest;
+import edu.ntnu.idatt2105.backend.user.dto.AnswerBidRequest;
 import edu.ntnu.idatt2105.backend.user.dto.GetBidItemResponse;
 import edu.ntnu.idatt2105.backend.user.dto.GetBidsRequest;
 import edu.ntnu.idatt2105.backend.user.dto.GetBidsResponse;
@@ -26,6 +27,7 @@ import edu.ntnu.idatt2105.backend.user.dto.EditItemRequest;
 import edu.ntnu.idatt2105.backend.user.dto.GetUserInfoResponse;
 import edu.ntnu.idatt2105.backend.user.dto.UpdateUserInfoRequest;
 import edu.ntnu.idatt2105.backend.user.model.User;
+import java.nio.file.AccessDeniedException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -200,8 +202,10 @@ public class UserService {
     return BidMapper.INSTANCE.bidArrayToGetBidsResponseArray(bids);
   }
 
-  public void answerBid() {
-
+  public void answerBid(AnswerBidRequest answerBidRequest) throws AccessDeniedException {
+    Bid bid = BidMapper.INSTANCE.answerBidRequestToBid(answerBidRequest);
+    String userID = SecurityContextHolder.getContext().getAuthentication().getName();
+    bidRepository.setBidStatus(bid, Integer.parseInt(userID));
   }
 
   private String encodePassword(String password) {
