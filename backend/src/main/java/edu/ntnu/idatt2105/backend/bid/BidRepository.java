@@ -9,12 +9,20 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+/**
+ * a repository for managing bids in the database.
+ */
 @Repository
 @RequiredArgsConstructor
 public class BidRepository {
 
   private final JdbcTemplate jdbcTemplate;
 
+  /**
+   * place a bid on an item.
+   *
+   * @param bid the bid to place
+   */
   public void placeBid(Bid bid) {
     jdbcTemplate.update(
           "INSERT INTO Bids (user_id, item_id, asking_price) VALUES (?, ?, ?)",
@@ -23,6 +31,12 @@ public class BidRepository {
           bid.getAskingPrice());
   }
 
+  /**
+   * get bids you have placed on distinct items.
+   *
+   * @param userID your user id
+   * @return the bids
+   */
   public Bid[] getYourUniqueBids(int userID) {
     List<Bid> bidList = jdbcTemplate.query(
         "SELECT DISTINCT user_id AS userID, item_id AS itemID FROM Bids "
@@ -32,6 +46,13 @@ public class BidRepository {
     return bidList.toArray(new Bid[0]);
   }
 
+  /**
+   * get bids you have placed on an item paginated.
+   *
+   * @param userID your user id
+   * @param getYourItemBidsRequest the request info
+   * @return the bids
+   */
   public Bid[] getItemBids(int userID, GetYourItemBidsRequest getYourItemBidsRequest) {
     List<Bid> bidList = jdbcTemplate.query(
         "SELECT *, item_id AS itemID, id AS bidID FROM Bids WHERE user_id = ? AND item_id = ? "
@@ -46,6 +67,13 @@ public class BidRepository {
     return bidList.toArray(new Bid[0]);
   }
 
+  /**
+   * set the bid status of an item you own.
+   *
+   * @param bid the bid
+   * @param userID your user id
+   * @throws AccessDeniedException when you don't own the item
+   */
   public void setBidStatus(Bid bid, int userID) throws AccessDeniedException {
     if (ownsBidItem(userID, bid.getBidID())) {
       jdbcTemplate.update(
@@ -59,6 +87,12 @@ public class BidRepository {
     }
   }
 
+  /**
+   * get users who have bid on your items.
+   *
+   * @param userID your user id
+   * @return the bids
+   */
   public Bid[] getUniqueBids(int userID) {
     List<Bid> bidList = jdbcTemplate.query(
         "SELECT DISTINCT Bids.item_id AS itemID, Bids.user_id AS userID, Item.name AS itemName, b.email FROM `Bids` "
@@ -71,6 +105,13 @@ public class BidRepository {
     return bidList.toArray(new Bid[0]);
   }
 
+  /**
+   * check if a user owns the item that is bid on.
+   *
+   * @param userID the user id
+   * @param bidID the bid id
+   * @return boolean from check
+   */
   private boolean ownsBidItem(int userID, int bidID) {
     return jdbcTemplate.queryForObject(
         "SELECT IF(EXISTS( "
