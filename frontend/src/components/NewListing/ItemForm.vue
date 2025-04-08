@@ -3,7 +3,6 @@ import type { AddItemRequest } from '@/models/item.ts';
 import { ref, computed, onMounted } from 'vue';
 import { useItemStore } from '@/stores/itemStore.ts';
 import ToggleGroup from '@/components/Result/ToggleGroup.vue';
-import * as stringVerificationUtils from '@/utils/stringVerificationUtils';
 
 const itemStore = useItemStore();
 
