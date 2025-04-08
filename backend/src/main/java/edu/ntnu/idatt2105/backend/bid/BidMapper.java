@@ -2,8 +2,9 @@ package edu.ntnu.idatt2105.backend.bid;
 
 import edu.ntnu.idatt2105.backend.bid.model.Bid;
 import edu.ntnu.idatt2105.backend.user.dto.AnswerBidRequest;
-import edu.ntnu.idatt2105.backend.user.dto.GetBidItemResponse;
-import edu.ntnu.idatt2105.backend.user.dto.GetBidsResponse;
+import edu.ntnu.idatt2105.backend.user.dto.GetYourBidItemsResponse;
+import edu.ntnu.idatt2105.backend.user.dto.GetYourItemBidsResponse;
+import edu.ntnu.idatt2105.backend.user.dto.GetYourUniqueBidsResponse;
 import edu.ntnu.idatt2105.backend.user.dto.PlaceBidRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -19,22 +20,30 @@ public interface BidMapper {
 
   @Mapping(source = "itemID", target = "itemID")
   @Mapping(source = "userID", target = "userID")
-  GetBidItemResponse bidToGetBidItemResponse(Bid bid);
+  GetYourUniqueBidsResponse bidToGetBidItemResponse(Bid bid);
 
-  GetBidItemResponse[] bidArrayToGetBidItemResponseArray(Bid[] bid);
+  GetYourUniqueBidsResponse[] bidArrayToGetBidItemResponseArray(Bid[] bid);
 
   @Mapping(source = "bidID", target = "bidID")
   @Mapping(source = "itemID", target = "itemID")
   @Mapping(source = "askingPrice", target = "askingPrice")
   @Mapping(source = "status", target = "status")
   @Mapping(source = "published", target = "published")
-  GetBidsResponse bidToGetBidsResponse(Bid bid);
+  GetYourItemBidsResponse bidToGetBidsResponse(Bid bid);
 
-  GetBidsResponse[] bidArrayToGetBidsResponseArray(Bid[] bid);
+  GetYourItemBidsResponse[] bidArrayToGetBidsResponseArray(Bid[] bid);
 
   @Mapping(source = "bidID", target = "bidID")
   @Mapping(source = "itemID", target = "itemID")
   @Mapping(source = "userID", target = "userID")
   @Mapping(source = "status", target = "status")
   Bid answerBidRequestToBid(AnswerBidRequest answerBidRequest);
+
+  @Mapping(source = "itemID", target = "itemID")
+  @Mapping(source = "userID", target = "userID")
+  @Mapping(source = "itemName", target = "itemName")
+  @Mapping(source = "email", target = "email")
+  GetYourBidItemsResponse bidToGetYourBidItemsResponse(Bid bid);
+
+  GetYourBidItemsResponse[] bidArrayToGetYourBidItemsResponseArray(Bid[] bid);
 }
