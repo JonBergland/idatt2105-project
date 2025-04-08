@@ -1,9 +1,13 @@
 <script setup lang="ts">
 import placeholderImage from '@/assets/images/placeholder-image.png';
+import "@/assets/color.css"
+import "@/assets/base.css"
+import "@/assets/main.css"
 
 const props = defineProps<{
-  itemName: string;
-  sellerName: string;
+  itemName: string;             // Name of the item that is being sold
+  messagingContactRole: string; // Role of the chatter (Buyer or Seller of the product)
+  messagingContactName: string; // The name of the person you are chatting with
   productImage: string;
   isActive: boolean;
   seenByUser: boolean;
@@ -20,10 +24,12 @@ const props = defineProps<{
     </div>
     <div class="message-product-info">
       <!-- Name of item -->
-      <h2 class="item-name">{{ itemName }}</h2>
+      <h3 class="item-name">{{ itemName }}</h3>
       <!-- Name of seller -->
-      <h3 class="seller-name">Seller: {{ sellerName }}</h3>
+      <p class="messaging-contact-name">{{ messagingContactRole + ": " + messagingContactName }}</p>
     </div>
+    <!-- Indicator for new message -->
+    <div v-if="!seenByUser" class="new-message-indicator"></div>
   </div>
 </template>
 
@@ -33,16 +39,16 @@ const props = defineProps<{
   align-items: center;
   gap: 10px;
   padding: 10px;
-  border: 1px solid #d9d9d9;
+  border: 1px solid var(--color-border);
   border-radius: 8px;
-  background-color: #f9f9f9;
+  background-color: var(--color-background-soft);
   transition: background-color 0.3s ease, border-color 0.3s ease;
   cursor: pointer;
 }
 
 .message-product-component.active {
-  background-color: #e6e6e6; /* Darker background for active state */
-  border-color: #b3b3b3; /* Highlighted border for active state */
+  background-color: var(--color-background-muted);
+  border-color: var(--color-border);
 }
 
 .message-product-image {
@@ -51,7 +57,7 @@ const props = defineProps<{
   height: 50px;
   border-radius: 4px;
   overflow: hidden;
-  background-color: #f0f0f0;
+  background-color: var(--color-background);
 }
 
 .message-product-image img {
@@ -66,17 +72,14 @@ const props = defineProps<{
   justify-content: center;
 }
 
-.item-name {
-  font-size: 16px;
-  font-weight: 500;
-  margin: 0;
-  color: #333;
-}
-
-.seller-name {
-  font-size: 14px;
-  font-weight: 400;
-  margin: 0;
-  color: #666;
+.new-message-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--color-trinary);
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
 }
 </style>
