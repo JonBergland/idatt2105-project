@@ -85,7 +85,12 @@ class UserService {
    * @returns A promise that resolves to the response of the POST request.
    */
   async postItem(request: AddItemRequest): Promise<void>{
-    await axiosInstance.post('/user/item', request);
+    try {
+      await axiosInstance.post('/user/item', request);
+    } catch (error) {
+      console.error('Error creating item:', error);
+      throw error;
+    }
   }
 
   async updateItem(request: UpdateItemRequest): Promise<void> {
@@ -98,8 +103,13 @@ class UserService {
   }
 
   async getUserItemDetails(request: ItemRequestDTO): Promise<ItemResponseDTO> {
-    const response = await axiosInstance.post<ItemResponseDTO>('/user/item/store', request);
-    return response.data;
+    try {
+      const response = await axiosInstance.post<ItemResponseDTO>('/user/item/store', request);
+      return response.data;
+    } catch (error) {
+      console.error('Error getting item details:', error);
+      throw error;
+    }
   }
 }
 
