@@ -4,6 +4,8 @@ import edu.ntnu.idatt2105.backend.item.dto.ItemRequest;
 import edu.ntnu.idatt2105.backend.item.dto.ItemsResponse;
 import edu.ntnu.idatt2105.backend.user.dto.AddItemRequest;
 import edu.ntnu.idatt2105.backend.user.dto.AnswerBidRequest;
+import edu.ntnu.idatt2105.backend.user.dto.BuyItemFromBidRequest;
+import edu.ntnu.idatt2105.backend.user.dto.BuyItemRequest;
 import edu.ntnu.idatt2105.backend.user.dto.DeleteItemRequest;
 import edu.ntnu.idatt2105.backend.user.dto.EditItemRequest;
 import edu.ntnu.idatt2105.backend.user.dto.GetBidsOnItemByUserRequest;
@@ -308,6 +310,38 @@ public class UserController {
       userService.editUserItem(editItemRequest);
     } catch (DataAccessException e) {
       logger.warn("could not edit item for user: {}", e.getMessage());
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  /**
+   * endpoint for directly buying an item.
+   *
+   * @param buyItemRequest the item
+   */
+  @PostMapping("/item/buy")
+  public void buyItem(@RequestBody BuyItemRequest buyItemRequest) {
+    logger.info("direct buy request");
+    try {
+      userService.buyItem(buyItemRequest);
+    } catch (DataAccessException | IllegalArgumentException e) {
+      logger.warn("could not buy item: {}", e.getMessage());
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  /**
+   * endpoint for buying through accepted bid.
+   *
+   * @param buyItemFromBidRequest the bid
+   */
+  @PostMapping("/item/bids/buy")
+  public void buyBidItem(@RequestBody BuyItemFromBidRequest buyItemFromBidRequest) {
+    logger.info("buy from bid request");
+    try {
+    userService.buyItemFromBid(buyItemFromBidRequest);
+    } catch (DataAccessException | IllegalArgumentException e) {
+      logger.warn("could not buy item: {}", e.getMessage());
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
     }
   }

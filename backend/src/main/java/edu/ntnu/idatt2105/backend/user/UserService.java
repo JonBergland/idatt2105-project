@@ -13,10 +13,15 @@ import edu.ntnu.idatt2105.backend.item.ItemRepository;
 import edu.ntnu.idatt2105.backend.item.dto.ItemRequest;
 import edu.ntnu.idatt2105.backend.item.dto.ItemsResponse;
 import edu.ntnu.idatt2105.backend.item.model.Item;
+import edu.ntnu.idatt2105.backend.purchase.PurchaseMapper;
+import edu.ntnu.idatt2105.backend.purchase.PurchaseRepository;
+import edu.ntnu.idatt2105.backend.purchase.model.Purchase;
 import edu.ntnu.idatt2105.backend.security.dto.SigninRequest;
 import edu.ntnu.idatt2105.backend.security.dto.SignupRequest;
 import edu.ntnu.idatt2105.backend.user.dto.AddItemRequest;
 import edu.ntnu.idatt2105.backend.user.dto.AnswerBidRequest;
+import edu.ntnu.idatt2105.backend.user.dto.BuyItemFromBidRequest;
+import edu.ntnu.idatt2105.backend.user.dto.BuyItemRequest;
 import edu.ntnu.idatt2105.backend.user.dto.DeleteItemRequest;
 import edu.ntnu.idatt2105.backend.user.dto.GetBidsOnItemByUserRequest;
 import edu.ntnu.idatt2105.backend.user.dto.GetBidsOnItemByUserResponse;
@@ -42,6 +47,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Service class for the User model.
@@ -61,6 +67,8 @@ public class UserService {
   private final BrowseHistoryRepository browseHistoryRepository;
 
   private final BidRepository bidRepository;
+
+  private final PurchaseRepository purchaseRepository;
 
   private final PasswordEncoder passwordEncoder;
 
@@ -294,6 +302,65 @@ public class UserService {
     Bid bid = BidMapper.INSTANCE.getBidsOnItemByUserRequestToBid(getBidsOnItemByUserRequest);
     Bid[] bids = bidRepository.getBidsByUserOnItem(bid, Integer.parseInt(userID), getBidsOnItemByUserRequest.getSegmentOffset());
     return BidMapper.INSTANCE.bidArrayToGetBidsOnItemByUserResponseArray(bids);
+  }
+
+  /**
+   * buy item directly.
+   *
+   * @param buyItemRequest the request info
+   */
+  @Transactional
+  public void buyItem(BuyItemRequest buyItemRequest) {
+    String userID = SecurityContextHolder.getContext().getAuthentication().getName();
+    Purchase purchase = PurchaseMapper.INSTANCE.buyItemRequestToPurchase(buyItemRequest);
+    purchase.setBuyerID(Integer.parseInt(userID));
+
+    Item item = itemRepository.getItem(purchase.getItemID());
+    if (item.getState().equals("sold") || item.getState().equals("reserved")) {
+      throw new IllegalArgumentException("Item not purchasable");
+    }
+
+    buy(purchase);
+  }
+
+  /**
+   * buy item from accepted bid.
+   *
+   * @param buyItemFromBidRequest the request info
+   */
+  @Transactional
+  public void buyItemFromBid(BuyItemFromBidRequest buyItemFromBidRequest) {
+    String userID = SecurityContextHolder.getContext().getAuthentication().getName();
+    Bid bid = bidRepository.getBid(buyItemFromBidRequest.getBidID());
+    Purchase purchase = new Purchase();
+    purchase.setItemID(bid.getItemID());
+    purchase.setBuyerID(Integer.parseInt(userID));
+    purchase.setFinalPrice(bid.getAskingPrice());
+
+    Item item = itemRepository.getItem(purchase.getItemID());
+    if (item.getState().equals("sold")) {
+      throw new IllegalArgumentException("Item not purchasable");
+    }
+
+    if (bid.getUserID() == Integer.parseInt(userID)
+        && bid.getStatus() != null
+        && bid.getStatus().equals("1")) {
+      buy(purchase);
+    } else {
+      throw new IllegalArgumentException("Bid not users or not valid");
+    }
+  }
+
+  /**
+   * method for buying item based on a purchase object.
+   *
+   * @param purchase the purchase
+   */
+  private void buy(Purchase purchase) {
+    Item item = itemRepository.getItem(purchase.getItemID());
+    purchase.setFinalPrice(item.getPrice());
+    itemRepository.updateState(purchase.getItemID(), 4);
+    purchaseRepository.addPurchase(purchase);
   }
 
   private String encodePassword(String password) {
