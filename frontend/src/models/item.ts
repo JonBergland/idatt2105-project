@@ -14,11 +14,13 @@ export interface ItemResponseDTO {
   itemID: number;
   name: string;
   category: string;
+  sellerID: number;
   seller: string;
   description: string;
   published: string;
   price: number;
   state: string;
+  // TODO: Add Image url
 }
 
 export interface ItemsResponseDTO {

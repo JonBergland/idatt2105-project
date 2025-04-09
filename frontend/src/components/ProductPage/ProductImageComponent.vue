@@ -1,13 +1,17 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import leftArrow from '@/assets/icons/image-arrow-left.svg'
 import rightArrow from '@/assets/icons/image-arrow-right.svg'
 import heartIcon from '@/assets/icons/heart.svg'
 import heartSelectedIcon from '@/assets/icons/heart-selected.svg'
+import placeholderImage from '@/assets/images/placeholder-image.png'
 
-const props = defineProps<{
-  images: string[] // TODO: See how best to handle images from the backend
-}>()
+const props = defineProps({
+  images: {
+    type: Array,
+    required: true
+  },
+});
 
 const imageNr = ref(0)
 const isFavorited = ref(false)
@@ -40,6 +44,12 @@ function toggleFavorite() {
   emit('favorite', isFavorited.value)
 }
 
+const currentImageUrl = computed(() => {
+  const image = props.images && props.images.length > imageNr.value ? props.images[imageNr.value] : null;
+
+  // Return placeholderImage if image is empty
+  return image || placeholderImage;
+});
 </script>
 
 <template>
@@ -48,7 +58,7 @@ function toggleFavorite() {
       <img :src="isFavorited ? heartSelectedIcon : heartIcon" alt="Favorite" />
     </button>
 
-    <div class="product-image" :style="{ backgroundImage: `url(${images[imageNr]})` }"></div>
+    <div class="product-image" :style="{ backgroundImage: `url(${currentImageUrl})` }"></div>
 
     <button class="nav-button left" @click="prevImage">
       <img :src="leftArrow" alt="Previous" />
