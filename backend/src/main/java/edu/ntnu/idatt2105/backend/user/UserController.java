@@ -6,11 +6,13 @@ import edu.ntnu.idatt2105.backend.user.dto.AddItemRequest;
 import edu.ntnu.idatt2105.backend.user.dto.AnswerBidRequest;
 import edu.ntnu.idatt2105.backend.user.dto.GetBidsOnItemByUserRequest;
 import edu.ntnu.idatt2105.backend.user.dto.GetBidsOnItemByUserResponse;
+import edu.ntnu.idatt2105.backend.user.dto.GetYourBidItemsRequest;
 import edu.ntnu.idatt2105.backend.user.dto.GetYourBidItemsResponse;
 import edu.ntnu.idatt2105.backend.user.dto.GetYourUniqueBidsResponse;
 import edu.ntnu.idatt2105.backend.user.dto.GetYourItemBidsRequest;
 import edu.ntnu.idatt2105.backend.user.dto.GetYourItemBidsResponse;
 import edu.ntnu.idatt2105.backend.user.dto.GetStoreItemResponse;
+import edu.ntnu.idatt2105.backend.user.dto.GetYourUniqueBidsRequest;
 import edu.ntnu.idatt2105.backend.user.dto.PlaceBidRequest;
 import edu.ntnu.idatt2105.backend.user.dto.ToggleBookmarkRequest;
 import edu.ntnu.idatt2105.backend.user.dto.EditItemRequest;
@@ -122,7 +124,7 @@ public class UserController {
    *
    * @param placeBidRequest the bid to place
    */
-  @PostMapping("/item/bid")
+  @PostMapping("/item/bid/place")
   public void placeBid(@RequestBody PlaceBidRequest placeBidRequest) {
     try {
       userService.placeBid(placeBidRequest);
@@ -136,9 +138,10 @@ public class UserController {
    *
    * @return the items
    */
-  @GetMapping("/item/bid")
-  public GetYourUniqueBidsResponse[] getUniqueBids() {
-    return userService.getYourBids();
+  @PostMapping("/item/bids/item")
+  public GetYourUniqueBidsResponse[] getUniqueBids(@RequestBody
+                                                   GetYourUniqueBidsRequest getYourUniqueBidsRequest) {
+    return userService.getYourBids(getYourUniqueBidsRequest);
   }
 
   /**
@@ -173,12 +176,12 @@ public class UserController {
    *
    * @return the users
    */
-  @GetMapping("/item/bid/your")
-  public GetYourBidItemsResponse[] getBidsOnYourItems() {
-    return userService.getBids();
+  @PostMapping("/item/bid/users")
+  public GetYourBidItemsResponse[] getBidsOnYourItems(@RequestBody GetYourBidItemsRequest getYourBidItemsRequest) {
+    return userService.getBids(getYourBidItemsRequest);
   }
 
-  @PostMapping("/item/bid/youritem")
+  @PostMapping("/item/bid/")
   public GetBidsOnItemByUserResponse[] getBidsOnYourItem(@RequestBody GetBidsOnItemByUserRequest getBidsOnItemByUserRequest) {
     return userService.getBidsOnYourItem(getBidsOnItemByUserRequest);
   }
