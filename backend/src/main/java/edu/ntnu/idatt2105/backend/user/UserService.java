@@ -304,6 +304,11 @@ public class UserService {
     return BidMapper.INSTANCE.bidArrayToGetBidsOnItemByUserResponseArray(bids);
   }
 
+  /**
+   * buy item directly.
+   *
+   * @param buyItemRequest the request info
+   */
   @Transactional
   public void buyItem(BuyItemRequest buyItemRequest) {
     String userID = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -312,6 +317,11 @@ public class UserService {
     buy(purchase);
   }
 
+  /**
+   * buy item from accepted bid.
+   *
+   * @param buyItemFromBidRequest the request info
+   */
   @Transactional
   public void buyItemFromBid(BuyItemFromBidRequest buyItemFromBidRequest) {
     String userID = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -330,6 +340,11 @@ public class UserService {
     }
   }
 
+  /**
+   * method for buying item based on a purchase object.
+   *
+   * @param purchase the purchase
+   */
   private void buy(Purchase purchase) {
     Item item = itemRepository.getItem(purchase.getItemID());
 
