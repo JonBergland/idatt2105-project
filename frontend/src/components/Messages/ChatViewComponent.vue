@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { ChatResponseDTO } from '@/models/message';
 import { useUserStore } from '@/stores/userStore';
-import { onMounted, ref, watch } from 'vue';
+import { nextTick, onMounted, ref, watch } from 'vue';
 
 const userStore = useUserStore();
 
@@ -19,9 +19,11 @@ const scrollToBottom = () => {
 
 watch(
   () => props.chat?.messages,
-  () => {
+  async () => {
+    await nextTick();
     scrollToBottom();
-  }
+  },
+  { deep: true }
 );
 
 onMounted(() => {
