@@ -4,8 +4,8 @@ import LogIn from "../../components/LogIn/LogInForm.vue";
 import { useRouter } from 'vue-router';
 import { useAuthStore } from "@/stores/authStore";
 
-const router = useRouter()
-const authStore = useAuthStore()
+const router = useRouter();
+const authStore = useAuthStore();
 
 /**
  * Navigates the user to the "sign-up" route when the sign-up button is clicked.
@@ -18,10 +18,10 @@ function handleSignUpButton() {
 async function handleLogin(user: UserLoginDTO) {
   try {
     console.log("Handling login");
-    const resp = await authStore.login(user)
+    const resp = await authStore.login(user);
 
     if(resp) {
-      router.push({ name: 'home' })
+      router.back();
     } else {
       throw new Error("Response from store was false");
     }
