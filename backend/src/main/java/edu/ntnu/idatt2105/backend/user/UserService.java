@@ -199,10 +199,10 @@ public class UserService {
     bid.setUserID(Integer.parseInt(userID));
 
     String itemState = itemRepository.getItem(bid.getItemID()).getState();
-    if (itemState.equals("Sold") || itemState.equals("Archived")) {
-      throw new Exception("Item sold or archived");
+    if (itemState.equals("available") || itemState.equals("reserved")) {
+      bidRepository.placeBid(bid);
     }
-    bidRepository.placeBid(bid);
+    throw new Exception("Item not allowed for bidding");
   }
 
   /**
@@ -234,15 +234,21 @@ public class UserService {
    * @param answerBidRequest the request info
    * @throws AccessDeniedException if user don't own item
    */
-  public void answerBid(AnswerBidRequest answerBidRequest) throws Exception {
+  public void answerBid(AnswerBidRequest answerBidRequest)
+      throws IllegalArgumentException, AccessDeniedException {
     Bid bid = BidMapper.INSTANCE.answerBidRequestToBid(answerBidRequest);
     String userID = SecurityContextHolder.getContext().getAuthentication().getName();
 
-    String itemState = itemRepository.getItem(bid.getItemID()).getState();
-    if (itemState.equals("Sold")) {
-      throw new Exception("Item already sold");
+    int itemID = bidRepository.itemFromBid(bid.getBidID());
+    String itemState = itemRepository.getItem(itemID).getState();
+    if (itemState.equals("sold")) {
+      throw new IllegalArgumentException("Item already sold");
     }
     bidRepository.setBidStatus(bid, Integer.parseInt(userID));
+
+    if (!bidRepository.checkIfUnansweredBid(itemID)) {
+      itemRepository.updateState(itemID, 1);
+    }
   }
 
   /**
