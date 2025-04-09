@@ -109,7 +109,13 @@ public class UserController {
 
   @DeleteMapping("/item/delete")
   public void deleteUserItem(@RequestBody DeleteItemRequest deleteItemRequest) {
-    userService.deleteUserItem(deleteItemRequest);
+    logger.info("delete user's item request");
+    try {
+      userService.deleteUserItem(deleteItemRequest);
+    } catch (DataAccessException e) {
+      logger.warn("could not delete item: {}", e.getMessage());
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+    }
   }
 
   @GetMapping("/item/recommended")
