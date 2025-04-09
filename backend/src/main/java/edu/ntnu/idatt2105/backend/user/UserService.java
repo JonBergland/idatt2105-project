@@ -193,7 +193,7 @@ public class UserService {
    *
    * @param placeBidRequest the request info
    */
-  public void placeBid(PlaceBidRequest placeBidRequest) throws Exception {
+  public void placeBid(PlaceBidRequest placeBidRequest) throws IllegalArgumentException {
     Bid bid = BidMapper.INSTANCE.placeBidReqeustToBid(placeBidRequest);
     String userID = SecurityContextHolder.getContext().getAuthentication().getName();
     bid.setUserID(Integer.parseInt(userID));
@@ -202,7 +202,7 @@ public class UserService {
     if (itemState.equals("available") || itemState.equals("reserved")) {
       bidRepository.placeBid(bid);
     }
-    throw new Exception("Item not allowed for bidding");
+    throw new IllegalArgumentException("Item not allowed for bidding");
   }
 
   /**
