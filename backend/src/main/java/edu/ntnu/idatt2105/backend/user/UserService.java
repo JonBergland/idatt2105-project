@@ -161,6 +161,11 @@ public class UserService {
     return new ItemsResponse(ItemMapper.INSTANCE.itemsToItemResponses(items));
   }
 
+  /**
+   * delete item for user.
+   *
+   * @param deleteItemRequest the request info
+   */
   public void deleteUserItem(DeleteItemRequest deleteItemRequest) {
     String userID = SecurityContextHolder.getContext().getAuthentication().getName();
     itemRepository.deleteItem(deleteItemRequest.getItemID(), Integer.parseInt(userID));
