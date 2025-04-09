@@ -15,7 +15,8 @@ const bidValue = ref<string>('');
 
 const props = defineProps<{
   item: ItemResponseDTO,
-  isAuth: boolean
+  isAuth: boolean,
+  bidResponse: string
 }>();
 
 const itemStatus = computed(() => {
@@ -69,6 +70,7 @@ function handleBid(): void {
         placeholder="Type your bid in kr here:"
       >
       <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
+      <p v-if="bidResponse">{{ bidResponse }}</p>
     </div>
     <div class="product-information-box">
       <h3><strong>Product information:</strong></h3>
@@ -157,19 +159,23 @@ strong {
   font-weight: bold;
 }
 
-/* Add these styles for the error message */
 .error-message {
   color: red;
-  font-size: 0.9rem;
-  margin-top: 5px;
 }
 
 .bid-input-container {
   display: flex;
   flex-direction: column;
-  width: 100%;
-  max-width: 400px;
+  width: 50%;
+  max-width: 120px;
 }
 
-/* Rest of your existing styles remain the same */
+.bid-input-container p {
+  font-size: 0.9rem;
+  margin-top: 5px;
+}
+
+.bid-input-container input {
+  height: 40px;
+}
 </style>
