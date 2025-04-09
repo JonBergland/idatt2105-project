@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * a repository for managing bids in the database.
@@ -19,16 +20,23 @@ public class BidRepository {
   private final JdbcTemplate jdbcTemplate;
 
   /**
-   * place a bid on an item.
+   * place a bid on an item and mark it reserved.
    *
    * @param bid the bid to place
    */
+  @Transactional
   public void placeBid(Bid bid) {
     jdbcTemplate.update(
           "INSERT INTO Bids (user_id, item_id, asking_price) VALUES (?, ?, ?)",
           bid.getUserID(),
           bid.getItemID(),
           bid.getAskingPrice());
+    jdbcTemplate.update(
+        "UPDATE Item "
+        + "SET state_id = 3 "
+        + "WHERE id = ?",
+        bid.getItemID()
+    );
   }
 
   /**
@@ -121,8 +129,8 @@ public class BidRepository {
     List<Bid> bidList = jdbcTemplate.query(
         "SELECT Bids.id AS bidID, Bids.item_id AS itemID, Bids.asking_price, Bids.status, Bids.published FROM Bids "
             + "JOIN Item On Bids.item_id = Item.id "
-            + "ORDER BY Bids.published DESC "
             + "WHERE Bids.item_id = ? AND Bids.user_id = ? AND Item.user_id = ? "
+            + "ORDER BY Bids.published DESC "
             + "LIMIT ? OFFSET ? ",
         new Object[]{
             bid.getItemID(),
@@ -132,6 +140,26 @@ public class BidRepository {
             segmentOffset[0] * segmentOffset[1]},
         new BeanPropertyRowMapper<>(Bid.class));
     return bidList.toArray(new Bid[0]);
+  }
+
+  public boolean checkIfUnansweredBid(int itemID) {
+    return jdbcTemplate.queryForObject(
+        "SELECT IF(EXISTS( "
+            + "SELECT 1 "
+            + "FROM Bids "
+            + "WHERE Bids.item_id = ? AND (Bids.status IS NULL OR Bids.status = 1) "
+            + "), 'true', 'false') AS finnes",
+        new Object[]{itemID},
+        Boolean.class);
+  }
+
+  public int itemFromBid(int bidID) {
+    return jdbcTemplate.queryForObject(
+        "SELECT item_id FROM Bids "
+        + "WHERE id = ?",
+        new Object[]{bidID},
+        Integer.class
+    );
   }
 
   /**
