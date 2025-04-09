@@ -6,7 +6,7 @@ import { nextTick, onMounted, ref, watch } from 'vue';
 const userStore = useUserStore();
 
 const props = defineProps<{
-  chat: ChatResponseDTO
+  chat: ChatResponseDTO | null
 }>();
 
 const messagesContainer = ref<HTMLElement | null>(null);
