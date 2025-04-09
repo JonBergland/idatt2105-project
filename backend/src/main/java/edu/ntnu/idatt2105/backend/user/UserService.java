@@ -173,6 +173,12 @@ public class UserService {
     }
   }
 
+  /**
+   * get bookmarked items from the user.
+   *
+   * @param getBookmarkedItemsRequest the request info
+   * @return the items
+   */
   public GetBookmarkedItemsResponse[] getBookmarkedItems(GetBookmarkedItemsRequest getBookmarkedItemsRequest) {
     String userID = SecurityContextHolder.getContext().getAuthentication().getName();
     Item[] items = itemRepository.getBookmarkedItems(Integer.parseInt(userID),
