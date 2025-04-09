@@ -89,7 +89,7 @@ async function handleFavorite(isFavorited: boolean) {
       itemID: itemId.value
     };
 
-  // TODO: API call to update item
+    await userStore.updateItemDetails(updateRequest);
 
     itemResponse.value = {
       ...itemResponse.value,
