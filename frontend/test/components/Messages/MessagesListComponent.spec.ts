@@ -1,12 +1,12 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { mount } from '@vue/test-utils';
-import MessageListComponent from '@/components/Messages/MessagesListComponent.vue';
+import MessagesListComponent from '@/components/Messages/MessagesListComponent.vue';
 import MessageItemComponent from '@/components/Messages/MessageItemComponent.vue';
 import type { ChatsResponseDTO } from '@/models/message';
 import { createPinia, setActivePinia } from 'pinia';
 import { useUserStore } from '@/stores/userStore';
 
-describe('MessageListComponent.vue', () => {
+describe('MessagesListComponent.vue', () => {
   beforeEach(() => {
     setActivePinia(createPinia());
 
@@ -42,7 +42,7 @@ describe('MessageListComponent.vue', () => {
   };
 
   it('renders the list of chats', () => {
-    const wrapper = mount(MessageListComponent, {
+    const wrapper = mount(MessagesListComponent, {
       props: { chats: mockChats },
     });
 
@@ -51,7 +51,7 @@ describe('MessageListComponent.vue', () => {
   });
 
   it('displays "Buyer" as the messaging contact role when user is the seller', () => {
-    const wrapper = mount(MessageListComponent, {
+    const wrapper = mount(MessagesListComponent, {
       props: { chats: mockChats },
     });
 
@@ -60,7 +60,7 @@ describe('MessageListComponent.vue', () => {
   });
 
   it('displays the name of the messaging contact when the user is the seller', () => {
-    const wrapper = mount(MessageListComponent, {
+    const wrapper = mount(MessagesListComponent, {
       props: { chats: mockChats },
     });
 
@@ -69,7 +69,7 @@ describe('MessageListComponent.vue', () => {
   });
 
   it('displays "No messages found" when there are no chats', () => {
-    const wrapper = mount(MessageListComponent, {
+    const wrapper = mount(MessagesListComponent, {
       props: { chats: { chats: [] } },
     });
 
@@ -78,7 +78,7 @@ describe('MessageListComponent.vue', () => {
   });
 
   it('emits "chat-selected" when a chat is clicked', async () => {
-    const wrapper = mount(MessageListComponent, {
+    const wrapper = mount(MessagesListComponent, {
       props: { chats: mockChats },
     });
 
@@ -90,7 +90,7 @@ describe('MessageListComponent.vue', () => {
   });
 
   it('marks the correct chat as active', async () => {
-    const wrapper = mount(MessageListComponent, {
+    const wrapper = mount(MessagesListComponent, {
       props: { chats: mockChats },
     });
 
@@ -101,7 +101,7 @@ describe('MessageListComponent.vue', () => {
   });
 
   it('marks the chat as seen', async () => {
-    const wrapper = mount(MessageListComponent, {
+    const wrapper = mount(MessagesListComponent, {
       props: { chats: mockChats },
     });
 
@@ -124,12 +124,77 @@ describe('MessageListComponent.vue', () => {
         },
       ],
     };
-    const wrapper = mount(MessageListComponent, {
+    const wrapper = mount(MessagesListComponent, {
       props: {chats: emptyMockChats}
     });
 
     const messageItem = wrapper.findComponent(MessageItemComponent);
 
     expect(messageItem.props('seenByUser')).toBe(true);
+  });
+
+  it('returns "Buyer" as the messaging contact role when the user is the seller', () => {
+    const wrapper = mount(MessagesListComponent, {
+      props: { chats: mockChats },
+    });
+
+    const { getMessagingContactRole } = wrapper.vm;
+    const role = getMessagingContactRole(mockChats.chats[0]);
+
+    expect(role).toBe('Buyer');
+  });
+
+  it('returns "Seller" as the messaging contact role when the user is the buyer', () => {
+    const wrapper = mount(MessagesListComponent, {
+      props: { chats: mockChats },
+    });
+
+    const userStore = useUserStore();
+    userStore.setUser({
+      userID: 101,
+      name: 'Lisa',
+      surname: 'Johnson',
+      email: 'lisa.johnson@example.com',
+      phoneNumber: 87654321,
+      countryCode: 47,
+      address: '456 Second St',
+      city: 'Bergen',
+      postalCode: 5000,
+      role: 'ROLE_USER',
+      latitude: 60.3913,
+      longitude: 5.3221,
+    });
+
+    const { getMessagingContactRole } = wrapper.vm;
+    const role = getMessagingContactRole(mockChats.chats[0]);
+
+    expect(role).toBe('Seller');
+  });
+
+  it('returns the correct messaging contact name when the user is the buyer', () => {
+    const wrapper = mount(MessagesListComponent, {
+      props: { chats: mockChats },
+    });
+
+    const userStore = useUserStore();
+    userStore.setUser({
+      userID: 101,
+      name: 'Lisa',
+      surname: 'Johnson',
+      email: 'lisa.johnson@example.com',
+      phoneNumber: 87654321,
+      countryCode: 47,
+      address: '456 Second St',
+      city: 'Bergen',
+      postalCode: 5000,
+      role: 'ROLE_USER',
+      latitude: 60.3913,
+      longitude: 5.3221,
+    });
+
+    const { getMessagingContactName } = wrapper.vm;
+    const contactName = getMessagingContactName(mockChats.chats[0]);
+
+    expect(contactName).toBe('John Doe');
   });
 });
