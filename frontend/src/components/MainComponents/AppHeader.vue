@@ -2,6 +2,7 @@
 import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useAuthStore } from '@/stores/authStore';
+import { useUserStore } from '@/stores/userStore';
 
 const props = withDefaults(defineProps<{
   skipAuthCheck?: boolean
@@ -11,6 +12,7 @@ const props = withDefaults(defineProps<{
 
 const route = useRoute()
 const authStore = useAuthStore()
+const userStore = useUserStore()
 const isAuthenticated = ref(false)
 
 const pageName = computed(() => route.name)
@@ -21,9 +23,6 @@ const isMessagePage = computed(() => pageName.value === "messages")
 const isProfilePage = computed(() => pageName.value === "profile")
 const isLoginPage = computed(() => pageName.value === "login")
 const isSignupPage = computed(() => pageName.value === "signup")
-
-//TODO: implement logic for notifications
-const hasNotifications = ref(true)
 
 // Wait for authentication to finish before loading
 onMounted(async () => {
@@ -99,19 +98,19 @@ watch(() => authStore.isAuth, (newValue) => {
         :class="{ active: isMessagePage }"
       >
         <img
-          v-if="isMessagePage && hasNotifications"
+          v-if="isMessagePage && userStore.messagesNotSeen"
           src="@/assets/icons/message-notification-selected.svg"
           alt="Message"
           class="icon"
         />
         <img
-          v-else-if="isMessagePage && !hasNotifications"
+          v-else-if="isMessagePage && !userStore.messagesNotSeen"
           src="@/assets/icons/message-selected.svg"
           alt="Message"
           class="icon"
         />
         <img
-          v-else-if="!isMessagePage && hasNotifications"
+          v-else-if="!isMessagePage && userStore.messagesNotSeen"
           src="@/assets/icons/message-notification.svg"
           alt="Message"
           class="icon"

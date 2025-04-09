@@ -3,17 +3,28 @@ package edu.ntnu.idatt2105.backend.user;
 import edu.ntnu.idatt2105.backend.item.dto.ItemRequest;
 import edu.ntnu.idatt2105.backend.item.dto.ItemsResponse;
 import edu.ntnu.idatt2105.backend.user.dto.AddItemRequest;
-import edu.ntnu.idatt2105.backend.user.dto.GetStoreItemResponse;
-import edu.ntnu.idatt2105.backend.user.dto.ToggleBookmarkRequest;
+import edu.ntnu.idatt2105.backend.user.dto.AnswerBidRequest;
 import edu.ntnu.idatt2105.backend.user.dto.EditItemRequest;
+import edu.ntnu.idatt2105.backend.user.dto.GetBidsOnItemByUserRequest;
+import edu.ntnu.idatt2105.backend.user.dto.GetBidsOnItemByUserResponse;
+import edu.ntnu.idatt2105.backend.user.dto.GetStoreItemResponse;
 import edu.ntnu.idatt2105.backend.user.dto.GetUserInfoResponse;
+import edu.ntnu.idatt2105.backend.user.dto.GetYourBidItemsRequest;
+import edu.ntnu.idatt2105.backend.user.dto.GetYourBidItemsResponse;
+import edu.ntnu.idatt2105.backend.user.dto.GetYourItemBidsRequest;
+import edu.ntnu.idatt2105.backend.user.dto.GetYourItemBidsResponse;
+import edu.ntnu.idatt2105.backend.user.dto.GetYourUniqueBidsRequest;
+import edu.ntnu.idatt2105.backend.user.dto.GetYourUniqueBidsResponse;
+import edu.ntnu.idatt2105.backend.user.dto.PlaceBidRequest;
+import edu.ntnu.idatt2105.backend.user.dto.ToggleBookmarkRequest;
 import edu.ntnu.idatt2105.backend.user.dto.UpdateUserInfoRequest;
+import java.nio.file.AccessDeniedException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -97,6 +108,11 @@ public class UserController {
 
   }
 
+  /**
+   * endpoint for toggling bookmark on an item.
+   *
+   * @param toggleBookmarkRequest the item to toggle
+   */
   @PostMapping("/item/bookmark")
   public void bookmarkItem(@RequestBody ToggleBookmarkRequest toggleBookmarkRequest) {
     logger.info("toggling bookmark request");
@@ -104,6 +120,108 @@ public class UserController {
       userService.toggleBookmark(toggleBookmarkRequest);
     } catch (DataAccessException e) {
       logger.warn("could not toggle bookmark: {}", e.getMessage());
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  /**
+   * endpoint for placing a bid.
+   *
+   * @param placeBidRequest the bid to place
+   */
+  @PostMapping("/item/bid/place")
+  public void placeBid(@RequestBody PlaceBidRequest placeBidRequest) {
+    logger.info("place bid request");
+    try {
+      userService.placeBid(placeBidRequest);
+    } catch (DataAccessException | IllegalArgumentException e) {
+      logger.warn("could not place bid: {}", e.getMessage());
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  /**
+   * endpoint for getting distinct items you have placed bids on.
+   *
+   * @return the items
+   */
+  @PostMapping("/item/bids/item")
+  public GetYourUniqueBidsResponse[] getUniqueBids(
+      @RequestBody GetYourUniqueBidsRequest getYourUniqueBidsRequest) {
+    logger.info("get distinct items user has placed bids on request");
+    try {
+      return userService.getYourBids(getYourUniqueBidsRequest);
+    } catch (DataAccessException e) {
+      logger.warn("could not get distinct items: {}", e.getMessage());
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  /**
+   * endpoint for getting bids you have placed on an item.
+   *
+   * @param getYourItemBidsRequest the item
+   * @return the bids
+   */
+  @PostMapping("/item/bids")
+  public GetYourItemBidsResponse[] getBidsOnItem(
+      @RequestBody GetYourItemBidsRequest getYourItemBidsRequest) {
+    logger.info("get bids user has placed on item request");
+    try {
+      return userService.getYourItemBids(getYourItemBidsRequest);
+    } catch (DataAccessException e) {
+      logger.warn("could not get bids: {}", e.getMessage());
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  /**
+   * accept or decline a bid placed on your item.
+   *
+   * @param answerBidRequest the item to answer
+   */
+  @PostMapping("/item/bid/answer")
+  public void answerBid(@RequestBody AnswerBidRequest answerBidRequest) {
+    logger.info("answer bid request");
+    try {
+      userService.answerBid(answerBidRequest);
+    } catch (AccessDeniedException | IllegalArgumentException | DataAccessException e) {
+      logger.warn("could not answer bid: {}", e.getMessage());
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  /**
+   * get users who have bid on your items.
+   *
+   * @return the users
+   */
+  @PostMapping("/item/bid/users")
+  public GetYourBidItemsResponse[] getBidsOnYourItems(
+      @RequestBody GetYourBidItemsRequest getYourBidItemsRequest) {
+    logger.info("get users who bid on item request");
+    try {
+      return userService.getBids(getYourBidItemsRequest);
+    } catch (DataAccessException e) {
+      logger.warn("could not get users: {}", e.getMessage());
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  /**
+   * endpoint for getting bids made by a user on an item.
+   *
+   * @param getBidsOnItemByUserRequest the item and user
+   * @return the bids
+   */
+  @PostMapping("/item/bid/")
+  public GetBidsOnItemByUserResponse[] getBidsOnYourItem(
+      @RequestBody GetBidsOnItemByUserRequest getBidsOnItemByUserRequest) {
+    logger.info("get bids on item by user request");
+    try {
+      return userService.getBidsOnYourItem(getBidsOnItemByUserRequest);
+    } catch (DataAccessException e) {
+      logger.warn("could not get bids: {}", e.getMessage());
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
     }
   }

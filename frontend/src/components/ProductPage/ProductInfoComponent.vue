@@ -2,6 +2,7 @@
 import type { ItemResponseDTO } from '@/models/item';
 import { computed } from 'vue';
 import "@/assets/color.css"
+import "@/assets/base.css"
 import "@/assets/main.css"
 
 

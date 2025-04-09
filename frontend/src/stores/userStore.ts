@@ -13,6 +13,7 @@ export const useUserStore = defineStore('user', {
     item: null as ItemResponseDTO | null,
     isItemLoading: false,
     itemError: null as string | null,
+    messagesNotSeen: false,
   }),
 
   actions: {
