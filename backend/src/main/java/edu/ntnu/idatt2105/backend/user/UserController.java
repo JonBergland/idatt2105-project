@@ -129,7 +129,13 @@ public class UserController {
   @PostMapping("/item/bookmark/get")
   public GetBookmarkedItemsResponse[] getBookmarkeditems(
       @RequestBody GetBookmarkedItemsRequest getBookmarkedItemsRequest) {
-    return userService.getBookmarkedItems(getBookmarkedItemsRequest);
+    logger.info("get bookmarked items request");
+    try {
+      return userService.getBookmarkedItems(getBookmarkedItemsRequest);
+    } catch (DataAccessException e) {
+      logger.warn("could not get items: {}", e.getMessage());
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+    }
   }
 
   /**
