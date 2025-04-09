@@ -205,4 +205,19 @@ public class ItemRepository {
     );
     return itemList.toArray(new Item[0]);
   }
+
+  /**
+   * delete a user's item.
+   *
+   * @param itemID the item id
+   * @param userID the user id
+   */
+  public void deleteItem(int itemID, int userID) {
+    jdbcTemplate.update(
+        "DELETE FROM Item "
+        + "WHERE id = ? AND user_id = ?",
+        itemID,
+        userID
+    );
+  }
 }

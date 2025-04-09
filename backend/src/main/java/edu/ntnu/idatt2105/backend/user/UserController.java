@@ -4,6 +4,7 @@ import edu.ntnu.idatt2105.backend.item.dto.ItemRequest;
 import edu.ntnu.idatt2105.backend.item.dto.ItemsResponse;
 import edu.ntnu.idatt2105.backend.user.dto.AddItemRequest;
 import edu.ntnu.idatt2105.backend.user.dto.AnswerBidRequest;
+import edu.ntnu.idatt2105.backend.user.dto.DeleteItemRequest;
 import edu.ntnu.idatt2105.backend.user.dto.EditItemRequest;
 import edu.ntnu.idatt2105.backend.user.dto.GetBidsOnItemByUserRequest;
 import edu.ntnu.idatt2105.backend.user.dto.GetBidsOnItemByUserResponse;
@@ -29,6 +30,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -101,6 +103,22 @@ public class UserController {
       return userService.getUserSpecificItemInfo(itemRequest);
     } catch (DataAccessException e) {
       logger.warn("could not get item: {}", e.getMessage());
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  /**
+   * endpoint for deleting a user's item.
+   *
+   * @param deleteItemRequest the item
+   */
+  @DeleteMapping("/item/delete")
+  public void deleteUserItem(@RequestBody DeleteItemRequest deleteItemRequest) {
+    logger.info("delete user's item request");
+    try {
+      userService.deleteUserItem(deleteItemRequest);
+    } catch (DataAccessException e) {
+      logger.warn("could not delete item: {}", e.getMessage());
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
     }
   }
