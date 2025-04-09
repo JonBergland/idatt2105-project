@@ -4,6 +4,7 @@ import edu.ntnu.idatt2105.backend.item.dto.ItemRequest;
 import edu.ntnu.idatt2105.backend.item.dto.ItemsResponse;
 import edu.ntnu.idatt2105.backend.user.dto.AddItemRequest;
 import edu.ntnu.idatt2105.backend.user.dto.AnswerBidRequest;
+import edu.ntnu.idatt2105.backend.user.dto.BuyItemFromBidRequest;
 import edu.ntnu.idatt2105.backend.user.dto.BuyItemRequest;
 import edu.ntnu.idatt2105.backend.user.dto.DeleteItemRequest;
 import edu.ntnu.idatt2105.backend.user.dto.EditItemRequest;
@@ -319,7 +320,7 @@ public class UserController {
   }
 
   @PostMapping("/item/bids/buy")
-  public void buyBidItem() {
-
+  public void buyBidItem(@RequestBody BuyItemFromBidRequest buyItemFromBidRequest) {
+    userService.buyItemFromBid(buyItemFromBidRequest);
   }
 }
