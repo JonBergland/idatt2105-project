@@ -7,6 +7,8 @@ import edu.ntnu.idatt2105.backend.user.dto.AnswerBidRequest;
 import edu.ntnu.idatt2105.backend.user.dto.EditItemRequest;
 import edu.ntnu.idatt2105.backend.user.dto.GetBidsOnItemByUserRequest;
 import edu.ntnu.idatt2105.backend.user.dto.GetBidsOnItemByUserResponse;
+import edu.ntnu.idatt2105.backend.user.dto.GetBookmarkedItemsRequest;
+import edu.ntnu.idatt2105.backend.user.dto.GetBookmarkedItemsResponse;
 import edu.ntnu.idatt2105.backend.user.dto.GetStoreItemResponse;
 import edu.ntnu.idatt2105.backend.user.dto.GetUserInfoResponse;
 import edu.ntnu.idatt2105.backend.user.dto.GetYourBidItemsRequest;
@@ -122,6 +124,12 @@ public class UserController {
       logger.warn("could not toggle bookmark: {}", e.getMessage());
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
     }
+  }
+
+  @PostMapping("/item/bookmark/get")
+  public GetBookmarkedItemsResponse[] getBookmarkeditems(
+      @RequestBody GetBookmarkedItemsRequest getBookmarkedItemsRequest) {
+    return userService.getBookmarkedItems(getBookmarkedItemsRequest);
   }
 
   /**
