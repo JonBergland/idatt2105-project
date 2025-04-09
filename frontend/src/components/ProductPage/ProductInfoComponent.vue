@@ -1,14 +1,23 @@
 <script setup lang="ts">
 import type { ItemResponseDTO } from '@/models/item';
-import { computed } from 'vue';
+import { computed, ref } from 'vue'; // Add ref import
 import "@/assets/color.css"
 import "@/assets/base.css"
 import "@/assets/main.css"
+import { useAuthStore } from '@/stores/authStore';
 
+const emit = defineEmits<{
+  (e: 'bid', value: number): void
+  (e: 'login'): void
+}>();
+
+const authStore = useAuthStore();
+const errorMessage = ref('');
+const bidValue = ref<string>('');
 
 const props = defineProps<{
   item: ItemResponseDTO,
-}>()
+}>();
 
 const itemStatus = computed(() => {
   const state = props.item.state
@@ -24,17 +33,43 @@ const itemStatus = computed(() => {
     default:
       return 'Unknown';
   }
-})
+});
 
+function handleBid(): void {
+  const bidAmount = parseFloat(bidValue.value);
+
+  if (!bidValue.value || isNaN(bidAmount) || bidAmount <= 0) {
+    errorMessage.value = 'Please enter a valid bid amount';
+    return;
+  }
+
+  errorMessage.value = '';
+  emit('bid', bidAmount);
+
+  bidValue.value = '';
+}
 </script>
 
 <template>
   <div class="product-info-container">
     <h3 class="product-center-header"><strong>{{ itemStatus }}</strong></h3>
     <h3 class="product-center-header"><strong>{{ props.item.price }} kr</strong></h3>
-    <div class="product-buttons">
-      <button class="give-bid-button">Give a bid</button>
-      <button class="vipps-button">Pay with vipps</button>
+    <div v-if="authStore.isAuth" class="product-buttons">
+      <button class="give-bid-button" @click="handleBid">Give a bid</button>
+      <button class="vipps-button" disabled>Pay with vipps</button>
+    </div>
+    <div v-else class="product-buttons">
+      <button class="give-bid-button" @click="$emit('login')">Give a bid</button>
+      <button class="vipps-button" disabled>Pay with vipps</button>
+    </div>
+    <div v-if="authStore.isAuth" class="bid-input-container">
+      <input
+        id="bid"
+        type="number"
+        v-model="bidValue"
+        placeholder="Type your bid in kr here:"
+      >
+      <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
     </div>
     <div class="product-information-box">
       <h3><strong>Product information:</strong></h3>
@@ -98,6 +133,10 @@ const itemStatus = computed(() => {
   background-color: var(--color-vipps-hover);
 }
 
+.vipps-button:disabled {
+  background-color: var(--color-vipps-disabled);
+}
+
 .product-information-box {
   display: flex;
   flex-direction: column;
@@ -118,4 +157,20 @@ const itemStatus = computed(() => {
 strong {
   font-weight: bold;
 }
+
+/* Add these styles for the error message */
+.error-message {
+  color: red;
+  font-size: 0.9rem;
+  margin-top: 5px;
+}
+
+.bid-input-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 400px;
+}
+
+/* Rest of your existing styles remain the same */
 </style>
