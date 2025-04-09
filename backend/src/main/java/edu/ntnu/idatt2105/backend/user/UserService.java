@@ -19,11 +19,13 @@ import edu.ntnu.idatt2105.backend.user.dto.AddItemRequest;
 import edu.ntnu.idatt2105.backend.user.dto.AnswerBidRequest;
 import edu.ntnu.idatt2105.backend.user.dto.GetBidsOnItemByUserRequest;
 import edu.ntnu.idatt2105.backend.user.dto.GetBidsOnItemByUserResponse;
+import edu.ntnu.idatt2105.backend.user.dto.GetYourBidItemsRequest;
 import edu.ntnu.idatt2105.backend.user.dto.GetYourBidItemsResponse;
 import edu.ntnu.idatt2105.backend.user.dto.GetYourUniqueBidsResponse;
 import edu.ntnu.idatt2105.backend.user.dto.GetYourItemBidsRequest;
 import edu.ntnu.idatt2105.backend.user.dto.GetYourItemBidsResponse;
 import edu.ntnu.idatt2105.backend.user.dto.GetStoreItemResponse;
+import edu.ntnu.idatt2105.backend.user.dto.GetYourUniqueBidsRequest;
 import edu.ntnu.idatt2105.backend.user.dto.PlaceBidRequest;
 import edu.ntnu.idatt2105.backend.user.dto.ToggleBookmarkRequest;
 import edu.ntnu.idatt2105.backend.user.dto.EditItemRequest;
@@ -208,9 +210,9 @@ public class UserService {
    *
    * @return the bids
    */
-  public GetYourUniqueBidsResponse[] getYourBids() {
+  public GetYourUniqueBidsResponse[] getYourBids(GetYourUniqueBidsRequest getYourUniqueBidsRequest) {
     String userID = SecurityContextHolder.getContext().getAuthentication().getName();
-    Bid[] bids = bidRepository.getYourUniqueBids(Integer.parseInt(userID));
+    Bid[] bids = bidRepository.getYourUniqueBids(Integer.parseInt(userID), getYourUniqueBidsRequest.getSegmentOffset());
     return BidMapper.INSTANCE.bidArrayToGetBidItemResponseArray(bids);
   }
 
@@ -248,9 +250,9 @@ public class UserService {
    *
    * @return the bids
    */
-  public GetYourBidItemsResponse[] getBids() {
+  public GetYourBidItemsResponse[] getBids(GetYourBidItemsRequest getYourBidItemsRequest) {
     String userID = SecurityContextHolder.getContext().getAuthentication().getName();
-    Bid[] bids = bidRepository.getUniqueBids(Integer.parseInt(userID));
+    Bid[] bids = bidRepository.getUniqueBids(Integer.parseInt(userID), getYourBidItemsRequest.getSegmentOffset());
     return BidMapper.INSTANCE.bidArrayToGetYourBidItemsResponseArray(bids);
   }
 
