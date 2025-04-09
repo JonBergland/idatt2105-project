@@ -311,4 +311,14 @@ public class UserController {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
     }
   }
+
+  @PostMapping("/item/buy")
+  public void buyItem() {
+
+  }
+
+  @PostMapping("/item/bids/buy")
+  public void buyBidItem() {
+
+  }
 }
