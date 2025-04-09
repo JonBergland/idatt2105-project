@@ -2,6 +2,7 @@ import type { ItemRequestDTO, ItemsResponseDTO, ItemResponseDTO } from "@/models
 import type { User, AddItemRequest, UpdateItemRequest} from "@/models/user";
 import { defineStore } from "pinia";
 import userService from "@/services/user/userService"
+import type { PlaceBid } from "@/models/bid";
 
 /**
  * Store for authenticating the user with login and signup
@@ -182,6 +183,24 @@ export const useUserStore = defineStore('user', {
         return false;
       } finally {
         this.isItemLoading = false;
+      }
+    },
+
+    /**
+     * Places a bid on an item using the provided bid details.
+     *
+     * @param bid - An object containing the details of the bid to be placed.
+     * @returns A promise that resolves to a number indicating the result of the bid operation.
+     *          Returns 0 if an error occurs during the process.
+     *          Returns 1 if the process was successful.
+     */
+    async giveBidOnItem(bid: PlaceBid): Promise<number> {
+      try {
+        const response = userService.postUserBid(bid);
+        return response;
+      } catch (error) {
+        console.log("Error when giving bid on item: ", error);
+        return 0;
       }
     }
   }
