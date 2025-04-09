@@ -162,6 +162,12 @@ public class BidRepository {
     );
   }
 
+  /**
+   * get a bid from bid id.
+   *
+   * @param bidID the bid id
+   * @return the bid
+   */
   public Bid getBid(int bidID) {
     return jdbcTemplate.queryForObject(
         "SELECT Bids.*, Bids.id AS bidID, Bids.item_id AS itemID, Bids.user_id AS userID FROM Bids "
