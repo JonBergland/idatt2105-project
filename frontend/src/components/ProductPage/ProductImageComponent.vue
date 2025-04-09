@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, watch, computed } from 'vue'
 import leftArrow from '@/assets/icons/image-arrow-left.svg'
 import rightArrow from '@/assets/icons/image-arrow-right.svg'
 import heartIcon from '@/assets/icons/heart.svg'
@@ -11,10 +11,18 @@ const props = defineProps({
     type: Array,
     required: true
   },
+  isFavorited: {
+    type: Boolean,
+    default: false
+  },
 });
 
 const imageNr = ref(0)
-const isFavorited = ref(false)
+const isFavoritedLocal = ref(props.isFavorited || false)
+
+watch(() => props.isFavorited, (newValue) => {
+  isFavoritedLocal.value = newValue || false
+})
 
 const emit = defineEmits(['favorite'])
 
@@ -39,11 +47,10 @@ function nextImage() {
 /**
  * Toggle the favorite state
  */
-function toggleFavorite() {
-  isFavorited.value = !isFavorited.value
-  emit('favorite', isFavorited.value)
-}
-
+ function toggleFavorite() {
+  isFavoritedLocal.value = !isFavoritedLocal.value
+  emit('favorite', isFavoritedLocal.value)
+ }
 const currentImageUrl = computed(() => {
   const image = props.images && props.images.length > imageNr.value ? props.images[imageNr.value] : null;
 
@@ -55,7 +62,7 @@ const currentImageUrl = computed(() => {
 <template>
   <div class="product-image-container">
     <button class="favorite-button" @click="toggleFavorite">
-      <img :src="isFavorited ? heartSelectedIcon : heartIcon" alt="Favorite" />
+      <img :src="isFavoritedLocal ? heartSelectedIcon : heartIcon" alt="Favorite" />
     </button>
 
     <div class="product-image" :style="{ backgroundImage: `url(${currentImageUrl})` }"></div>

@@ -13,7 +13,7 @@ const userStore = useUserStore()
 const emit = defineEmits(['chat-selected']);
 
 // Track the active chat ID
-const activeChatId = ref<number | null>(null);
+const activeChatID = ref<number | null>(null);
 
 /**
  * Handles when a message item is clicked
@@ -22,7 +22,7 @@ const activeChatId = ref<number | null>(null);
  * @param chat The chat that was selected
  */
 function handleMessageItemClick(chat: ChatResponseDTO) {
-  activeChatId.value = chat.item.itemID;
+  activeChatID.value = chat.item.itemID || null;
 
   chat.messages.forEach(messsage => {
     messsage.notSeenByUser = false
@@ -37,8 +37,11 @@ function handleMessageItemClick(chat: ChatResponseDTO) {
  * @param {number} sellerID - The ID of the seller to check against the current user.
  * @returns {boolean} - Returns true if the current user is the seller, otherwise false.
  */
-function isUserSeller(sellerID: number) {
-  return sellerID === userStore.user?.userID
+function isUserSeller(sellerID: number | undefined): boolean {
+  if (sellerID === undefined || userStore.user?.userID === undefined) {
+    return false;
+  }
+  return sellerID === userStore.user.userID;
 }
 
 /**
@@ -48,7 +51,7 @@ function isUserSeller(sellerID: number) {
  * @returns "Buyer" or "Seller" based on who is the contact
  */
 function getMessagingContactRole(chat: ChatResponseDTO): string {
-  return isUserSeller(chat.item.sellerID) ?"Buyer" : "Seller";
+  return isUserSeller(chat.item.sellerID) ? "Buyer" : "Seller";
 }
 
 /**
@@ -58,7 +61,9 @@ function getMessagingContactRole(chat: ChatResponseDTO): string {
  * @returns The name of the contact person
  */
 function getMessagingContactName(chat: ChatResponseDTO): string {
-  return isUserSeller(chat.item.sellerID) ? `${chat.buyer.name} ${chat.buyer.surname}` : `${chat.seller.name} ${chat.seller.surname}`;
+  return isUserSeller(chat.item.sellerID)
+    ? `${chat.buyer.name || ''} ${chat.buyer.surname || ''}`
+    : `${chat.seller.name || ''} ${chat.seller.surname || ''}`;
 }
 
 /**
@@ -89,15 +94,14 @@ defineExpose({
     <div class="messages-list">
       <!-- List of messages -->
       <div v-if="props.chats && props.chats.chats && props.chats.chats.length > 0">
-        <!-- TODO: Add image url when that is implemented -->
         <MessageItemComponent
           v-for="chat in props.chats.chats"
-          :key="chat.item.itemID"
-          :itemName="chat.item.name"
+          :key="chat.item.itemID || 0"
+          :itemName="chat.item.name || ''"
           :messagingContactRole="getMessagingContactRole(chat)"
           :messagingContactName="getMessagingContactName(chat)"
           :productImage="''"
-          :isActive="activeChatId === chat.item.itemID"
+          :isActive="activeChatID === chat.item.itemID"
           :seenByUser="isLatestMessageSeen(chat)"
           @click="handleMessageItemClick(chat)"
         />

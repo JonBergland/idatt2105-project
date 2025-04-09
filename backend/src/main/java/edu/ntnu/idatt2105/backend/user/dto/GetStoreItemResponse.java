@@ -18,4 +18,5 @@ public class GetStoreItemResponse {
   String description;
   String published;
   int price;
+  boolean bookmark;
 }

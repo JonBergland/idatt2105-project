@@ -42,3 +42,11 @@ export interface AddItemRequest {
   price: number;
   category: string;
 }
+
+export interface UpdateItemRequest {
+  itemID: number;
+  name: string;
+  description: string;
+  price: number;
+  category: string;
+}

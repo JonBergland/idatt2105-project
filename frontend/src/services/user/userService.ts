@@ -1,5 +1,5 @@
-import type { ItemsResponseDTO } from "@/models/item";
-import type { User, UserLoginDTO, UserRegistrationDTO, AddItemRequest } from "@/models/user";
+import type { ItemsResponseDTO, ItemRequestDTO, ItemResponseDTO } from "@/models/item";
+import type { User, UserLoginDTO, UserRegistrationDTO, AddItemRequest, UpdateItemRequest } from "@/models/user";
 import axiosInstance from "@/services/axiosService";
 import axios from 'axios';
 
@@ -78,16 +78,53 @@ class UserService {
     console.log(resp);
   }
 
-
   /**
    * Sends a POST request to create a new user item.
    *
    * @param request - The payload containing the details of the item to be added.
    * @returns A promise that resolves to the response of the POST request.
+   * * @throws Will throw an error if the request fails, logging the error to the console.
    */
   async postItem(request: AddItemRequest): Promise<void>{
-    const response = await axiosInstance.post('/user/item', request);
-    console.log(response);
+    try {
+      await axiosInstance.post('/user/item', request);
+    } catch (error) {
+      console.error('Error creating item:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Updates an item by sending a POST request to the server with the provided request data.
+   *
+   * @param request - The data required to update the item, adhering to the `UpdateItemRequest` interface.
+   * @returns A promise that resolves when the item is successfully updated.
+   * @throws Will throw an error if the request fails, logging the error to the console.
+   */
+  async updateItem(request: UpdateItemRequest): Promise<void> {
+    try {
+      await axiosInstance.post('/user/item/edit', request);
+    } catch (error) {
+      console.error('Error updating item:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Retrieves the details of a user item by sending a request to the server.
+   *
+   * @param request - The data transfer object containing the item request details.
+   * @returns A promise that resolves to an `ItemResponseDTO` containing the item details.
+   * @throws Will throw an error if the request fails.
+   */
+  async getUserItemDetails(request: ItemRequestDTO): Promise<ItemResponseDTO> {
+    try {
+      const response = await axiosInstance.post<ItemResponseDTO>('/user/item/store', request);
+      return response.data;
+    } catch (error) {
+      console.error('Error getting item details:', error);
+      throw error;
+    }
   }
 }
 
