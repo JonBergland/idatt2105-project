@@ -4,27 +4,27 @@ import edu.ntnu.idatt2105.backend.item.dto.ItemRequest;
 import edu.ntnu.idatt2105.backend.item.dto.ItemsResponse;
 import edu.ntnu.idatt2105.backend.user.dto.AddItemRequest;
 import edu.ntnu.idatt2105.backend.user.dto.AnswerBidRequest;
+import edu.ntnu.idatt2105.backend.user.dto.EditItemRequest;
 import edu.ntnu.idatt2105.backend.user.dto.GetBidsOnItemByUserRequest;
 import edu.ntnu.idatt2105.backend.user.dto.GetBidsOnItemByUserResponse;
+import edu.ntnu.idatt2105.backend.user.dto.GetStoreItemResponse;
+import edu.ntnu.idatt2105.backend.user.dto.GetUserInfoResponse;
 import edu.ntnu.idatt2105.backend.user.dto.GetYourBidItemsRequest;
 import edu.ntnu.idatt2105.backend.user.dto.GetYourBidItemsResponse;
-import edu.ntnu.idatt2105.backend.user.dto.GetYourUniqueBidsResponse;
 import edu.ntnu.idatt2105.backend.user.dto.GetYourItemBidsRequest;
 import edu.ntnu.idatt2105.backend.user.dto.GetYourItemBidsResponse;
-import edu.ntnu.idatt2105.backend.user.dto.GetStoreItemResponse;
 import edu.ntnu.idatt2105.backend.user.dto.GetYourUniqueBidsRequest;
+import edu.ntnu.idatt2105.backend.user.dto.GetYourUniqueBidsResponse;
 import edu.ntnu.idatt2105.backend.user.dto.PlaceBidRequest;
 import edu.ntnu.idatt2105.backend.user.dto.ToggleBookmarkRequest;
-import edu.ntnu.idatt2105.backend.user.dto.EditItemRequest;
-import edu.ntnu.idatt2105.backend.user.dto.GetUserInfoResponse;
 import edu.ntnu.idatt2105.backend.user.dto.UpdateUserInfoRequest;
 import java.nio.file.AccessDeniedException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -108,6 +108,11 @@ public class UserController {
 
   }
 
+  /**
+   * endpoint for toggling bookmark on an item.
+   *
+   * @param toggleBookmarkRequest the item to toggle
+   */
   @PostMapping("/item/bookmark")
   public void bookmarkItem(@RequestBody ToggleBookmarkRequest toggleBookmarkRequest) {
     logger.info("toggling bookmark request");
@@ -139,8 +144,8 @@ public class UserController {
    * @return the items
    */
   @PostMapping("/item/bids/item")
-  public GetYourUniqueBidsResponse[] getUniqueBids(@RequestBody
-                                                   GetYourUniqueBidsRequest getYourUniqueBidsRequest) {
+  public GetYourUniqueBidsResponse[] getUniqueBids(
+      @RequestBody GetYourUniqueBidsRequest getYourUniqueBidsRequest) {
     return userService.getYourBids(getYourUniqueBidsRequest);
   }
 
@@ -151,7 +156,8 @@ public class UserController {
    * @return the bids
    */
   @PostMapping("/item/bids")
-  public GetYourItemBidsResponse[] getBidsOnItem(@RequestBody GetYourItemBidsRequest getYourItemBidsRequest) {
+  public GetYourItemBidsResponse[] getBidsOnItem(
+      @RequestBody GetYourItemBidsRequest getYourItemBidsRequest) {
     return userService.getYourItemBids(getYourItemBidsRequest);
   }
 
