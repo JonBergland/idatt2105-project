@@ -15,6 +15,7 @@ export const useUserStore = defineStore('user', {
     itemError: null as string | null,
     messagesNotSeen: false,
     bookmarkedItems: [],
+    newBookmarkedItemsCount: 0,
   }),
 
   actions: {
@@ -241,5 +242,23 @@ export const useUserStore = defineStore('user', {
         this.bookmarkedItems = [];
       }
     },
+
+    async loadMoreBookmarkedItems(request: GetBookmarkedItemsRequest) {
+      try {
+        const response = await userService.getBookmarkedItems(request);
+        const newItems = response;
+
+        // Store the count of new items for pagination logic
+        this.newBookmarkedItemsCount = newItems.length;
+
+        // Append new items to existing items
+        this.bookmarkedItems = [...this.bookmarkedItems, ...newItems];
+
+        return newItems;
+      } catch (error) {
+        console.error('Error loading more bookmarked items:', error);
+        throw error;
+      }
+    }
   }
 })
