@@ -126,6 +126,12 @@ public class UserController {
     }
   }
 
+  /**
+   * endpoint for getting the items bookmarked by user.
+   *
+   * @param getBookmarkedItemsRequest the segment and offset
+   * @return the items
+   */
   @PostMapping("/item/bookmark/get")
   public GetBookmarkedItemsResponse[] getBookmarkeditems(
       @RequestBody GetBookmarkedItemsRequest getBookmarkedItemsRequest) {
