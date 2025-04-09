@@ -1,10 +1,9 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { mount, flushPromises } from '@vue/test-utils';
+import { describe, it, expect, beforeEach } from 'vitest';
+import { mount } from '@vue/test-utils';
 import ChatViewComponent from '@/components/Messages/ChatViewComponent.vue';
 import { useUserStore } from '@/stores/userStore';
 import { createPinia, setActivePinia } from 'pinia';
 import type { ChatResponseDTO } from '@/models/message';
-import { nextTick } from 'vue';
 
 describe('ChatViewComponent.vue', () => {
   let mockChat: ChatResponseDTO;

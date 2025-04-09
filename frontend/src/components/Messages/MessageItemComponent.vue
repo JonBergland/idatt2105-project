@@ -4,7 +4,7 @@ import "@/assets/color.css"
 import "@/assets/base.css"
 import "@/assets/main.css"
 
-const props = defineProps<{
+defineProps<{
   itemName: string;             // Name of the item that is being sold
   messagingContactRole: string; // Role of the chatter (Buyer or Seller of the product)
   messagingContactName: string; // The name of the person you are chatting with
