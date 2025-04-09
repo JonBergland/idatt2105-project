@@ -74,7 +74,7 @@ public class UserController {
 
     // Check if no user is logged in
     if ("anonymousUser".equals(userID)) {
-        return ResponseEntity.ok(null);
+      return ResponseEntity.ok(null);
     }
 
     try {
@@ -131,10 +131,12 @@ public class UserController {
    */
   @PostMapping("/item/bid/place")
   public void placeBid(@RequestBody PlaceBidRequest placeBidRequest) {
+    logger.info("place bid request");
     try {
       userService.placeBid(placeBidRequest);
-    } catch (Exception e) {
-
+    } catch (DataAccessException | IllegalArgumentException e) {
+      logger.warn("could not place bid: {}", e.getMessage());
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -146,7 +148,13 @@ public class UserController {
   @PostMapping("/item/bids/item")
   public GetYourUniqueBidsResponse[] getUniqueBids(
       @RequestBody GetYourUniqueBidsRequest getYourUniqueBidsRequest) {
-    return userService.getYourBids(getYourUniqueBidsRequest);
+    logger.info("get distinct items user has placed bids on request");
+    try {
+      return userService.getYourBids(getYourUniqueBidsRequest);
+    } catch (DataAccessException e) {
+      logger.warn("could not get distinct items: {}", e.getMessage());
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+    }
   }
 
   /**
@@ -158,7 +166,13 @@ public class UserController {
   @PostMapping("/item/bids")
   public GetYourItemBidsResponse[] getBidsOnItem(
       @RequestBody GetYourItemBidsRequest getYourItemBidsRequest) {
-    return userService.getYourItemBids(getYourItemBidsRequest);
+    logger.info("get bids user has placed on item request");
+    try {
+      return userService.getYourItemBids(getYourItemBidsRequest);
+    } catch (DataAccessException e) {
+      logger.warn("could not get bids: {}", e.getMessage());
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+    }
   }
 
   /**
@@ -168,12 +182,12 @@ public class UserController {
    */
   @PostMapping("/item/bid/answer")
   public void answerBid(@RequestBody AnswerBidRequest answerBidRequest) {
+    logger.info("answer bid request");
     try {
       userService.answerBid(answerBidRequest);
-    } catch (AccessDeniedException e) {
-      logger.warn("permission denied: {}", e.getMessage());
-    } catch (Exception e) {
-
+    } catch (AccessDeniedException | IllegalArgumentException | DataAccessException e) {
+      logger.warn("could not answer bid: {}", e.getMessage());
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -183,13 +197,33 @@ public class UserController {
    * @return the users
    */
   @PostMapping("/item/bid/users")
-  public GetYourBidItemsResponse[] getBidsOnYourItems(@RequestBody GetYourBidItemsRequest getYourBidItemsRequest) {
-    return userService.getBids(getYourBidItemsRequest);
+  public GetYourBidItemsResponse[] getBidsOnYourItems(
+      @RequestBody GetYourBidItemsRequest getYourBidItemsRequest) {
+    logger.info("get users who bid on item request");
+    try {
+      return userService.getBids(getYourBidItemsRequest);
+    } catch (DataAccessException e) {
+      logger.warn("could not get users: {}", e.getMessage());
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+    }
   }
 
+  /**
+   * endpoint for getting bids made by a user on an item.
+   *
+   * @param getBidsOnItemByUserRequest the item and user
+   * @return the bids
+   */
   @PostMapping("/item/bid/")
-  public GetBidsOnItemByUserResponse[] getBidsOnYourItem(@RequestBody GetBidsOnItemByUserRequest getBidsOnItemByUserRequest) {
-    return userService.getBidsOnYourItem(getBidsOnItemByUserRequest);
+  public GetBidsOnItemByUserResponse[] getBidsOnYourItem(
+      @RequestBody GetBidsOnItemByUserRequest getBidsOnItemByUserRequest) {
+    logger.info("get bids on item by user request");
+    try {
+      return userService.getBidsOnYourItem(getBidsOnItemByUserRequest);
+    } catch (DataAccessException e) {
+      logger.warn("could not get bids: {}", e.getMessage());
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+    }
   }
 
   /**
