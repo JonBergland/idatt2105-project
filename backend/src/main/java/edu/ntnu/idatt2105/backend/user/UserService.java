@@ -314,6 +314,12 @@ public class UserService {
     String userID = SecurityContextHolder.getContext().getAuthentication().getName();
     Purchase purchase = PurchaseMapper.INSTANCE.buyItemRequestToPurchase(buyItemRequest);
     purchase.setBuyerID(Integer.parseInt(userID));
+
+    Item item = itemRepository.getItem(purchase.getItemID());
+    if (item.getState().equals("sold") || item.getState().equals("reserved")) {
+      throw new IllegalArgumentException("Item not purchasable");
+    }
+
     buy(purchase);
   }
 
@@ -331,6 +337,11 @@ public class UserService {
     purchase.setBuyerID(Integer.parseInt(userID));
     purchase.setFinalPrice(bid.getAskingPrice());
 
+    Item item = itemRepository.getItem(purchase.getItemID());
+    if (item.getState().equals("sold")) {
+      throw new IllegalArgumentException("Item not purchasable");
+    }
+
     if (bid.getUserID() == Integer.parseInt(userID)
         && bid.getStatus() != null
         && bid.getStatus().equals("1")) {
@@ -347,11 +358,6 @@ public class UserService {
    */
   private void buy(Purchase purchase) {
     Item item = itemRepository.getItem(purchase.getItemID());
-
-    if (item.getState().equals("sold") || item.getState().equals("reserved")) {
-      throw new IllegalArgumentException("Item not purchasable");
-    }
-
     purchase.setFinalPrice(item.getPrice());
     itemRepository.updateState(purchase.getItemID(), 4);
     purchaseRepository.addPurchase(purchase);
