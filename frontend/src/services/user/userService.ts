@@ -38,6 +38,14 @@ class UserService {
     }
   }
 
+  /**
+   * Fetches the items associated with the current user from the server.
+   *
+   * @returns {Promise<ItemsResponseDTO | null>} A promise that resolves to an `ItemsResponseDTO` object
+   * containing the user's items, or `null` if an error occurs during the request.
+   *
+   * @throws {Error} Logs an error message to the console if the request fails.
+   */
   async getUserItems(): Promise<ItemsResponseDTO | null> {
     try {
       const response = await axiosInstance.get<ItemsResponseDTO>('/user/item');
