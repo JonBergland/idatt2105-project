@@ -166,6 +166,12 @@ public class ItemRepository {
     return itemList.toArray(new Item[0]);
   }
 
+  /**
+   * updates the state of an item.
+   *
+   * @param itemID the items id
+   * @param stateID the states id
+   */
   public void updateState(int itemID, int stateID) {
     jdbcTemplate.update(
         "UPDATE Item "
@@ -173,5 +179,30 @@ public class ItemRepository {
             + "WHERE id = ?",
         stateID,
         itemID);
+  }
+
+  /**
+   * get bookmarked items by user.
+   *
+   * @param userID the users id
+   * @param segmentOffset selection
+   * @return the items
+   */
+  public Item[] getBookmarkedItems(int userID, int[] segmentOffset) {
+    List<Item> itemList = jdbcTemplate.query(
+        "SELECT Item.*, Item.id AS itemID, User.email AS seller, Categories.category_name AS category, State.state_name AS state FROM Item "
+            + "JOIN Bookmark ON Item.id = Bookmark.item_id "
+            + "JOIN User ON Item.user_id = User.id "
+            + "JOIN Categories ON Item.category_id = Categories.id "
+            + "JOIN State ON Item.state_id = State.id "
+            + "WHERE Bookmark.user_id = ? "
+            + "LIMIT ? OFFSET ?",
+        new Object[]{
+            userID,
+            segmentOffset[1],
+            segmentOffset[0] * segmentOffset[1]},
+        new BeanPropertyRowMapper<>(Item.class)
+    );
+    return itemList.toArray(new Item[0]);
   }
 }

@@ -4,6 +4,8 @@ import edu.ntnu.idatt2105.backend.item.dto.ItemResponse;
 import edu.ntnu.idatt2105.backend.item.model.Item;
 import edu.ntnu.idatt2105.backend.user.dto.AddItemRequest;
 import edu.ntnu.idatt2105.backend.user.dto.EditItemRequest;
+import edu.ntnu.idatt2105.backend.user.dto.GetBookmarkedItemsRequest;
+import edu.ntnu.idatt2105.backend.user.dto.GetBookmarkedItemsResponse;
 import edu.ntnu.idatt2105.backend.user.dto.GetStoreItemResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -80,4 +82,28 @@ public interface ItemMapper {
   @Mapping(source = "description", target = "description")
   @Mapping(source = "state", target = "state")
   GetStoreItemResponse itemToGetStoreItemResponse(Item item);
+
+  /**
+   * maps item to getBookmarkedItemsResponse.
+   *
+   * @param item the item to map
+   * @return the mapped dto
+   */
+  @Mapping(source = "category", target = "category")
+  @Mapping(source = "itemID", target = "itemID")
+  @Mapping(source = "seller", target = "seller")
+  @Mapping(source = "name", target = "name")
+  @Mapping(source = "published", target = "published")
+  @Mapping(source = "price", target = "price")
+  @Mapping(source = "description", target = "description")
+  @Mapping(source = "state", target = "state")
+  GetBookmarkedItemsResponse itemToGetBookmarkedItemsResponse(Item item);
+
+  /**
+   * maps item array to getBookmarkedItemsResponse array.
+   *
+   * @param items the items to map
+   * @return the mapped dto
+   */
+  GetBookmarkedItemsResponse[] itemArrayToGetBookmarkedItemsResponseArray(Item[] items);
 }

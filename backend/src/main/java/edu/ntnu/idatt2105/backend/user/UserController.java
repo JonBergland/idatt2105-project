@@ -7,6 +7,8 @@ import edu.ntnu.idatt2105.backend.user.dto.AnswerBidRequest;
 import edu.ntnu.idatt2105.backend.user.dto.EditItemRequest;
 import edu.ntnu.idatt2105.backend.user.dto.GetBidsOnItemByUserRequest;
 import edu.ntnu.idatt2105.backend.user.dto.GetBidsOnItemByUserResponse;
+import edu.ntnu.idatt2105.backend.user.dto.GetBookmarkedItemsRequest;
+import edu.ntnu.idatt2105.backend.user.dto.GetBookmarkedItemsResponse;
 import edu.ntnu.idatt2105.backend.user.dto.GetStoreItemResponse;
 import edu.ntnu.idatt2105.backend.user.dto.GetUserInfoResponse;
 import edu.ntnu.idatt2105.backend.user.dto.GetYourBidItemsRequest;
@@ -120,6 +122,24 @@ public class UserController {
       userService.toggleBookmark(toggleBookmarkRequest);
     } catch (DataAccessException e) {
       logger.warn("could not toggle bookmark: {}", e.getMessage());
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  /**
+   * endpoint for getting the items bookmarked by user.
+   *
+   * @param getBookmarkedItemsRequest the segment and offset
+   * @return the items
+   */
+  @PostMapping("/item/bookmark/get")
+  public GetBookmarkedItemsResponse[] getBookmarkeditems(
+      @RequestBody GetBookmarkedItemsRequest getBookmarkedItemsRequest) {
+    logger.info("get bookmarked items request");
+    try {
+      return userService.getBookmarkedItems(getBookmarkedItemsRequest);
+    } catch (DataAccessException e) {
+      logger.warn("could not get items: {}", e.getMessage());
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
     }
   }
