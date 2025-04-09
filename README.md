@@ -8,6 +8,7 @@ If you have docker running on your PC you can run this command to start the cont
 ```sh
 docker compose up --build
 ```
+*NB!: The build time on first compose is quite long (~5 min) 
 
 To stop it, click CTRL + C and type this command:
 ```sh
@@ -25,8 +26,8 @@ npm run dev
 ### Backend
 To run the backend use these commands:
 ```sh
-mvn run spring-boot:run
-npm run dev
+mvn clean install
+mvn spring-boot:run
 ```
 
 ## Tests
