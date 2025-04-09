@@ -185,58 +185,5 @@ export const useUserStore = defineStore('user', {
         this.isItemLoading = false;
       }
     },
-
-    /**
-     * Places a bid on an item using the provided bid details.
-     *
-     * @param bid - An object containing the details of the bid to be placed.
-     * @returns A promise that resolves to a number indicating the result of the bid operation.
-     *          Returns 0 if an error occurs during the process.
-     *          Returns 1 if the process was successful.
-     */
-    async giveBidOnItem(bid: PlaceBid): Promise<number> {
-      try {
-        const response = userService.postUserBid(bid);
-        return response;
-      } catch (error) {
-        console.log("Error when giving bid on item: ", error);
-        return 0;
-      }
-    },
-
-    /**
-     * Retrieves a user's bid on a specific item
-     *
-     * @param request - An object containing the request parameters for fetching bids
-     * @returns A promise that resolves to a BidsOnItemByUserResponse object with bid information
-     */
-    async getUsersBidOnItem(request: BidOnItemByUserRequest): Promise<BidOnItemByUserResponse[]> {
-      const defaultResponse = [{
-        bidID: 0,
-        itemID: 0,
-        askingPrice: 0,
-        status: '',
-        published: ''
-      }] as BidOnItemByUserResponse[];
-
-      try {
-        if (!request || !request.itemID || !request.userID) {
-          console.error('Invalid request parameters for getUsersBidOnItem');
-          return defaultResponse;
-        }
-
-        const response = await userService.getUserBidsOnItem(request);
-
-        if (response === null) {
-          return defaultResponse;
-        }
-
-        return response;
-      } catch (error) {
-        console.error('Error retrieving user bid on item:', error);
-
-        return defaultResponse;
-      }
-    }
   }
 })
