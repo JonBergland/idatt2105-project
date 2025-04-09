@@ -83,6 +83,12 @@ public interface ItemMapper {
   @Mapping(source = "state", target = "state")
   GetStoreItemResponse itemToGetStoreItemResponse(Item item);
 
+  /**
+   * maps item to getBookmarkedItemsResponse.
+   *
+   * @param item the item to map
+   * @return the mapped dto
+   */
   @Mapping(source = "category", target = "category")
   @Mapping(source = "itemID", target = "itemID")
   @Mapping(source = "seller", target = "seller")
@@ -93,5 +99,11 @@ public interface ItemMapper {
   @Mapping(source = "state", target = "state")
   GetBookmarkedItemsResponse itemToGetBookmarkedItemsResponse(Item item);
 
-  GetBookmarkedItemsResponse[] itemArrayToGetBookmarkedItemsResponseArray(Item[] item);
+  /**
+   * maps item array to getBookmarkedItemsResponse array.
+   *
+   * @param items the items to map
+   * @return the mapped dto
+   */
+  GetBookmarkedItemsResponse[] itemArrayToGetBookmarkedItemsResponseArray(Item[] items);
 }
