@@ -50,3 +50,7 @@ export interface UpdateItemRequest {
   price: number;
   category: string;
 }
+
+export interface ToggleBookmarkRequest {
+  itemID: number;
+}
