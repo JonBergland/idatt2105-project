@@ -20,6 +20,8 @@ public interface BidMapper {
   @Mapping(source = "askingPrice", target = "askingPrice")
   Bid placeBidReqeustToBid(PlaceBidRequest placeBidRequest);
 
+  @Mapping(source = "email", target = "seller")
+  @Mapping(source = "itemName", target = "itemName")
   @Mapping(source = "itemID", target = "itemID")
   @Mapping(source = "userID", target = "userID")
   GetYourUniqueBidsResponse bidToGetBidItemResponse(Bid bid);
