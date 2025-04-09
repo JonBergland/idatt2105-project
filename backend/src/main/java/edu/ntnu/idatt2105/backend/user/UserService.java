@@ -201,8 +201,9 @@ public class UserService {
     String itemState = itemRepository.getItem(bid.getItemID()).getState();
     if (itemState.equals("available") || itemState.equals("reserved")) {
       bidRepository.placeBid(bid);
+    } else {
+      throw new IllegalArgumentException("Item not allowed for bidding");
     }
-    throw new IllegalArgumentException("Item not allowed for bidding");
   }
 
   /**
