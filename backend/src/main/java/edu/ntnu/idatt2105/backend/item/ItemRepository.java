@@ -166,6 +166,12 @@ public class ItemRepository {
     return itemList.toArray(new Item[0]);
   }
 
+  /**
+   * updates the state of an item.
+   *
+   * @param itemID the items id
+   * @param stateID the states id
+   */
   public void updateState(int itemID, int stateID) {
     jdbcTemplate.update(
         "UPDATE Item "
@@ -175,6 +181,13 @@ public class ItemRepository {
         itemID);
   }
 
+  /**
+   * get bookmarked items by user.
+   *
+   * @param userID the users id
+   * @param segmentOffset selection
+   * @return the items
+   */
   public Item[] getBookmarkedItems(int userID, int[] segmentOffset) {
     List<Item> itemList = jdbcTemplate.query(
         "SELECT Item.*, Item.id AS itemID, User.email AS seller, Categories.category_name AS category, State.state_name AS state FROM Item "
