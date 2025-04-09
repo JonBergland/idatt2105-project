@@ -9,7 +9,11 @@ vi.mock('@/services/user/userService', () => ({
     getUserInfo: vi.fn(),
     updateUserInfo: vi.fn(),
     getUserItems: vi.fn(),
-    postItem: vi.fn()
+    postItem: vi.fn(),
+    getUserItemDetails: vi.fn(),
+    updateItem: vi.fn(),
+    toggleBookmark: vi.fn(),
+    getBookmarkedItems: vi.fn()
   }
 }));
 
@@ -251,6 +255,277 @@ describe('UserStore', () => {
 
       expect(userService.postItem).toHaveBeenCalledWith(mockItemRequest);
       expect(result).toBe(false);
+    });
+  });
+
+  describe('fetchUserItemDetails', () => {
+    it('should fetch user item details successfully', async () => {
+      const mockRequest: ItemRequestDTO = { itemID: 123 };
+      const mockResponse = {
+        itemID: 123,
+        name: 'Test Item',
+        description: 'Test Description',
+        price: 100,
+        category: 'Electronics',
+        seller: 'test@example.com',
+        sellerID: 1,
+        state: 'available'
+      };
+
+      userService.getUserItemDetails.mockResolvedValue(mockResponse);
+
+      await store.fetchUserItemDetails(mockRequest);
+
+      expect(userService.getUserItemDetails).toHaveBeenCalledWith(mockRequest);
+      expect(store.item).toEqual(mockResponse);
+      expect(store.isItemLoading).toBe(false);
+      expect(store.itemError).toBeNull();
+    });
+
+    it('should handle error when fetching item details fails', async () => {
+      const mockRequest: ItemRequestDTO = { itemID: 123 };
+
+      userService.getUserItemDetails.mockRejectedValue(new Error('Failed to fetch'));
+
+      await store.fetchUserItemDetails(mockRequest);
+
+      expect(store.isItemLoading).toBe(false);
+      expect(store.itemError).toBe('Failed to fetch item.');
+      expect(store.item).toBeNull();
+    });
+  });
+
+  describe('updateItemDetails', () => {
+    it('should update item details successfully', async () => {
+      const mockRequest = {
+        itemID: 123,
+        name: 'Updated Name',
+        description: 'Updated Description',
+        price: 150,
+        category: 'Updated Category'
+      };
+
+      store.item = {
+        itemID: 123,
+        name: 'Original Name',
+        description: 'Original Description',
+        price: 100,
+        category: 'Original Category',
+        seller: 'test@example.com',
+        sellerID: 1,
+        state: 'available'
+      };
+
+      store.userItems = {
+        items: [{
+          itemID: 123,
+          name: 'Original Name',
+          description: 'Original Description',
+          price: 100,
+          category: 'Original Category',
+          seller: 'test@example.com',
+          sellerID: 1,
+          state: 'available'
+        }]
+      };
+
+      userService.updateItem.mockResolvedValue(undefined);
+
+      const result = await store.updateItemDetails(mockRequest);
+
+      expect(userService.updateItem).toHaveBeenCalledWith(mockRequest);
+      expect(result).toBe(true);
+      expect(store.item?.name).toBe('Updated Name');
+      expect(store.item?.description).toBe('Updated Description');
+      expect(store.item?.price).toBe(150);
+      expect(store.item?.category).toBe('Updated Category');
+      expect(store.userItems.items[0].name).toBe('Updated Name');
+      expect(store.isItemLoading).toBe(false);
+    });
+
+    it('should update item details in store even if item ID does not match current item', async () => {
+      const mockRequest = {
+        itemID: 123,
+        name: 'Updated Name',
+        description: 'Updated Description',
+        price: 150,
+        category: 'Updated Category'
+      };
+
+      store.item = {
+        itemID: 456,
+        name: 'Different Item',
+        description: 'Different Description',
+        price: 200,
+        category: 'Different Category',
+        seller: 'other@example.com',
+        sellerID: 2,
+        state: 'available'
+      };
+
+      store.userItems = {
+        items: [{
+          itemID: 123,
+          name: 'Original Name',
+          description: 'Original Description',
+          price: 100,
+          category: 'Original Category',
+          seller: 'test@example.com',
+          sellerID: 1,
+          state: 'available'
+        }]
+      };
+
+      userService.updateItem.mockResolvedValue(undefined);
+
+      const result = await store.updateItemDetails(mockRequest);
+
+      expect(result).toBe(true);
+      expect(store.item?.itemID).toBe(456);
+      expect(store.item?.name).toBe('Different Item');
+      expect(store.userItems.items[0].name).toBe('Updated Name');
+    });
+
+    it('should handle error when updating item details fails', async () => {
+      const mockRequest = {
+        itemID: 123,
+        name: 'Updated Name',
+        description: 'Updated Description',
+        price: 150,
+        category: 'Updated Category'
+      };
+
+      userService.updateItem.mockRejectedValue(new Error('Failed to update'));
+
+      const result = await store.updateItemDetails(mockRequest);
+
+      expect(result).toBe(false);
+      expect(store.itemError).toBe('Failed to update item.');
+      expect(store.isItemLoading).toBe(false);
+    });
+  });
+
+  describe('toggleBookmark', () => {
+    it('should toggle bookmark successfully', async () => {
+      const mockRequest: ToggleBookmarkRequest = {
+        itemID: 123,
+        bookmark: true
+      };
+
+      userService.toggleBookmark.mockResolvedValue({});
+
+      const result = await store.toggleBookmark(mockRequest);
+
+      expect(userService.toggleBookmark).toHaveBeenCalledWith(mockRequest);
+      expect(result).toBe(true);
+    });
+
+    it('should handle error when toggling bookmark fails', async () => {
+      const mockRequest: ToggleBookmarkRequest = {
+        itemID: 123,
+        bookmark: true
+      };
+
+      userService.toggleBookmark.mockRejectedValue(new Error('Failed to toggle bookmark'));
+
+      const result = await store.toggleBookmark(mockRequest);
+
+      expect(result).toBe(false);
+    });
+  });
+
+  describe('fetchBookmarkedItems', () => {
+    it('should fetch bookmarked items successfully when user is logged in', async () => {
+      const mockUser = { email: 'test@example.com' } as User;
+      const mockRequest: GetBookmarkedItemsRequest = {
+        segmentOffset: [0, 10]
+      };
+      const mockResponse = [
+        {
+          itemID: 123,
+          name: 'Bookmarked Item',
+          description: 'Description',
+          price: 100,
+          category: 'Electronics'
+        }
+      ];
+
+      store.setUser(mockUser);
+      userService.getBookmarkedItems.mockResolvedValue(mockResponse);
+
+      await store.fetchBookmarkedItems(mockRequest);
+
+      expect(userService.getBookmarkedItems).toHaveBeenCalledWith(mockRequest);
+      expect(store.bookmarkedItems).toEqual(mockResponse);
+    });
+
+    it('should handle situation when user is not logged in', async () => {
+      const mockRequest: GetBookmarkedItemsRequest = {
+        segmentOffset: [0, 10]
+      };
+
+      store.setUser(null);
+
+      await store.fetchBookmarkedItems(mockRequest);
+
+      expect(userService.getBookmarkedItems).not.toHaveBeenCalled();
+      expect(store.bookmarkedItems).toEqual([]);
+    });
+
+    it('should handle error when fetching bookmarked items fails', async () => {
+      const mockUser = { email: 'test@example.com' } as User;
+      const mockRequest: GetBookmarkedItemsRequest = {
+        segmentOffset: [0, 10]
+      };
+
+      store.setUser(mockUser);
+      userService.getBookmarkedItems.mockRejectedValue(new Error('Failed to fetch'));
+
+      await store.fetchBookmarkedItems(mockRequest);
+
+      expect(store.bookmarkedItems).toEqual([]);
+    });
+  });
+
+  describe('loadMoreBookmarkedItems', () => {
+    it('should load more bookmarked items successfully', async () => {
+      const mockRequest: GetBookmarkedItemsRequest = {
+        segmentOffset: [10, 10]
+      };
+      const existingItems = [
+        { itemID: 1, name: 'Item 1' },
+        { itemID: 2, name: 'Item 2' }
+      ];
+      const newItems = [
+        { itemID: 3, name: 'Item 3' },
+        { itemID: 4, name: 'Item 4' }
+      ];
+
+      store.bookmarkedItems = existingItems;
+      userService.getBookmarkedItems.mockResolvedValue(newItems);
+
+      await store.loadMoreBookmarkedItems(mockRequest);
+
+      expect(userService.getBookmarkedItems).toHaveBeenCalledWith(mockRequest);
+      expect(store.bookmarkedItems).toEqual([...existingItems, ...newItems]);
+      expect(store.newBookmarkedItemsCount).toBe(newItems.length);
+    });
+
+    it('should handle error when loading more bookmarked items fails', async () => {
+      const mockRequest: GetBookmarkedItemsRequest = {
+        segmentOffset: [10, 10]
+      };
+      const existingItems = [
+        { itemID: 1, name: 'Item 1' },
+        { itemID: 2, name: 'Item 2' }
+      ];
+
+      store.bookmarkedItems = existingItems;
+      userService.getBookmarkedItems.mockRejectedValue(new Error('Failed to load more'));
+
+      await expect(store.loadMoreBookmarkedItems(mockRequest)).rejects.toThrow('Failed to load more');
+
+      expect(store.bookmarkedItems).toEqual(existingItems);
     });
   });
 });

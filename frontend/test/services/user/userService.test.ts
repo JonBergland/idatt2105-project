@@ -23,7 +23,6 @@ vi.mock('axios');
 
 describe("UserService", () => {
   beforeEach(() => {
-    // Ensure mock methods are properly defined before each test
     vi.clearAllMocks();
   });
 
