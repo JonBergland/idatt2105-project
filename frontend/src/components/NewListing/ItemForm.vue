@@ -1,28 +1,43 @@
 <script setup lang="ts">
 import type { AddItemRequest } from '@/models/user.ts';
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import { useItemStore } from '@/stores/itemStore.ts';
 import ToggleGroup from '@/components/Result/ToggleGroup.vue';
 
 const itemStore = useItemStore();
 
+// Add prop to accept existing item for editing
+const props = defineProps<{
+  existingItem?: AddItemRequest
+}>();
+
 const emit = defineEmits<{
   submit: [item: AddItemRequest]
 }>();
 
-// Form data
+// Form data - initialize with existing item if provided
 const item = ref<AddItemRequest>({
-  name: '',
-  description: '',
-  price: 0,
-  category: ''
+  name: props.existingItem?.name || '',
+  description: props.existingItem?.description || '',
+  price: props.existingItem?.price || 0,
+  category: props.existingItem?.category || ''
 });
 
-// Touched states
-const nameTouched = ref(false);
-const descriptionTouched = ref(false);
-const priceTouched = ref(false);
-const categoryTouched = ref(false);
+// Watch for changes to existingItem prop
+watch(() => props.existingItem, (newValue) => {
+  if (newValue) {
+    item.value = { ...newValue };
+  }
+}, { deep: true });
+
+// Determine if we're in edit mode
+const isEditMode = computed(() => !!props.existingItem);
+
+// Only mark fields as touched if in edit mode or when actually touched
+const nameTouched = ref(!!props.existingItem);
+const descriptionTouched = ref(!!props.existingItem);
+const priceTouched = ref(!!props.existingItem);
+const categoryTouched = ref(!!props.existingItem);
 
 // Error display element
 const errorLabelEl = ref<HTMLElement | null>(null);
@@ -78,6 +93,7 @@ function submitForm() {
     setErrorLabel("Please fix the errors in the form");
     return;
   }
+
   const formattedItem = {
     ...item.value,
     price: Number(item.value.price)
@@ -94,7 +110,7 @@ onMounted(() => {
 <template>
   <div class="item-form-container">
     <form @submit.prevent="submitForm" class="item-form">
-      <label for="create-item">Please fill in the item details:</label>
+      <label for="create-item">{{ isEditMode ? 'Update item details:' : 'Please fill in the item details:' }}</label>
 
       <div class="form-group">
         <input
@@ -148,7 +164,8 @@ onMounted(() => {
         <ToggleGroup
           v-else
           :names="itemStore.categories"
-          :auto-select-first="true"
+          :auto-select-first="!item.category"
+          :initial-selected="item.category"
           @toggle-selected="handleCategoryClick"
           direction="row"
           :allow-deselect="false"
@@ -159,7 +176,12 @@ onMounted(() => {
         </p>
       </div>
 
-      <input type="submit" :disabled="!validForm" value="Create Listing" id="submit-button">
+      <input
+        type="submit"
+        :disabled="!validForm"
+        :value="isEditMode ? 'Update Listing' : 'Create Listing'"
+        id="submit-button"
+      >
       <label for="error" id="item-status-label" ref="errorLabelEl"></label>
     </form>
   </div>
