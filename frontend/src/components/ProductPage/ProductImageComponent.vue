@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
-import { ref, computed } from 'vue'
+import { ref, watch, computed } from 'vue'
 import leftArrow from '@/assets/icons/image-arrow-left.svg'
 import rightArrow from '@/assets/icons/image-arrow-right.svg'
 import heartIcon from '@/assets/icons/heart.svg'
@@ -12,7 +11,10 @@ const props = defineProps({
     type: Array,
     required: true
   },
-  isFavorited?: boolean
+  isFavorited: {
+    type: Boolean,
+    default: false
+  },
 });
 
 const imageNr = ref(0)
