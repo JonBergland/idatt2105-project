@@ -1,5 +1,5 @@
 import type { ItemRequestDTO, ItemsResponseDTO, ItemResponseDTO } from "@/models/item";
-import type { User, AddItemRequest } from "@/models/user";
+import type { User, AddItemRequest, UpdateItemRequest} from "@/models/user";
 import { defineStore } from "pinia";
 import userService from "@/services/user/userService"
 
@@ -117,7 +117,10 @@ export const useUserStore = defineStore('user', {
     },
 
     /**
-     * Fetches user spesific details about an item.
+     * Fetches the details of a user item based on the provided request.
+     *
+     * @param request - An object of type `ItemRequestDTO` containing the details of the item to fetch.
+     *
      */
     async fetchUserItemDetails(request: ItemRequestDTO) {
       this.isItemLoading = true;
@@ -129,6 +132,53 @@ export const useUserStore = defineStore('user', {
       } catch (error) {
         this.itemError = "Failed to fetch item.";
         console.error("Error fetching item:", error);
+      } finally {
+        this.isItemLoading = false;
+      }
+    },
+
+    /**
+     * Updates the details of an existing item.
+     *
+     * @param request - The request object containing the updated item details and item ID.
+     * @returns A promise that resolves to `true` if the item was successfully updated,
+     *          or `false` if an error occurred during the operation.
+     */
+    async updateItemDetails(request: UpdateItemRequest): Promise<boolean> {
+      this.isItemLoading = true;
+      this.itemError = null;
+
+      try {
+        await userService.updateItem(request);
+
+        if (this.item && this.item.itemID === request.itemID) {
+          this.item = {
+            ...this.item,
+            name: request.name,
+            description: request.description,
+            price: request.price,
+            category: request.category
+          };
+        }
+
+        if (this.userItems && this.userItems.items) {
+          const index = this.userItems.items.findIndex(item => item.itemID === request.itemID);
+          if (index !== -1) {
+            this.userItems.items[index] = {
+              ...this.userItems.items[index],
+              name: request.name,
+              description: request.description,
+              price: request.price,
+              category: request.category
+            };
+          }
+        }
+
+        return true;
+      } catch (error) {
+        this.itemError = "Failed to update item.";
+        console.error("Error updating item:", error);
+        return false;
       } finally {
         this.isItemLoading = false;
       }
