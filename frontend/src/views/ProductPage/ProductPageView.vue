@@ -18,7 +18,18 @@ const itemStore = useItemStore();
 const authStore = useAuthStore();
 const userStore = useUserStore();
 
-const itemResponse = ref<ItemResponseDTO>({});
+const itemResponse = ref<ItemResponseDTO>({
+  itemID: undefined,
+  name: '',
+  category: '',
+  sellerID: undefined,
+  seller: '',
+  description: '',
+  published: '',
+  price: undefined,
+  state: '',
+  bookmark: false // Initialize with a default value
+});
 const error = ref('');
 
 // Extract ID from route query params
@@ -69,7 +80,14 @@ async function handleFavorite(isFavorited: boolean) {
  * Maps ItemResponseDTO to AddItemRequest format for editing
  */
  function mapItemResponseToAddItemRequest(item: ItemResponseDTO): AddItemRequest {
-  console.log(item)
+  if (!item) {
+    return {
+      name: '',
+      description: '',
+      price: 0,
+      category: ''
+    };
+  }
   return {
     name: item.name || '',
     description: item.description || '',
@@ -83,7 +101,6 @@ async function handleFavorite(isFavorited: boolean) {
  */
  async function handleUpdateItem(updatedItem: AddItemRequest) {
   try {
-    // Add the item ID to the update request
     const updateRequest = {
       ...updatedItem,
       itemID: itemId.value
@@ -96,7 +113,6 @@ async function handleFavorite(isFavorited: boolean) {
       ...updatedItem
     };
 
-    // Exit edit mode
     isEditing.value = false;
 
     console.log('Item updated:', updateRequest);
@@ -108,33 +124,33 @@ async function handleFavorite(isFavorited: boolean) {
 /**
  * Fetches item details based on authentication status
  */
-async function fetchItemDetails() {
+ async function fetchItemDetails() {
   if (itemId.value <= 0) {
     error.value = 'Invalid item ID';
     return;
   }
 
   try {
-
-    // Ensure auth state is current
     const isAuthenticated = authStore.isAuth || await authStore.checkIfAuth();
 
-    // Create item request object
     const request: ItemRequestDTO = { itemID: itemId.value };
 
     if (isAuthenticated) {
-      // Fetch with user context
       await userStore.fetchUserItemDetails(request);
-      itemResponse.value = userStore.item || {};
+      itemResponse.value = {
+        ...userStore.item,
+        bookmark: userStore.item?.bookmark || false
+      };
       await userStore.getUserInfo();
       if (userStore.user?.email === userStore.item?.seller) {
         isMyItem.value = true;
-        console.log('This is your item')
       }
     } else {
-      // Fetch without user context
       await itemStore.fetchItemDetails(request);
-      itemResponse.value = itemStore.item || {};
+      itemResponse.value = {
+        ...itemStore.item,
+        bookmark: false
+      };
     }
   } catch (err) {
     console.error('Error fetching item details:', err);
