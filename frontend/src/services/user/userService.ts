@@ -1,5 +1,5 @@
 import type { ItemsResponseDTO, ItemRequestDTO, ItemResponseDTO } from "@/models/item";
-import type { User, UserLoginDTO, UserRegistrationDTO, AddItemRequest, UpdateItemRequest } from "@/models/user";
+import type { User, UserLoginDTO, UserRegistrationDTO, AddItemRequest, UpdateItemRequest, ToggleBookmarkRequest } from "@/models/user";
 import axiosInstance from "@/services/axiosService";
 import axios from 'axios';
 
@@ -123,6 +123,24 @@ class UserService {
       return response.data;
     } catch (error) {
       console.error('Error getting item details:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Sends a POST request to the `/user/item/bookmark` endpoint with the provided
+   * request payload to either add or remove a bookmark for a specific item.
+   *
+   * @param request - The payload containing the necessary data to toggle the bookmark.
+   * @returns A promise that resolves to the response data from the server.
+   * @throws Will throw an error if the request fails.
+   */
+  async toggleBookmark(request: ToggleBookmarkRequest) {
+    try {
+      const response = await axiosInstance.post<ToggleBookmarkRequest>('/user/item/bookmark', request);
+      return response.data;
+    } catch (error) {
+      console.error('Error toggeling bookmark:', error);
       throw error;
     }
   }
