@@ -56,11 +56,11 @@ onMounted(loadUserData);
 async function handleSaveUser(user: User) {
   try {
     const userUpdated = await userStore.postUserInfo(user);
-  if (userUpdated) {
-    await loadUserData();
-  } else {
-    userError.value = "User was not updated";
-  }
+    if (userUpdated) {
+      await loadUserData();
+    } else {
+      userError.value = "User was not updated";
+    }
   } catch (error) {
     userError.value = "Error while updating user"
     console.log("Error while updating user: ", error);
@@ -78,7 +78,14 @@ async function handleLogout() {
     userError.value = "Error while logging out the user"
     console.log("Error while logging out the user: ", error);
   }
+}
 
+/**
+ * Handles the 'item-clicked' event emitted by the ItemGroup component
+ * @param {number} itemID - The unique identifier of the clicked item
+ */
+function handleItemClick(itemID: number) {
+  router.push({ name: 'product', query: { id: itemID } });
 }
 </script>
 
@@ -94,34 +101,65 @@ async function handleLogout() {
 
   <!-- User or Admin profile specific  -->
    <div v-if="userStore.user?.role === 'ROLE_USER'" class="profile-specifics">
-    <h1>Your listings:</h1>
+    <h1>Your listings</h1>
     <div v-if="isLoading" class="loading">
       Loading your listings...
     </div>
-    <div v-else-if="flattenedItems.length === 0" class="no-items">
-      You don't have any listings yet.
+    <div v-else-if="flattenedItems.length === 0" class="empty-state">
+      <p>You don't have any listings yet.</p>
+      <p>Create your first listing by clicking the "New listing" button in the navigation bar.</p>
     </div>
     <ItemGroup
       v-else
       :items="flattenedItems"
       mode="Grid"
+      @item-clicked="handleItemClick"
     />
    </div>
 </div>
 </template>
 
 <style scoped>
-
-.profile-specifics {
-  margin-top: 20px;
-  padding: 10px;
-  border-top: 2px solid black;
+.user-profile-wrapper {
+  display: flex;
+  flex-direction: column;
+  padding-top: 8px;
+  align-items: center;
+  padding-left: 64px;
+  padding-right: 64px;
 }
 
-.loading, .no-items {
-  padding: 20px;
-  text-align: center;
-  color: #666;
+.profile-specifics {
+  display: flex;
+  padding: 64px;
+  gap: 16px;
+  flex-direction: column;
+  align-items: center;
+}
+
+.loading {
+  margin-top: 10px;
+  color: #6c757d;
   font-style: italic;
+}
+
+.empty-state {
+  margin: 40px 0;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: var(--color-background-soft, #f8f9fa);
+  max-width: 500px;
+  text-align: center;
+}
+
+.empty-state p {
+  margin: 10px 0;
+  color: var(--color-text-secondary, #6c757d);
+}
+
+.empty-state p:first-child {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: var(--color-text, #212529);
 }
 </style>

@@ -82,7 +82,7 @@ describe('Profile Page', () => {
   });
 
   it('displays user listings', () => {
-    cy.contains('Your listings:').should('be.visible');
+    cy.contains('Your listings').should('be.visible');
     cy.contains(mockItems[0].name).should('be.visible');
     cy.contains(mockItems[1].name).should('be.visible');
     cy.contains(`${mockItems[0].price} kr`).should('be.visible');

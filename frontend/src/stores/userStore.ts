@@ -1,5 +1,5 @@
 import type { ItemRequestDTO, ItemsResponseDTO, ItemResponseDTO } from "@/models/item";
-import type { User, AddItemRequest, UpdateItemRequest} from "@/models/user";
+import type { User, AddItemRequest, UpdateItemRequest, ToggleBookmarkRequest, GetBookmarkedItemsRequest} from "@/models/user";
 import { defineStore } from "pinia";
 import userService from "@/services/user/userService"
 
@@ -14,6 +14,8 @@ export const useUserStore = defineStore('user', {
     isItemLoading: false,
     itemError: null as string | null,
     messagesNotSeen: false,
+    bookmarkedItems: [],
+    newBookmarkedItemsCount: 0,
   }),
 
   actions: {
@@ -80,6 +82,14 @@ export const useUserStore = defineStore('user', {
       }
     },
 
+    /**
+     * Updates the `userItems` property by fetching the user's items from the `userService`.
+     *
+     * @throws {Error} If the user is not logged in.
+     * @throws {Error} If the response from the `userService` is null.
+     *
+     * @returns {Promise<void>} A promise that resolves when the user items are successfully updated.
+     */
     async updateUserItems(): Promise<void> {
       try {
         if (this.user) {
@@ -182,6 +192,72 @@ export const useUserStore = defineStore('user', {
         return false;
       } finally {
         this.isItemLoading = false;
+      }
+    },
+
+    /**
+     * Toggles the bookmark status for a given request.
+     *
+     *
+     * @param {ToggleBookmarkRequest} request - The request object containing the necessary
+     * information to toggle the bookmark.
+     * @returns {Promise<boolean>} A promise that resolves to `true` if the operation
+     * succeeds, or `false` if an error occurs.
+     */
+    async toggleBookmark(request: ToggleBookmarkRequest): Promise<boolean> {
+      try {
+        await userService.toggleBookmark(request);
+        return true;
+      } catch (error) {
+        console.log("Error when toggeling bookmark: ", error)
+        return false;
+      }
+    },
+
+    /**
+     * Fetches the bookmarked items for the currently logged-in user.
+     *
+     * @param request - An object containing the parameters required to fetch the bookmarked items.
+     * @returns A promise that resolves when the bookmarked items have been fetched and stored.
+     *
+     * @throws An error if the user is not logged in or if the response from the service is null.
+     *
+     * If an error occurs during the fetch operation, the `bookmarkedItems` property is reset to an empty list.
+     */
+    async fetchBookmarkedItems(request: GetBookmarkedItemsRequest): Promise<void> {
+      try {
+        if (this.user) {
+          const response = await userService.getBookmarkedItems(request);
+
+          if (response !== null) {
+            this.bookmarkedItems = response
+          } else {
+            throw new Error("Response was null");
+          }
+        } else {
+          throw new Error("User not logged in");
+        }
+      } catch (error) {
+        console.log("Unexpected error from trying to retrieve user items: ", error);
+        this.bookmarkedItems = [];
+      }
+    },
+
+    async loadMoreBookmarkedItems(request: GetBookmarkedItemsRequest) {
+      try {
+        const response = await userService.getBookmarkedItems(request);
+        const newItems = response;
+
+        // Store the count of new items for pagination logic
+        this.newBookmarkedItemsCount = newItems.length;
+
+        // Append new items to existing items
+        this.bookmarkedItems = [...this.bookmarkedItems, ...newItems];
+
+        return newItems;
+      } catch (error) {
+        console.error('Error loading more bookmarked items:', error);
+        throw error;
       }
     }
   }

@@ -1,5 +1,5 @@
 import type { ItemsResponseDTO, ItemRequestDTO, ItemResponseDTO } from "@/models/item";
-import type { User, UserLoginDTO, UserRegistrationDTO, AddItemRequest, UpdateItemRequest } from "@/models/user";
+import type { User, UserLoginDTO, UserRegistrationDTO, AddItemRequest, UpdateItemRequest, ToggleBookmarkRequest, GetBookmarkedItemsRequest } from "@/models/user";
 import axiosInstance from "@/services/axiosService";
 import axios from 'axios';
 
@@ -38,6 +38,14 @@ class UserService {
     }
   }
 
+  /**
+   * Fetches the items associated with the current user from the server.
+   *
+   * @returns {Promise<ItemsResponseDTO | null>} A promise that resolves to an `ItemsResponseDTO` object
+   * containing the user's items, or `null` if an error occurs during the request.
+   *
+   * @throws {Error} Logs an error message to the console if the request fails.
+   */
   async getUserItems(): Promise<ItemsResponseDTO | null> {
     try {
       const response = await axiosInstance.get<ItemsResponseDTO>('/user/item');
@@ -124,6 +132,43 @@ class UserService {
     } catch (error) {
       console.error('Error getting item details:', error);
       throw error;
+    }
+  }
+
+  /**
+   * Sends a POST request to the `/user/item/bookmark` endpoint with the provided
+   * request payload to either add or remove a bookmark for a specific item.
+   *
+   * @param request - The payload containing the necessary data to toggle the bookmark.
+   * @returns A promise that resolves to the response data from the server.
+   * @throws Will throw an error if the request fails.
+   */
+  async toggleBookmark(request: ToggleBookmarkRequest) {
+    try {
+      const response = await axiosInstance.post<ToggleBookmarkRequest>('/user/item/bookmark', request);
+      return response.data;
+    } catch (error) {
+      console.error('Error toggeling bookmark:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Retrieves a list of bookmarked items for a user.
+   *
+   * @param request - The request object containing the necessary parameters to fetch bookmarked items.
+   * @returns A promise that resolves to an `ItemsResponseDTO` containing the bookmarked items,
+   *          or `null` if an error occurs during the request.
+   *
+   * @throws Logs an error message to the console if the request fails.
+   */
+  async getBookmarkedItems(request: GetBookmarkedItemsRequest): Promise<[]> {
+    try {
+      const response = await axiosInstance.post<[]>('/user/item/bookmark/get', request);
+      return response.data;
+    } catch (error) {
+      console.error('Error toggeling bookmark:', error)
+      return [];
     }
   }
 }

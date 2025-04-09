@@ -2,10 +2,10 @@
 import type { ItemResponseDTO, ItemRequestDTO } from '@/models/item';
 import type { AddItemRequest } from '@/models/user';
 import ProductImageComponent from '@/components/ProductPage/ProductImageComponent.vue';
-import ProductNameComponent from '@/components/ProductPage/ProductNameComponent.vue'
-import placeholderImage from '@/assets/images/placeholder-image.png'
+import ProductNameComponent from '@/components/ProductPage/ProductNameComponent.vue';
+import placeholderImage from '@/assets/images/placeholder-image.png';
 import { onMounted, ref, computed } from 'vue';
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router';
 import ProductInfoComponent from '@/components/ProductPage/ProductInfoComponent.vue';
 import { useItemStore } from '@/stores/itemStore';
 import { useAuthStore } from '@/stores/authStore';
@@ -18,6 +18,9 @@ const itemStore = useItemStore();
 const authStore = useAuthStore();
 const userStore = useUserStore();
 
+const isMyItem = ref(false);
+const isEditing = ref(false);
+
 const itemResponse = ref<ItemResponseDTO>({
   itemID: undefined,
   name: '',
@@ -28,28 +31,34 @@ const itemResponse = ref<ItemResponseDTO>({
   published: '',
   price: undefined,
   state: '',
-  bookmark: false // Initialize with a default value
+  bookmark: false
 });
 const error = ref('');
 
-// Extract ID from route query params
-const itemId = computed(() => {
+const itemID = computed(() => {
   const id = route.query.id;
   return typeof id === 'string' ? parseInt(id, 10) : -1;
 });
 
-// Computed property to track bookmark status
 const isBookmarked = computed(() => {
   return !!itemResponse.value?.bookmark;
 });
 
-const isMyItem = ref(false);
-const isEditing = ref(false);
 
+/**
+ * Handles the click event for the back button.
+ * Navigates the user back to the previous page or view.
+ */
 function handleBackClick() {
   router.back();
 }
 
+/**
+ * Handles the logic for favoriting or unfavoriting a product.
+ *
+ * @param {boolean} isFavorited - A boolean indicating whether the product is currently favorited.
+ *                                Pass `true` to mark the product as favorited, or `false` to unfavorite it.
+ */
 async function handleFavorite(isFavorited: boolean) {
   if (!authStore.isAuth) {
     router.push('/login');
@@ -57,18 +66,19 @@ async function handleFavorite(isFavorited: boolean) {
   }
 
   try {
-    // Update local state immediately for responsive UI
     itemResponse.value = {
       ...itemResponse.value,
       bookmark: isFavorited
     };
 
-    // TODO: API call to toogle the favorite
+    const toggleBookmarkRequest = {
+      itemID: itemID.value
+    }
 
-    console.log(`Item ${itemId.value} bookmark status set to ${isFavorited}`);
+    await userStore.toggleBookmark(toggleBookmarkRequest)
+
   } catch (err) {
     console.error('Error updating bookmark status:', err);
-    // Revert UI if API call fails
     itemResponse.value = {
       ...itemResponse.value,
       bookmark: !isFavorited
@@ -77,7 +87,10 @@ async function handleFavorite(isFavorited: boolean) {
 }
 
 /**
- * Maps ItemResponseDTO to AddItemRequest format for editing
+ * Maps an ItemResponseDTO object to an AddItemRequest object.
+ *
+ * @param {ItemResponseDTO} item - The item response data transfer object to be mapped.
+ * @returns {AddItemRequest} - The resulting AddItemRequest object after mapping.
  */
  function mapItemResponseToAddItemRequest(item: ItemResponseDTO): AddItemRequest {
   if (!item) {
@@ -96,14 +109,17 @@ async function handleFavorite(isFavorited: boolean) {
   };
 }
 
+
 /**
- * Handles updating an existing item
+ * Handles the update of an item in the product page.
+ *
+ * @param {AddItemRequest} updatedItem - The updated item data to be processed.
  */
  async function handleUpdateItem(updatedItem: AddItemRequest) {
   try {
     const updateRequest = {
       ...updatedItem,
-      itemID: itemId.value
+      itemID: itemID.value
     };
 
     await userStore.updateItemDetails(updateRequest);
@@ -121,11 +137,15 @@ async function handleFavorite(isFavorited: boolean) {
   }
 }
 
+
 /**
- * Fetches item details based on authentication status
+ * Fetches the details of a specific item.
+ *
+ * Checks if the user is authenticated or not, and fetches items
+ * from different stores thereafter.
  */
  async function fetchItemDetails() {
-  if (itemId.value <= 0) {
+  if (itemID.value <= 0) {
     error.value = 'Invalid item ID';
     return;
   }
@@ -133,7 +153,7 @@ async function handleFavorite(isFavorited: boolean) {
   try {
     const isAuthenticated = authStore.isAuth || await authStore.checkIfAuth();
 
-    const request: ItemRequestDTO = { itemID: itemId.value };
+    const request: ItemRequestDTO = { itemID: itemID.value };
 
     if (isAuthenticated) {
       await userStore.fetchUserItemDetails(request);
@@ -260,6 +280,7 @@ onMounted(fetchItemDetails);
   flex-direction: column;
   gap: 16px;
   padding: 32px;
+  text-align: center;
 }
 
 .cancel-button {
