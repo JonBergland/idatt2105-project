@@ -18,6 +18,9 @@ const itemStore = useItemStore();
 const authStore = useAuthStore();
 const userStore = useUserStore();
 
+const isMyItem = ref(false);
+const isEditing = ref(false);
+
 const itemResponse = ref<ItemResponseDTO>({
   itemID: undefined,
   name: '',
@@ -28,7 +31,7 @@ const itemResponse = ref<ItemResponseDTO>({
   published: '',
   price: undefined,
   state: '',
-  bookmark: false // Initialize with a default value
+  bookmark: false
 });
 const error = ref('');
 
@@ -43,13 +46,21 @@ const isBookmarked = computed(() => {
   return !!itemResponse.value?.bookmark;
 });
 
-const isMyItem = ref(false);
-const isEditing = ref(false);
 
+/**
+ * Handles the click event for the back button.
+ * Navigates the user back to the previous page or view.
+ */
 function handleBackClick() {
   router.back();
 }
 
+/**
+ * Handles the logic for favoriting or unfavoriting a product.
+ *
+ * @param {boolean} isFavorited - A boolean indicating whether the product is currently favorited.
+ *                                Pass `true` to mark the product as favorited, or `false` to unfavorite it.
+ */
 async function handleFavorite(isFavorited: boolean) {
   if (!authStore.isAuth) {
     router.push('/login');
@@ -77,7 +88,10 @@ async function handleFavorite(isFavorited: boolean) {
 }
 
 /**
- * Maps ItemResponseDTO to AddItemRequest format for editing
+ * Maps an ItemResponseDTO object to an AddItemRequest object.
+ *
+ * @param {ItemResponseDTO} item - The item response data transfer object to be mapped.
+ * @returns {AddItemRequest} - The resulting AddItemRequest object after mapping.
  */
  function mapItemResponseToAddItemRequest(item: ItemResponseDTO): AddItemRequest {
   if (!item) {
@@ -96,8 +110,11 @@ async function handleFavorite(isFavorited: boolean) {
   };
 }
 
+
 /**
- * Handles updating an existing item
+ * Handles the update of an item in the product page.
+ *
+ * @param {AddItemRequest} updatedItem - The updated item data to be processed.
  */
  async function handleUpdateItem(updatedItem: AddItemRequest) {
   try {
@@ -121,8 +138,12 @@ async function handleFavorite(isFavorited: boolean) {
   }
 }
 
+
 /**
- * Fetches item details based on authentication status
+ * Fetches the details of a specific item.
+ *
+ * Checks if the user is authenticated or not, and fetches items
+ * from different stores thereafter.
  */
  async function fetchItemDetails() {
   if (itemId.value <= 0) {
