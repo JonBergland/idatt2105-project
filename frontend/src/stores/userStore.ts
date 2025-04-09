@@ -2,7 +2,7 @@ import type { ItemRequestDTO, ItemsResponseDTO, ItemResponseDTO } from "@/models
 import type { User, AddItemRequest, UpdateItemRequest} from "@/models/user";
 import { defineStore } from "pinia";
 import userService from "@/services/user/userService"
-import type { PlaceBid } from "@/models/bid";
+import type { BidOnItemByUserRequest, BidOnItemByUserResponse, PlaceBid } from "@/models/bid";
 
 /**
  * Store for authenticating the user with login and signup
@@ -201,6 +201,41 @@ export const useUserStore = defineStore('user', {
       } catch (error) {
         console.log("Error when giving bid on item: ", error);
         return 0;
+      }
+    },
+
+    /**
+     * Retrieves a user's bid on a specific item
+     *
+     * @param request - An object containing the request parameters for fetching bids
+     * @returns A promise that resolves to a BidsOnItemByUserResponse object with bid information
+     */
+    async getUsersBidOnItem(request: BidOnItemByUserRequest): Promise<BidOnItemByUserResponse[]> {
+      const defaultResponse = [{
+        bidID: 0,
+        itemID: 0,
+        askingPrice: 0,
+        status: '',
+        published: ''
+      }] as BidOnItemByUserResponse[];
+
+      try {
+        if (!request || !request.itemID || !request.userID) {
+          console.error('Invalid request parameters for getUsersBidOnItem');
+          return defaultResponse;
+        }
+
+        const response = await userService.getUserBidsOnItem(request);
+
+        if (response === null) {
+          return defaultResponse;
+        }
+
+        return response;
+      } catch (error) {
+        console.error('Error retrieving user bid on item:', error);
+
+        return defaultResponse;
       }
     }
   }
