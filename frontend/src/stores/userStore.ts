@@ -1,5 +1,5 @@
 import type { ItemRequestDTO, ItemsResponseDTO, ItemResponseDTO } from "@/models/item";
-import type { User, AddItemRequest, UpdateItemRequest} from "@/models/user";
+import type { User, AddItemRequest, UpdateItemRequest, ToggleBookmarkRequest} from "@/models/user";
 import { defineStore } from "pinia";
 import userService from "@/services/user/userService"
 
@@ -182,6 +182,16 @@ export const useUserStore = defineStore('user', {
         return false;
       } finally {
         this.isItemLoading = false;
+      }
+    },
+
+    async toggleBookmark(request: ToggleBookmarkRequest): Promise<boolean> {
+      try {
+        await userService.toggleBookmark(request);
+        return true;
+      } catch (error) {
+        console.log("Error when toggeling bookmark: ", error)
+        return false;
       }
     }
   }
