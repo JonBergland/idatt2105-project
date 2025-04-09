@@ -2,29 +2,46 @@
 import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useAuthStore } from '@/stores/authStore';
+import { useUserStore } from '@/stores/userStore';
 
-const route = useRoute();
-const authStore = useAuthStore();
-const isAuthenticated = ref(false)
-
-const pageName = computed(() => route.name);
-
-const isListingPage = computed(() => pageName.value === "listing");
-const isFavoritesPage = computed(() => pageName.value === "favorites");
-const isMessagePage = computed(() => pageName.value === "messages");
-const isProfilePage = computed(() => pageName.value === "profile");
-const isLoginPage = computed(() => pageName.value === "login");
-const isSignupPage = computed(() => pageName.value === "signup");
-
-//TODO: implement logic for notifications
-const hasNotifications = ref(true)
-
-onMounted(async () => {
-  isAuthenticated.value = await authStore.checkIfAuth();
+const props = withDefaults(defineProps<{
+  skipAuthCheck?: boolean
+}>(), {
+  skipAuthCheck: false
 });
 
+const route = useRoute()
+const authStore = useAuthStore()
+const userStore = useUserStore()
+const isAuthenticated = ref(false)
+
+const pageName = computed(() => route.name)
+
+const isListingPage = computed(() => pageName.value === "listing")
+const isFavoritesPage = computed(() => pageName.value === "favorites")
+const isMessagePage = computed(() => pageName.value === "messages")
+const isProfilePage = computed(() => pageName.value === "profile")
+const isLoginPage = computed(() => pageName.value === "login")
+const isSignupPage = computed(() => pageName.value === "signup")
+
+// Wait for authentication to finish before loading
+onMounted(async () => {
+  if (!props.skipAuthCheck) {
+    try {
+      await Promise.all([
+        authStore.checkIfAuth().then(result => {
+          isAuthenticated.value = result
+        }),
+        new Promise(resolve => setTimeout(resolve, 300)) // Wait for at least 300 ms to prevent flickering
+      ]);
+    } catch (error) {
+      console.error("Error checking authentication:", error)
+    }
+  }
+})
+
 watch(() => authStore.isAuth, (newValue) => {
-  isAuthenticated.value = newValue;
+  isAuthenticated.value = newValue
 });
 </script>
 
@@ -81,19 +98,19 @@ watch(() => authStore.isAuth, (newValue) => {
         :class="{ active: isMessagePage }"
       >
         <img
-          v-if="isMessagePage && hasNotifications"
+          v-if="isMessagePage && userStore.messagesNotSeen"
           src="@/assets/icons/message-notification-selected.svg"
           alt="Message"
           class="icon"
         />
         <img
-          v-else-if="isMessagePage && !hasNotifications"
+          v-else-if="isMessagePage && !userStore.messagesNotSeen"
           src="@/assets/icons/message-selected.svg"
           alt="Message"
           class="icon"
         />
         <img
-          v-else-if="!isMessagePage && hasNotifications"
+          v-else-if="!isMessagePage && userStore.messagesNotSeen"
           src="@/assets/icons/message-notification.svg"
           alt="Message"
           class="icon"

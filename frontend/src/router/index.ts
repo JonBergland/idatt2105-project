@@ -4,6 +4,8 @@ import LoginView from '@/views/LogIn/LogInView.vue'
 import SignUpView from '@/views/SignUp/SignUpView.vue'
 import ProductPageView from '@/views/ProductPage/ProductPageView.vue'
 import ResultView from '@/views/Result/ResultView.vue'
+import NewListingView from '@/views/NewListing/NewListingView.vue'
+import MessagesView from '@/views/Messages/MessagesView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -24,15 +26,29 @@ const router = createRouter({
       component: SignUpView,
     },
     {
-      path: '/product/:productId',
+      path: '/product',
       name: 'product',
       component: ProductPageView,
-      props: true
     },
     {
       path: '/result',
       name: 'result',
-      component: ResultView,
+      component: ResultView
+    },
+    {
+      path: '/listing',
+      name: 'listing',
+      component: NewListingView,
+    },
+    {
+      path: '/profile',
+      name: 'profile',
+      component: () => import('@/views/Profile/ProfileView.vue'),
+    },
+    {
+      path: '/messages',
+      name: 'messages',
+      component: MessagesView
     },
   ],
 })

@@ -1,7 +1,3 @@
-networks:
-  app-network:
-    driver: bridge
-
 services:
   frontend:
     build: ./frontend
@@ -33,6 +29,7 @@ services:
       spring.datasource.password: ${SPRING_DATASOURCE_PASSWORD}
     volumes:
       - ./backend:/src
+      - maven-repo:/root/.m2
     command: mvn spring-boot:run
     deploy:
       resources:
@@ -40,3 +37,10 @@ services:
           memory: 1G
         reservations:
           memory: 512M
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  maven-repo:

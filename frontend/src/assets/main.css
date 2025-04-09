@@ -6,6 +6,9 @@ button {
   min-width: var(--size-button-min);
   cursor: pointer;
   transition: background-color 0.3s ease;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 400;
 }
 
 .input {

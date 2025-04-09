@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import resultService from '@/services/item/resultService';
+import itemService from '@/services/item/itemService';
 import axiosInstance from '@/services/axiosService';
 
 vi.mock('@/services/axiosService', () => ({
@@ -9,7 +9,7 @@ vi.mock('@/services/axiosService', () => ({
   },
 }));
 
-describe('ResultService', () => {
+describe('itemService', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
@@ -42,7 +42,7 @@ describe('ResultService', () => {
 
       vi.mocked(axiosInstance.post).mockResolvedValueOnce(mockResponse);
 
-      const result = await resultService.getItems(mockRequest);
+      const result = await itemService.getItems(mockRequest);
 
       expect(axiosInstance.post).toHaveBeenCalledTimes(1);
       expect(axiosInstance.post).toHaveBeenCalledWith('/store/item/filter', mockRequest);
@@ -68,7 +68,7 @@ describe('ResultService', () => {
 
       vi.mocked(axiosInstance.post).mockResolvedValueOnce(mockResponse);
 
-      const result = await resultService.getItems(mockRequest);
+      const result = await itemService.getItems(mockRequest);
 
       expect(axiosInstance.post).toHaveBeenCalledWith('/store/item/filter', mockRequest);
       expect(result).toEqual(mockResponse.data);
@@ -86,7 +86,7 @@ describe('ResultService', () => {
       const mockError = new Error('Network Error');
       vi.mocked(axiosInstance.post).mockRejectedValueOnce(mockError);
 
-      await expect(resultService.getItems(mockRequest)).rejects.toThrow('Network Error');
+      await expect(itemService.getItems(mockRequest)).rejects.toThrow('Network Error');
       expect(axiosInstance.post).toHaveBeenCalledWith('/store/item/filter', mockRequest);
     });
   });
@@ -101,7 +101,7 @@ describe('ResultService', () => {
 
       vi.mocked(axiosInstance.get).mockResolvedValueOnce(mockResponse);
 
-      const result = await resultService.getCategories();
+      const result = await itemService.getCategories();
 
       expect(axiosInstance.get).toHaveBeenCalledTimes(1);
       expect(axiosInstance.get).toHaveBeenCalledWith('/store/category');
@@ -114,8 +114,52 @@ describe('ResultService', () => {
       const mockError = new Error('API Error');
       vi.mocked(axiosInstance.get).mockRejectedValueOnce(mockError);
 
-      await expect(resultService.getCategories()).rejects.toThrow('API Error');
+      await expect(itemService.getCategories()).rejects.toThrow('API Error');
       expect(axiosInstance.get).toHaveBeenCalledWith('/store/category');
+    });
+  });
+
+  describe('getItemDetails', () => {
+    it('should call the correct endpoint with the provided item ID', async () => {
+      const mockRequest = {
+        itemID: 123
+      };
+
+      const mockResponse = {
+        data: {
+          itemID: 123,
+          name: 'Test Product',
+          price: 799,
+          category: 'Electronics',
+          seller: 'TestSeller',
+          description: 'A detailed description',
+          published: '2023-04-05',
+          state: 'available',
+          images: []
+        }
+      };
+
+      vi.mocked(axiosInstance.post).mockResolvedValueOnce(mockResponse);
+
+      const result = await itemService.getItemDetails(mockRequest);
+
+      expect(axiosInstance.post).toHaveBeenCalledTimes(1);
+      expect(axiosInstance.post).toHaveBeenCalledWith('/store/item/get', mockRequest);
+      expect(result).toEqual(mockResponse.data);
+      expect(result.itemID).toBe(123);
+      expect(result.name).toBe('Test Product');
+    });
+
+    it('should propagate errors from the API', async () => {
+      const mockRequest = {
+        itemID: 99999 // Non-existent item
+      };
+
+      const mockError = new Error('Item not found');
+      vi.mocked(axiosInstance.post).mockRejectedValueOnce(mockError);
+
+      await expect(itemService.getItemDetails(mockRequest)).rejects.toThrow('Item not found');
+      expect(axiosInstance.post).toHaveBeenCalledWith('/store/item/get', mockRequest);
     });
   });
 });
