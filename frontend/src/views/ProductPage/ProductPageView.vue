@@ -280,6 +280,7 @@ onMounted(fetchItemDetails);
   flex-direction: column;
   gap: 16px;
   padding: 32px;
+  text-align: center;
 }
 
 .cancel-button {
