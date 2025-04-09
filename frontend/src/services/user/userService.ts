@@ -1,5 +1,5 @@
 import type { ItemsResponseDTO, ItemRequestDTO, ItemResponseDTO } from "@/models/item";
-import type { User, UserLoginDTO, UserRegistrationDTO, AddItemRequest } from "@/models/user";
+import type { User, UserLoginDTO, UserRegistrationDTO, AddItemRequest, UpdateItemRequest } from "@/models/user";
 import axiosInstance from "@/services/axiosService";
 import axios from 'axios';
 
@@ -85,8 +85,16 @@ class UserService {
    * @returns A promise that resolves to the response of the POST request.
    */
   async postItem(request: AddItemRequest): Promise<void>{
-    const response = await axiosInstance.post('/user/item', request);
-    console.log(response);
+    await axiosInstance.post('/user/item', request);
+  }
+
+  async updateItem(request: UpdateItemRequest): Promise<void> {
+    try {
+      await axios.post('/user/item/edit', request);
+    } catch (error) {
+      console.error('Error updating item:', error);
+      throw error;
+    }
   }
 
   async getUserItemDetails(request: ItemRequestDTO): Promise<ItemResponseDTO> {
