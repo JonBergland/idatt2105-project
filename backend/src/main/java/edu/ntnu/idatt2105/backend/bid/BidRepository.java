@@ -37,11 +37,18 @@ public class BidRepository {
    * @param userID your user id
    * @return the bids
    */
-  public Bid[] getYourUniqueBids(int userID) {
+  public Bid[] getYourUniqueBids(int userID, int[] segmentOffset) {
     List<Bid> bidList = jdbcTemplate.query(
-        "SELECT DISTINCT user_id AS userID, item_id AS itemID FROM Bids "
-        + "WHERE user_id = ?",
-        new Object[]{userID},
+        "SELECT DISTINCT Bids.user_id AS userID, Bids.item_id AS itemID, User.email, Item.name AS itemName FROM Bids "
+        + "JOIN Item ON Bids.item_id = Item.id "
+        + "JOIN User ON Item.user_id = User.id "
+        + "WHERE Bids.user_id = ? "
+        + "GROUP BY Bids.user_id, Bids.item_id, User.email, Item.name "
+        + "ORDER BY MAX(Bids.published) DESC "
+        + "LIMIT ? OFFSET ?",
+        new Object[]{userID,
+        segmentOffset[1],
+        segmentOffset[0] * segmentOffset[1]},
         new BeanPropertyRowMapper<>(Bid.class));
     return bidList.toArray(new Bid[0]);
   }
@@ -93,14 +100,19 @@ public class BidRepository {
    * @param userID your user id
    * @return the bids
    */
-  public Bid[] getUniqueBids(int userID) {
+  public Bid[] getUniqueBids(int userID, int[] segmentOffset) {
     List<Bid> bidList = jdbcTemplate.query(
-        "SELECT DISTINCT Bids.item_id AS itemID, Bids.user_id AS userID, Item.name AS itemName, b.email FROM `Bids` "
+        "SELECT DISTINCT Bids.item_id AS itemID, Bids.user_id AS userID, Item.name AS itemName, b.email, Bids.published FROM `Bids` "
         + "JOIN Item ON Bids.item_id = Item.id "
         + "JOIN User o ON Item.user_id = o.id "
         + "JOIN User b ON Bids.user_id = b.id "
-        + "WHERE o.id = ?",
-        new Object[]{userID},
+        + "WHERE o.id = ? "
+        + "ORDER BY Bids.published DESC "
+        + "LIMIT ? OFFSET ?",
+        new Object[]{
+            userID,
+            segmentOffset[1],
+            segmentOffset[0] * segmentOffset[1]},
         new BeanPropertyRowMapper<>(Bid.class));
     return bidList.toArray(new Bid[0]);
   }
@@ -109,8 +121,8 @@ public class BidRepository {
     List<Bid> bidList = jdbcTemplate.query(
         "SELECT Bids.id AS bidID, Bids.item_id AS itemID, Bids.asking_price, Bids.status, Bids.published FROM Bids "
             + "JOIN Item On Bids.item_id = Item.id "
+            + "ORDER BY Bids.published DESC "
             + "WHERE Bids.item_id = ? AND Bids.user_id = ? AND Item.user_id = ? "
-            + "ORDER BY published DESC "
             + "LIMIT ? OFFSET ? ",
         new Object[]{
             bid.getItemID(),
