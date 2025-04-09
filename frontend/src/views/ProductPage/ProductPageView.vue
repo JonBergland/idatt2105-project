@@ -35,13 +35,11 @@ const itemResponse = ref<ItemResponseDTO>({
 });
 const error = ref('');
 
-// Extract ID from route query params
-const itemId = computed(() => {
+const itemID = computed(() => {
   const id = route.query.id;
   return typeof id === 'string' ? parseInt(id, 10) : -1;
 });
 
-// Computed property to track bookmark status
 const isBookmarked = computed(() => {
   return !!itemResponse.value?.bookmark;
 });
@@ -68,18 +66,19 @@ async function handleFavorite(isFavorited: boolean) {
   }
 
   try {
-    // Update local state immediately for responsive UI
     itemResponse.value = {
       ...itemResponse.value,
       bookmark: isFavorited
     };
 
-    // TODO: API call to toogle the favorite
+    const toggleBookmarkRequest = {
+      itemID: itemID.value
+    }
 
-    console.log(`Item ${itemId.value} bookmark status set to ${isFavorited}`);
+    await userStore.toggleBookmark(toggleBookmarkRequest)
+
   } catch (err) {
     console.error('Error updating bookmark status:', err);
-    // Revert UI if API call fails
     itemResponse.value = {
       ...itemResponse.value,
       bookmark: !isFavorited
@@ -120,7 +119,7 @@ async function handleFavorite(isFavorited: boolean) {
   try {
     const updateRequest = {
       ...updatedItem,
-      itemID: itemId.value
+      itemID: itemID.value
     };
 
     await userStore.updateItemDetails(updateRequest);
@@ -146,7 +145,7 @@ async function handleFavorite(isFavorited: boolean) {
  * from different stores thereafter.
  */
  async function fetchItemDetails() {
-  if (itemId.value <= 0) {
+  if (itemID.value <= 0) {
     error.value = 'Invalid item ID';
     return;
   }
@@ -154,7 +153,7 @@ async function handleFavorite(isFavorited: boolean) {
   try {
     const isAuthenticated = authStore.isAuth || await authStore.checkIfAuth();
 
-    const request: ItemRequestDTO = { itemID: itemId.value };
+    const request: ItemRequestDTO = { itemID: itemID.value };
 
     if (isAuthenticated) {
       await userStore.fetchUserItemDetails(request);
