@@ -20,6 +20,7 @@ import edu.ntnu.idatt2105.backend.security.dto.SigninRequest;
 import edu.ntnu.idatt2105.backend.security.dto.SignupRequest;
 import edu.ntnu.idatt2105.backend.user.dto.AddItemRequest;
 import edu.ntnu.idatt2105.backend.user.dto.AnswerBidRequest;
+import edu.ntnu.idatt2105.backend.user.dto.BuyItemFromBidRequest;
 import edu.ntnu.idatt2105.backend.user.dto.BuyItemRequest;
 import edu.ntnu.idatt2105.backend.user.dto.DeleteItemRequest;
 import edu.ntnu.idatt2105.backend.user.dto.GetBidsOnItemByUserRequest;
@@ -308,6 +309,28 @@ public class UserService {
     String userID = SecurityContextHolder.getContext().getAuthentication().getName();
     Purchase purchase = PurchaseMapper.INSTANCE.buyItemRequestToPurchase(buyItemRequest);
     purchase.setBuyerID(Integer.parseInt(userID));
+    buy(purchase);
+  }
+
+  @Transactional
+  public void buyItemFromBid(BuyItemFromBidRequest buyItemFromBidRequest) {
+    String userID = SecurityContextHolder.getContext().getAuthentication().getName();
+    Bid bid = bidRepository.getBid(buyItemFromBidRequest.getBidID());
+    Purchase purchase = new Purchase();
+    purchase.setItemID(bid.getItemID());
+    purchase.setBuyerID(Integer.parseInt(userID));
+    purchase.setFinalPrice(bid.getAskingPrice());
+
+    if (bid.getUserID() == Integer.parseInt(userID)
+        && bid.getStatus() != null
+        && bid.getStatus().equals("1")) {
+      buy(purchase);
+    } else {
+      throw new IllegalArgumentException("Bid not users or not valid");
+    }
+  }
+
+  private void buy(Purchase purchase) {
     Item item = itemRepository.getItem(purchase.getItemID());
 
     if (item.getState().equals("sold") || item.getState().equals("reserved")) {
