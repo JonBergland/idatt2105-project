@@ -9,7 +9,8 @@ import userService from "@/services/user/userService"
 export const useUserStore = defineStore('user', {
   state: () => ({
     user: null as User | null,
-    userItems: { items: [] } as ItemsResponseDTO
+    userItems: { items: [] } as ItemsResponseDTO,
+    messagesNotSeen: false
   }),
 
   actions: {
