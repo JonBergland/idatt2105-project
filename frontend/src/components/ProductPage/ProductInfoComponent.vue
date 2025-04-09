@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { ItemResponseDTO } from '@/models/item';
-import { onMounted, ref, computed } from 'vue';
+import { computed } from 'vue';
 import "@/assets/color.css"
 import "@/assets/main.css"
 
