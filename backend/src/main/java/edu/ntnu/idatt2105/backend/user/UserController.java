@@ -107,6 +107,11 @@ public class UserController {
     }
   }
 
+  /**
+   * endpoint for deleting a user's item.
+   *
+   * @param deleteItemRequest the item
+   */
   @DeleteMapping("/item/delete")
   public void deleteUserItem(@RequestBody DeleteItemRequest deleteItemRequest) {
     logger.info("delete user's item request");
