@@ -3,6 +3,9 @@ package edu.ntnu.idatt2105.backend.purchase.model;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * a model representing a purchase
+ */
 @Getter
 @Setter
 public class Purchase {
