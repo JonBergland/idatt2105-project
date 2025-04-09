@@ -2,10 +2,10 @@
 import type { ItemResponseDTO, ItemRequestDTO } from '@/models/item';
 import type { AddItemRequest } from '@/models/user';
 import ProductImageComponent from '@/components/ProductPage/ProductImageComponent.vue';
-import ProductNameComponent from '@/components/ProductPage/ProductNameComponent.vue'
-import placeholderImage from '@/assets/images/placeholder-image.png'
+import ProductNameComponent from '@/components/ProductPage/ProductNameComponent.vue';
+import placeholderImage from '@/assets/images/placeholder-image.png';
 import { onMounted, ref, computed } from 'vue';
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router';
 import ProductInfoComponent from '@/components/ProductPage/ProductInfoComponent.vue';
 import { useItemStore } from '@/stores/itemStore';
 import { useAuthStore } from '@/stores/authStore';
