@@ -1,4 +1,4 @@
-export interface BidsOnItemByUserResponse {
+export interface Bid {
   bidID: number;
   itemID: number;
   userID: number;
@@ -14,13 +14,49 @@ export interface PlaceBid {
   askingPrice: number;
 }
 
-export interface BidsOnItemByUserRequest {
+export interface BidOnItemByUserRequest {
   itemID: number;
   userID: number;
   segmentOffset: number[];
 }
 
-export interface BidsOnItemByUserResponse {
+export interface BidOnItemByUserResponse {
+  bidID: number;
+  itemID: number;
+  askingPrice: number;
+  status: string;
+  published: string;
+}
+
+export interface UserBidItemsRequest {
+  SegmentOffset: number[];
+}
+
+export interface UserBidItemsResponse {
+  itemID: number;
+  userID: number;
+  itemName: string;
+  seller: string;
+}
+
+export interface UsersWithBidOnUserItemRequest {
+  SegmentOffset: number[];
+}
+
+export interface UsersWithBidOnUserItemResponse {
+  itemID: number;
+  userID: number;
+  itemName: string;
+  buyer: string;
+}
+
+export interface BidsFromUsersOnUserItemRequest {
+  itemID: number;
+  userID: number;
+  segmentOffset: number[];
+}
+
+export interface BidsFromUsersOnUserItemResponse {
   bidID: number;
   itemID: number;
   askingPrice: number;
