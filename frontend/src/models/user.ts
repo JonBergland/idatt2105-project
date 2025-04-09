@@ -54,3 +54,7 @@ export interface UpdateItemRequest {
 export interface ToggleBookmarkRequest {
   itemID: number;
 }
+
+export interface GetBookmarkedItemsRequest{
+  segmentOffset: [number, number] | null;
+}
