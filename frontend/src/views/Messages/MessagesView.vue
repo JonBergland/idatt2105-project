@@ -8,8 +8,10 @@ import { useRouter } from 'vue-router';
 import "@/assets/color.css"
 import "@/assets/base.css"
 import "@/assets/main.css"
+import { useUserStore } from '@/stores/userStore';
 
 const authStore = useAuthStore()
+const userStore = useUserStore()
 const router = useRouter()
 const chats = ref<ChatsResponseDTO>({ chats: [] });
 const selectedChat = ref<ChatResponseDTO | null>(null);
@@ -228,20 +230,47 @@ onMounted(async () => {
     }
   }
 
-  // Set user data from auth store
   // TODO: Retrieve chats from backend
   chats.value = mockChats;
+
+  checkForUnseenMessages();
 
 });
 
 /**
- * Handles when a chat is selected from the message list
+ * Handles when a chat is selected from the message list.
  *
  * @param chat The selected chat
  */
  function handleChatSelected(chat: ChatResponseDTO) {
   selectedChat.value = chat;
   console.log("Selected chat:", chat);
+
+  checkForUnseenMessages();
+}
+
+/**
+ * Checks for any unseen messages in the system.
+ * This function is responsible for determining if there are messages
+ * that have not yet been viewed by the user.
+ */
+function checkForUnseenMessages() {
+  let hasUnseenMessages = false;
+
+  if (chats.value && chats.value.chats) {
+    for (const chat of chats.value.chats) {
+      if (!chat.messages || chat.messages.length === 0) continue;
+
+      const unseenMessages = chat.messages.some(message => message.notSeenByUser);
+
+      if (unseenMessages) {
+        hasUnseenMessages = true;
+        break;
+      }
+    }
+  }
+
+  userStore.messagesNotSeen = hasUnseenMessages;
 }
 
 </script>
