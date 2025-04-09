@@ -14,7 +14,7 @@ export const useUserStore = defineStore('user', {
     isItemLoading: false,
     itemError: null as string | null,
     messagesNotSeen: false,
-    bookmarkedItems: { items: [] } as ItemsResponseDTO,
+    bookmarkedItems: [],
   }),
 
   actions: {
@@ -238,7 +238,7 @@ export const useUserStore = defineStore('user', {
         }
       } catch (error) {
         console.log("Unexpected error from trying to retrieve user items: ", error);
-        this.bookmarkedItems =  { items: [] }
+        this.bookmarkedItems = [];
       }
     },
   }

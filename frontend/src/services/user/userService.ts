@@ -154,13 +154,13 @@ class UserService {
    *
    * @throws Logs an error message to the console if the request fails.
    */
-  async getBookmarkedItems(request: GetBookmarkedItemsRequest): Promise<ItemsResponseDTO | null> {
+  async getBookmarkedItems(request: GetBookmarkedItemsRequest): Promise<[]> {
     try {
-      const response = await axiosInstance.post<ItemsResponseDTO>('/user/item/bookmark/get', request);
+      const response = await axiosInstance.post<[]>('/user/item/bookmark/get', request);
       return response.data;
     } catch (error) {
       console.error('Error toggeling bookmark:', error)
-      return null;
+      return [];
     }
   }
 }
