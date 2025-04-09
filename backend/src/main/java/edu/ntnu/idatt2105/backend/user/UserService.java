@@ -19,6 +19,8 @@ import edu.ntnu.idatt2105.backend.user.dto.AddItemRequest;
 import edu.ntnu.idatt2105.backend.user.dto.AnswerBidRequest;
 import edu.ntnu.idatt2105.backend.user.dto.GetBidsOnItemByUserRequest;
 import edu.ntnu.idatt2105.backend.user.dto.GetBidsOnItemByUserResponse;
+import edu.ntnu.idatt2105.backend.user.dto.GetBookmarkedItemsRequest;
+import edu.ntnu.idatt2105.backend.user.dto.GetBookmarkedItemsResponse;
 import edu.ntnu.idatt2105.backend.user.dto.GetYourBidItemsRequest;
 import edu.ntnu.idatt2105.backend.user.dto.GetYourBidItemsResponse;
 import edu.ntnu.idatt2105.backend.user.dto.GetYourUniqueBidsResponse;
@@ -169,6 +171,13 @@ public class UserService {
     } else {
       bookmarkRepository.addBookmark(bookmark);
     }
+  }
+
+  public GetBookmarkedItemsResponse[] getBookmarkedItems(GetBookmarkedItemsRequest getBookmarkedItemsRequest) {
+    String userID = SecurityContextHolder.getContext().getAuthentication().getName();
+    Item[] items = itemRepository.getBookmarkedItems(Integer.parseInt(userID),
+        getBookmarkedItemsRequest.getSegmentOffset());
+    return ItemMapper.INSTANCE.itemArrayToGetBookmarkedItemsResponseArray(items);
   }
 
   public GetStoreItemResponse getUserSpecificItemInfo(ItemRequest itemRequest) {
