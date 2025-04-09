@@ -80,6 +80,14 @@ export const useUserStore = defineStore('user', {
       }
     },
 
+    /**
+     * Updates the `userItems` property by fetching the user's items from the `userService`.
+     *
+     * @throws {Error} If the user is not logged in.
+     * @throws {Error} If the response from the `userService` is null.
+     *
+     * @returns {Promise<void>} A promise that resolves when the user items are successfully updated.
+     */
     async updateUserItems(): Promise<void> {
       try {
         if (this.user) {
@@ -185,6 +193,15 @@ export const useUserStore = defineStore('user', {
       }
     },
 
+    /**
+     * Toggles the bookmark status for a given request.
+     *
+     *
+     * @param {ToggleBookmarkRequest} request - The request object containing the necessary
+     * information to toggle the bookmark.
+     * @returns {Promise<boolean>} A promise that resolves to `true` if the operation
+     * succeeds, or `false` if an error occurs.
+     */
     async toggleBookmark(request: ToggleBookmarkRequest): Promise<boolean> {
       try {
         await userService.toggleBookmark(request);
