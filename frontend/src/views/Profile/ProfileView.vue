@@ -56,11 +56,11 @@ onMounted(loadUserData);
 async function handleSaveUser(user: User) {
   try {
     const userUpdated = await userStore.postUserInfo(user);
-  if (userUpdated) {
-    await loadUserData();
-  } else {
-    userError.value = "User was not updated";
-  }
+    if (userUpdated) {
+      await loadUserData();
+    } else {
+      userError.value = "User was not updated";
+    }
   } catch (error) {
     userError.value = "Error while updating user"
     console.log("Error while updating user: ", error);
@@ -78,14 +78,13 @@ async function handleLogout() {
     userError.value = "Error while logging out the user"
     console.log("Error while logging out the user: ", error);
   }
-
 }
 
 /**
  * Handles the 'item-clicked' event emitted by the ItemGroup component
  * @param {number} itemID - The unique identifier of the clicked item
  */
- function handleItemClick(itemID: number) {
+function handleItemClick(itemID: number) {
   router.push({ name: 'product', query: { id: itemID } });
 }
 </script>
@@ -106,8 +105,9 @@ async function handleLogout() {
     <div v-if="isLoading" class="loading">
       Loading your listings...
     </div>
-    <div v-else-if="flattenedItems.length === 0" class="no-items">
-      You don't have any listings yet.
+    <div v-else-if="flattenedItems.length === 0" class="empty-state">
+      <p>You don't have any listings yet.</p>
+      <p>Create your first listing by clicking the "New listing" button in the navigation bar.</p>
     </div>
     <ItemGroup
       v-else
@@ -132,10 +132,29 @@ async function handleLogout() {
   align-items: center;
 }
 
-.loading, .no-items {
-  padding: 20px;
-  text-align: center;
-  color: #666;
+.loading {
+  margin-top: 10px;
+  color: #6c757d;
   font-style: italic;
+}
+
+.empty-state {
+  margin: 40px 0;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: var(--color-background-soft, #f8f9fa);
+  max-width: 500px;
+  text-align: center;
+}
+
+.empty-state p {
+  margin: 10px 0;
+  color: var(--color-text-secondary, #6c757d);
+}
+
+.empty-state p:first-child {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: var(--color-text, #212529);
 }
 </style>
