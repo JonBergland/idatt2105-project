@@ -5,6 +5,9 @@ import type { ChatsResponseDTO, ChatResponseDTO } from '@/models/message';
 import { useAuthStore } from '@/stores/authStore';
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import "@/assets/color.css"
+import "@/assets/base.css"
+import "@/assets/main.css"
 
 const authStore = useAuthStore()
 const router = useRouter()
@@ -260,5 +263,24 @@ onMounted(async () => {
     </div>
   </div>
 </template>
-<style>
+<style scoped>
+.messages-page-wrapper {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+}
+
+.messages-list {
+  width: 30%;
+  border-right: 1px solid var(--color-border);
+  overflow-y: auto;
+}
+
+.chat-view {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
 </style>
