@@ -1,22 +1,21 @@
 <script setup lang="ts">
 import type { ItemResponseDTO } from '@/models/item';
-import { computed, ref } from 'vue'; // Add ref import
+import { computed, ref } from 'vue';
 import "@/assets/color.css"
 import "@/assets/base.css"
 import "@/assets/main.css"
-import { useAuthStore } from '@/stores/authStore';
 
 const emit = defineEmits<{
   (e: 'bid', value: number): void
   (e: 'login'): void
 }>();
 
-const authStore = useAuthStore();
 const errorMessage = ref('');
 const bidValue = ref<string>('');
 
 const props = defineProps<{
   item: ItemResponseDTO,
+  isAuth: boolean
 }>();
 
 const itemStatus = computed(() => {
@@ -54,7 +53,7 @@ function handleBid(): void {
   <div class="product-info-container">
     <h3 class="product-center-header"><strong>{{ itemStatus }}</strong></h3>
     <h3 class="product-center-header"><strong>{{ props.item.price }} kr</strong></h3>
-    <div v-if="authStore.isAuth" class="product-buttons">
+    <div v-if="props.isAuth" class="product-buttons">
       <button class="give-bid-button" @click="handleBid">Give a bid</button>
       <button class="vipps-button" disabled>Pay with vipps</button>
     </div>
@@ -62,7 +61,7 @@ function handleBid(): void {
       <button class="give-bid-button" @click="$emit('login')">Give a bid</button>
       <button class="vipps-button" disabled>Pay with vipps</button>
     </div>
-    <div v-if="authStore.isAuth" class="bid-input-container">
+    <div v-if="props.isAuth" class="bid-input-container">
       <input
         id="bid"
         type="number"
