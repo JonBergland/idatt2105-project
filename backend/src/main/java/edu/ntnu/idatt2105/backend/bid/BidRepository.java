@@ -162,6 +162,15 @@ public class BidRepository {
     );
   }
 
+  public Bid getBid(int bidID) {
+    return jdbcTemplate.queryForObject(
+        "SELECT Bids.*, Bids.id AS bidID, Bids.item_id AS itemID, Bids.user_id AS userID FROM Bids "
+        + "WHERE id = ?",
+        new Object[]{bidID},
+        new BeanPropertyRowMapper<>(Bid.class)
+    );
+  }
+
   /**
    * check if a user owns the item that is bid on.
    *
