@@ -83,6 +83,7 @@ class UserService {
    *
    * @param request - The payload containing the details of the item to be added.
    * @returns A promise that resolves to the response of the POST request.
+   * * @throws Will throw an error if the request fails, logging the error to the console.
    */
   async postItem(request: AddItemRequest): Promise<void>{
     try {
@@ -93,6 +94,13 @@ class UserService {
     }
   }
 
+  /**
+   * Updates an item by sending a POST request to the server with the provided request data.
+   *
+   * @param request - The data required to update the item, adhering to the `UpdateItemRequest` interface.
+   * @returns A promise that resolves when the item is successfully updated.
+   * @throws Will throw an error if the request fails, logging the error to the console.
+   */
   async updateItem(request: UpdateItemRequest): Promise<void> {
     try {
       await axios.post('/user/item/edit', request);
@@ -102,6 +110,13 @@ class UserService {
     }
   }
 
+  /**
+   * Retrieves the details of a user item by sending a request to the server.
+   *
+   * @param request - The data transfer object containing the item request details.
+   * @returns A promise that resolves to an `ItemResponseDTO` containing the item details.
+   * @throws Will throw an error if the request fails.
+   */
   async getUserItemDetails(request: ItemRequestDTO): Promise<ItemResponseDTO> {
     try {
       const response = await axiosInstance.post<ItemResponseDTO>('/user/item/store', request);
