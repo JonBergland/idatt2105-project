@@ -316,11 +316,23 @@ public class UserController {
 
   @PostMapping("/item/buy")
   public void buyItem(@RequestBody BuyItemRequest buyItemRequest) {
-    userService.buyItem(buyItemRequest);
+    logger.info("direct buy request");
+    try {
+      userService.buyItem(buyItemRequest);
+    } catch (DataAccessException | IllegalArgumentException e) {
+      logger.warn("could not buy item: {}", e.getMessage());
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+    }
   }
 
   @PostMapping("/item/bids/buy")
   public void buyBidItem(@RequestBody BuyItemFromBidRequest buyItemFromBidRequest) {
+    logger.info("buy from bid request");
+    try {
     userService.buyItemFromBid(buyItemFromBidRequest);
+    } catch (DataAccessException | IllegalArgumentException e) {
+      logger.warn("could not buy item: {}", e.getMessage());
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+    }
   }
 }
