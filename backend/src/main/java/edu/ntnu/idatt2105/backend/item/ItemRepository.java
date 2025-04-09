@@ -165,4 +165,13 @@ public class ItemRepository {
         new BeanPropertyRowMapper<>(Item.class));
     return itemList.toArray(new Item[0]);
   }
+
+  public void updateState(int itemID, int stateID) {
+    jdbcTemplate.update(
+        "UPDATE Item "
+            + "SET state_id = ? "
+            + "WHERE id = ?",
+        stateID,
+        itemID);
+  }
 }
