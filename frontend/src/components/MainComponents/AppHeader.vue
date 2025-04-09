@@ -183,6 +183,7 @@ header {
   text-decoration: none;
   color: inherit;
   position: relative;
+  align-items: center;
 }
 
 .routerLink:hover::after,
