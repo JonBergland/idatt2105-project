@@ -75,6 +75,11 @@ function isLatestMessageSeen(chat: ChatResponseDTO): boolean {
   const latestMessage = chat.messages[chat.messages.length - 1];
   return !latestMessage.notSeenByUser;
 }
+
+defineExpose({
+  getMessagingContactName,
+  getMessagingContactRole
+});
 </script>
 
 <template>
