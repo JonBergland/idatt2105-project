@@ -103,7 +103,7 @@ class UserService {
    */
   async updateItem(request: UpdateItemRequest): Promise<void> {
     try {
-      await axios.post('/user/item/edit', request);
+      await axiosInstance.post('/user/item/edit', request);
     } catch (error) {
       console.error('Error updating item:', error);
       throw error;
