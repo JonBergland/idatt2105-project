@@ -5,6 +5,12 @@ import type { User, UserLoginDTO, UserRegistrationDTO, AddItemRequest, UpdateIte
 import type { ItemsResponseDTO, ItemRequestDTO, ItemResponseDTO } from "@/models/item";
 import axios from 'axios';
 
+interface AxiosErrorWithResponse extends Error {
+  response?: {
+    status: number;
+  };
+}
+
 vi.mock("@/services/axiosService", () => ({
   default: {
     get: vi.fn(),
@@ -44,9 +50,9 @@ describe("UserService", () => {
     });
 
     it("should return null if fetching user info fails with 401", async () => {
-      const error = new Error("Unauthorized");
-      (error as any).response = { status: 401 };
-      (axiosInstance.get as vi.Mock).mockRejectedValueOnce(error);
+      const error = new Error("Unauthorized") as AxiosErrorWithResponse;
+      error.response = { status: 401 };
+      (axiosInstance.get as vi.Mocks).mockRejectedValueOnce(error);
       (axios.isAxiosError as vi.Mock).mockReturnValueOnce(true);
 
       const result = await userService.getUserInfo();
