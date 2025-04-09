@@ -25,7 +25,7 @@ const props = defineProps<{
     <div class="message-product-info">
       <!-- Name of item -->
       <h3 class="item-name">{{ itemName }}</h3>
-      <!-- Name of seller -->
+      <!-- Name of contact -->
       <p class="messaging-contact-name">{{ messagingContactRole + ": " + messagingContactName }}</p>
     </div>
     <!-- Indicator for new message -->
@@ -44,6 +44,7 @@ const props = defineProps<{
   background-color: var(--color-background-soft);
   transition: background-color 0.3s ease, border-color 0.3s ease;
   cursor: pointer;
+  position: relative;
 }
 
 .message-product-component.active {
