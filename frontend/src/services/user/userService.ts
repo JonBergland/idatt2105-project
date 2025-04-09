@@ -1,3 +1,4 @@
+import type { PlaceBid } from "@/models/bid";
 import type { ItemsResponseDTO, ItemRequestDTO, ItemResponseDTO } from "@/models/item";
 import type { User, UserLoginDTO, UserRegistrationDTO, AddItemRequest, UpdateItemRequest } from "@/models/user";
 import axiosInstance from "@/services/axiosService";
@@ -124,6 +125,24 @@ class UserService {
     } catch (error) {
       console.error('Error getting item details:', error);
       throw error;
+    }
+  }
+
+  /**
+   * Places a bid on an item for the user.
+   *
+   * @param bid - An object containing the bid details to be placed.
+   * @returns A promise that resolves to a number:
+   *          - `1` if the bid was successfully placed.
+   *          - `0` if an error occurred while placing the bid.
+   */
+  async postUserBid(bid: PlaceBid): Promise<number> {
+    try {
+      await axiosInstance.post<PlaceBid>('/user/item/bid/place', bid);
+      return 1;
+    } catch (error) {
+      console.error('Error placing bid on item:', error);
+      return 0;
     }
   }
 }
