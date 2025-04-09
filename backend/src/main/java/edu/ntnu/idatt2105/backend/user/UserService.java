@@ -17,6 +17,7 @@ import edu.ntnu.idatt2105.backend.security.dto.SigninRequest;
 import edu.ntnu.idatt2105.backend.security.dto.SignupRequest;
 import edu.ntnu.idatt2105.backend.user.dto.AddItemRequest;
 import edu.ntnu.idatt2105.backend.user.dto.AnswerBidRequest;
+import edu.ntnu.idatt2105.backend.user.dto.DeleteItemRequest;
 import edu.ntnu.idatt2105.backend.user.dto.GetBidsOnItemByUserRequest;
 import edu.ntnu.idatt2105.backend.user.dto.GetBidsOnItemByUserResponse;
 import edu.ntnu.idatt2105.backend.user.dto.GetBookmarkedItemsRequest;
@@ -158,6 +159,16 @@ public class UserService {
     String userID = SecurityContextHolder.getContext().getAuthentication().getName();
     Item[] items = itemRepository.getItemsFromUserID(Integer.parseInt(userID));
     return new ItemsResponse(ItemMapper.INSTANCE.itemsToItemResponses(items));
+  }
+
+  /**
+   * delete item for user.
+   *
+   * @param deleteItemRequest the request info
+   */
+  public void deleteUserItem(DeleteItemRequest deleteItemRequest) {
+    String userID = SecurityContextHolder.getContext().getAuthentication().getName();
+    itemRepository.deleteItem(deleteItemRequest.getItemID(), Integer.parseInt(userID));
   }
 
   public void toggleBookmark(ToggleBookmarkRequest toggleBookmarkRequest) {
