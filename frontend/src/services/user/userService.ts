@@ -1,4 +1,4 @@
-import type { PlaceBid } from "@/models/bid";
+import type { BidsOnItemByUserRequest, BidsOnItemByUserResponse, PlaceBid } from "@/models/bid";
 import type { ItemsResponseDTO, ItemRequestDTO, ItemResponseDTO } from "@/models/item";
 import type { User, UserLoginDTO, UserRegistrationDTO, AddItemRequest, UpdateItemRequest } from "@/models/user";
 import axiosInstance from "@/services/axiosService";
@@ -145,6 +145,23 @@ class UserService {
       return 0;
     }
   }
+
+  /**
+   * Retrieves bids placed by a user on an item.
+   *
+   * @param request The request object containing the item details.
+   * @returns       A promise that resolves to a `BidsOnItemByUserResponse` or an empty response in case of an error.
+   */
+  async getUserBids(request: BidsOnItemByUserRequest): Promise<BidsOnItemByUserResponse | null> {
+    try {
+      const response = await axiosInstance.post<BidsOnItemByUserResponse>('/item/bids/item', request);
+      return response.data;
+    } catch (error) {
+      console.error('Error getting bids on Item by User: ', error);
+      return null;
+    }
+  }
+
 }
 
 const userService = new UserService();
