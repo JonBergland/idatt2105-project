@@ -1,5 +1,8 @@
 package edu.ntnu.idatt2105.backend.user;
 
+import edu.ntnu.idatt2105.backend.bid.BidMapper;
+import edu.ntnu.idatt2105.backend.bid.BidRepository;
+import edu.ntnu.idatt2105.backend.bid.model.Bid;
 import edu.ntnu.idatt2105.backend.bookmark.BookmarkMapper;
 import edu.ntnu.idatt2105.backend.bookmark.BookmarkRepository;
 import edu.ntnu.idatt2105.backend.bookmark.model.Bookmark;
@@ -13,12 +16,23 @@ import edu.ntnu.idatt2105.backend.item.model.Item;
 import edu.ntnu.idatt2105.backend.security.dto.SigninRequest;
 import edu.ntnu.idatt2105.backend.security.dto.SignupRequest;
 import edu.ntnu.idatt2105.backend.user.dto.AddItemRequest;
+import edu.ntnu.idatt2105.backend.user.dto.AnswerBidRequest;
+import edu.ntnu.idatt2105.backend.user.dto.GetBidsOnItemByUserRequest;
+import edu.ntnu.idatt2105.backend.user.dto.GetBidsOnItemByUserResponse;
+import edu.ntnu.idatt2105.backend.user.dto.GetYourBidItemsRequest;
+import edu.ntnu.idatt2105.backend.user.dto.GetYourBidItemsResponse;
+import edu.ntnu.idatt2105.backend.user.dto.GetYourUniqueBidsResponse;
+import edu.ntnu.idatt2105.backend.user.dto.GetYourItemBidsRequest;
+import edu.ntnu.idatt2105.backend.user.dto.GetYourItemBidsResponse;
 import edu.ntnu.idatt2105.backend.user.dto.GetStoreItemResponse;
+import edu.ntnu.idatt2105.backend.user.dto.GetYourUniqueBidsRequest;
+import edu.ntnu.idatt2105.backend.user.dto.PlaceBidRequest;
 import edu.ntnu.idatt2105.backend.user.dto.ToggleBookmarkRequest;
 import edu.ntnu.idatt2105.backend.user.dto.EditItemRequest;
 import edu.ntnu.idatt2105.backend.user.dto.GetUserInfoResponse;
 import edu.ntnu.idatt2105.backend.user.dto.UpdateUserInfoRequest;
 import edu.ntnu.idatt2105.backend.user.model.User;
+import java.nio.file.AccessDeniedException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +56,8 @@ public class UserService {
   private final BookmarkRepository bookmarkRepository;
 
   private final BrowseHistoryRepository browseHistoryRepository;
+
+  private final BidRepository bidRepository;
 
   private final PasswordEncoder passwordEncoder;
 
@@ -170,6 +186,88 @@ public class UserService {
     browseHistoryRepository.addUpdateBrowseHistory(browseHistory);
 
     return ItemMapper.INSTANCE.itemToGetStoreItemResponse(item);
+  }
+
+  /**
+   * place a bid on an item.
+   *
+   * @param placeBidRequest the request info
+   */
+  public void placeBid(PlaceBidRequest placeBidRequest) throws IllegalArgumentException {
+    Bid bid = BidMapper.INSTANCE.placeBidReqeustToBid(placeBidRequest);
+    String userID = SecurityContextHolder.getContext().getAuthentication().getName();
+    bid.setUserID(Integer.parseInt(userID));
+
+    String itemState = itemRepository.getItem(bid.getItemID()).getState();
+    if (itemState.equals("available") || itemState.equals("reserved")) {
+      bidRepository.placeBid(bid);
+    } else {
+      throw new IllegalArgumentException("Item not allowed for bidding");
+    }
+  }
+
+  /**
+   * Get bids you have placed on distinct items.
+   *
+   * @return the bids
+   */
+  public GetYourUniqueBidsResponse[] getYourBids(GetYourUniqueBidsRequest getYourUniqueBidsRequest) {
+    String userID = SecurityContextHolder.getContext().getAuthentication().getName();
+    Bid[] bids = bidRepository.getYourUniqueBids(Integer.parseInt(userID), getYourUniqueBidsRequest.getSegmentOffset());
+    return BidMapper.INSTANCE.bidArrayToGetBidItemResponseArray(bids);
+  }
+
+  /**
+   * get bids you have placed on one item.
+   *
+   * @param getYourItemBidsRequest the request info
+   * @return the bids
+   */
+  public GetYourItemBidsResponse[] getYourItemBids(GetYourItemBidsRequest getYourItemBidsRequest) {
+    String userID = SecurityContextHolder.getContext().getAuthentication().getName();
+    Bid[] bids = bidRepository.getItemBids(Integer.parseInt(userID), getYourItemBidsRequest);
+    return BidMapper.INSTANCE.bidArrayToGetBidsResponseArray(bids);
+  }
+
+  /**
+   * answer a bid by setting the bid status.
+   *
+   * @param answerBidRequest the request info
+   * @throws AccessDeniedException if user don't own item
+   */
+  public void answerBid(AnswerBidRequest answerBidRequest)
+      throws IllegalArgumentException, AccessDeniedException {
+    Bid bid = BidMapper.INSTANCE.answerBidRequestToBid(answerBidRequest);
+    String userID = SecurityContextHolder.getContext().getAuthentication().getName();
+
+    int itemID = bidRepository.itemFromBid(bid.getBidID());
+    String itemState = itemRepository.getItem(itemID).getState();
+    if (itemState.equals("sold")) {
+      throw new IllegalArgumentException("Item already sold");
+    }
+    bidRepository.setBidStatus(bid, Integer.parseInt(userID));
+
+    if (!bidRepository.checkIfUnansweredBid(itemID)) {
+      itemRepository.updateState(itemID, 1);
+    }
+  }
+
+  /**
+   * get users who have bid on your items.
+   *
+   * @return the bids
+   */
+  public GetYourBidItemsResponse[] getBids(GetYourBidItemsRequest getYourBidItemsRequest) {
+    String userID = SecurityContextHolder.getContext().getAuthentication().getName();
+    Bid[] bids = bidRepository.getUniqueBids(Integer.parseInt(userID), getYourBidItemsRequest.getSegmentOffset());
+    return BidMapper.INSTANCE.bidArrayToGetYourBidItemsResponseArray(bids);
+  }
+
+  public GetBidsOnItemByUserResponse[] getBidsOnYourItem(GetBidsOnItemByUserRequest getBidsOnItemByUserRequest) {
+    String userID = SecurityContextHolder.getContext().getAuthentication().getName();
+    Bid bid = BidMapper.INSTANCE.getBidsOnItemByUserRequestToBid(getBidsOnItemByUserRequest);
+    Bid[] bids = bidRepository.getBidsByUserOnItem(bid, Integer.parseInt(userID), getBidsOnItemByUserRequest.getSegmentOffset());
+    return BidMapper.INSTANCE.bidArrayToGetBidsOnItemByUserResponseArray(bids);
   }
 
   private String encodePassword(String password) {
