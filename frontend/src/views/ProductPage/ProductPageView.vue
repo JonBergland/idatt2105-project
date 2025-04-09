@@ -11,6 +11,7 @@ import { useItemStore } from '@/stores/itemStore';
 import { useAuthStore } from '@/stores/authStore';
 import { useUserStore } from '@/stores/userStore';
 import ItemForm from '@/components/NewListing/ItemForm.vue';
+import type { PlaceBid } from '@/models/bid';
 
 const route = useRoute();
 const router = useRouter();
@@ -30,7 +31,9 @@ const itemResponse = ref<ItemResponseDTO>({
   state: '',
   bookmark: false // Initialize with a default value
 });
+
 const error = ref('');
+const bidResponse = ref('');
 
 // Extract ID from route query params
 const itemId = computed(() => {
@@ -46,10 +49,22 @@ const isBookmarked = computed(() => {
 const isMyItem = ref(false);
 const isEditing = ref(false);
 
+/**
+ * Handles the event when the back button is clicked.
+ * Uses the router to go back to previous page
+ */
 function handleBackClick() {
   router.back();
 }
 
+
+/**
+ * Handles the logic for favoriting or unfavoriting a product.
+ *
+ * @param {boolean} isFavorited - A boolean indicating whether the product is currently favorited.
+ *                                Pass `true` to unfavorite the product, or `false` to favorite it.
+ * @returns {Promise<void>} A promise that resolves when the operation is complete.
+ */
 async function handleFavorite(isFavorited: boolean) {
   if (!authStore.isAuth) {
     router.push('/login');
@@ -74,6 +89,56 @@ async function handleFavorite(isFavorited: boolean) {
       bookmark: !isFavorited
     };
   }
+}
+
+/**
+ * Handles the bidding process for a product.
+ *
+ * @param {number} bid      The bid amount entered by the user.
+ * @returns {Promise<void>} A promise that resolves when the bid is processed.
+ */
+async function handleBid(bid: number) {
+  if (!bid || bid <= 0) {
+    console.error('Invalid bid amount');
+    bidResponse.value = 'Invalid bid amount';
+    return;
+  }
+
+  if (!itemResponse.value || !itemResponse.value.itemID) {
+    console.error('Cannot place bid: Invalid item data');
+    bidResponse.value = 'Cannot place bid: Invalid item data';
+    return;
+  }
+
+  try {
+    const bidData: PlaceBid = {
+      itemID: itemResponse.value.itemID,
+      askingPrice: bid
+    };
+
+    const result = await userStore.giveBidOnItem(bidData);
+
+    if (result > 0) {
+      console.log(`Bid placed successfully: ${bid} kr`);
+      bidResponse.value = `Bid placed successfully: ${bid} kr`;
+    } else {
+      console.error('Failed to place bid');
+      bidResponse.value = 'Failed to place bid';
+    }
+  } catch (error) {
+    console.error('Error placing bid:', error);
+    bidResponse.value = 'Error placing bid:';
+  }
+}
+
+/**
+ * Handles the login click event.
+ * This function is triggered when the user clicks the give bid button
+ * without being logged in
+ * @function handleLoginClick
+ */
+function handleLoginClick() {
+  router.push({ name: "login" })
 }
 
 /**
@@ -193,6 +258,10 @@ onMounted(fetchItemDetails);
       <div class="product-info-component-wrapper">
         <ProductInfoComponent
           :item="itemResponse"
+          :isAuth="authStore.isAuth"
+          :bidResponse="bidResponse"
+          @bid="handleBid"
+          @login="handleLoginClick"
         />
       </div>
     </div>
