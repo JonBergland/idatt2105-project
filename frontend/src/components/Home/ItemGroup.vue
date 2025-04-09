@@ -45,7 +45,6 @@ function handleItemClick(itemId: number) {
 
 .item-grid {
   display: flex;
-  justify-content: center;
   align-items: flex-start;
   align-content: flex-start;
   gap: 24px;
