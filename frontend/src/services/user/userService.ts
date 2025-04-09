@@ -156,7 +156,7 @@ class UserService {
    */
   async getBookmarkedItems(request: GetBookmarkedItemsRequest): Promise<ItemsResponseDTO | null> {
     try {
-      const response = await axiosInstance.post<ItemsResponseDTO>('/user/item/bookmark', request);
+      const response = await axiosInstance.post<ItemsResponseDTO>('/user/item/bookmark/get', request);
       return response.data;
     } catch (error) {
       console.error('Error toggeling bookmark:', error)
