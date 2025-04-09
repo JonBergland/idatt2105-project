@@ -314,6 +314,11 @@ public class UserController {
     }
   }
 
+  /**
+   * endpoint for directly buying an item.
+   *
+   * @param buyItemRequest the item
+   */
   @PostMapping("/item/buy")
   public void buyItem(@RequestBody BuyItemRequest buyItemRequest) {
     logger.info("direct buy request");
@@ -325,6 +330,11 @@ public class UserController {
     }
   }
 
+  /**
+   * endpoint for buying through accepted bid.
+   *
+   * @param buyItemFromBidRequest the bid
+   */
   @PostMapping("/item/bids/buy")
   public void buyBidItem(@RequestBody BuyItemFromBidRequest buyItemFromBidRequest) {
     logger.info("buy from bid request");
