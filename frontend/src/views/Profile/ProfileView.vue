@@ -121,7 +121,12 @@ function handleItemClick(itemID: number) {
 
 <style scoped>
 .user-profile-wrapper {
-  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  padding-top: 8px;
+  align-items: center;
+  padding-left: 64px;
+  padding-right: 64px;
 }
 
 .profile-specifics {
