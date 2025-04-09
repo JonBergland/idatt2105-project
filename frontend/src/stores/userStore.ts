@@ -1,5 +1,5 @@
 import type { ItemRequestDTO, ItemsResponseDTO, ItemResponseDTO } from "@/models/item";
-import type { User, AddItemRequest, UpdateItemRequest, ToggleBookmarkRequest} from "@/models/user";
+import type { User, AddItemRequest, UpdateItemRequest, ToggleBookmarkRequest, GetBookmarkedItemsRequest} from "@/models/user";
 import { defineStore } from "pinia";
 import userService from "@/services/user/userService"
 
@@ -14,6 +14,7 @@ export const useUserStore = defineStore('user', {
     isItemLoading: false,
     itemError: null as string | null,
     messagesNotSeen: false,
+    bookmarkedItems: { items: [] } as ItemsResponseDTO,
   }),
 
   actions: {
@@ -210,6 +211,35 @@ export const useUserStore = defineStore('user', {
         console.log("Error when toggeling bookmark: ", error)
         return false;
       }
-    }
+    },
+
+    /**
+     * Fetches the bookmarked items for the currently logged-in user.
+     *
+     * @param request - An object containing the parameters required to fetch the bookmarked items.
+     * @returns A promise that resolves when the bookmarked items have been fetched and stored.
+     *
+     * @throws An error if the user is not logged in or if the response from the service is null.
+     *
+     * If an error occurs during the fetch operation, the `bookmarkedItems` property is reset to an empty list.
+     */
+    async fetchBookmarkedItems(request: GetBookmarkedItemsRequest): Promise<void> {
+      try {
+        if (this.user) {
+          const response = await userService.getBookmarkedItems(request);
+
+          if (response !== null) {
+            this.bookmarkedItems = response
+          } else {
+            throw new Error("Response was null");
+          }
+        } else {
+          throw new Error("User not logged in");
+        }
+      } catch (error) {
+        console.log("Unexpected error from trying to retrieve user items: ", error);
+        this.bookmarkedItems =  { items: [] }
+      }
+    },
   }
 })

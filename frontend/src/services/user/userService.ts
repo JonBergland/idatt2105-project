@@ -1,5 +1,5 @@
 import type { ItemsResponseDTO, ItemRequestDTO, ItemResponseDTO } from "@/models/item";
-import type { User, UserLoginDTO, UserRegistrationDTO, AddItemRequest, UpdateItemRequest, ToggleBookmarkRequest } from "@/models/user";
+import type { User, UserLoginDTO, UserRegistrationDTO, AddItemRequest, UpdateItemRequest, ToggleBookmarkRequest, GetBookmarkedItemsRequest } from "@/models/user";
 import axiosInstance from "@/services/axiosService";
 import axios from 'axios';
 
@@ -142,6 +142,25 @@ class UserService {
     } catch (error) {
       console.error('Error toggeling bookmark:', error);
       throw error;
+    }
+  }
+
+  /**
+   * Retrieves a list of bookmarked items for a user.
+   *
+   * @param request - The request object containing the necessary parameters to fetch bookmarked items.
+   * @returns A promise that resolves to an `ItemsResponseDTO` containing the bookmarked items,
+   *          or `null` if an error occurs during the request.
+   *
+   * @throws Logs an error message to the console if the request fails.
+   */
+  async getBookmarkedItems(request: GetBookmarkedItemsRequest): Promise<ItemsResponseDTO | null> {
+    try {
+      const response = await axiosInstance.post<ItemsResponseDTO>('/user/item/bookmark', request);
+      return response.data;
+    } catch (error) {
+      console.error('Error toggeling bookmark:', error)
+      return null;
     }
   }
 }
