@@ -80,6 +80,14 @@ async function handleLogout() {
   }
 
 }
+
+/**
+ * Handles the 'item-clicked' event emitted by the ItemGroup component
+ * @param {number} itemID - The unique identifier of the clicked item
+ */
+ function handleItemClick(itemID: number) {
+  router.push({ name: 'product', query: { id: itemID } });
+}
 </script>
 
 <template>
@@ -94,7 +102,7 @@ async function handleLogout() {
 
   <!-- User or Admin profile specific  -->
    <div v-if="userStore.user?.role === 'ROLE_USER'" class="profile-specifics">
-    <h1>Your listings:</h1>
+    <h1>Your listings</h1>
     <div v-if="isLoading" class="loading">
       Loading your listings...
     </div>
@@ -105,17 +113,23 @@ async function handleLogout() {
       v-else
       :items="flattenedItems"
       mode="Grid"
+      @item-clicked="handleItemClick"
     />
    </div>
 </div>
 </template>
 
 <style scoped>
+.user-profile-wrapper {
+  padding: 8px;
+}
 
 .profile-specifics {
-  margin-top: 20px;
-  padding: 10px;
-  border-top: 2px solid black;
+  display: flex;
+  padding: 64px;
+  gap: 16px;
+  flex-direction: column;
+  align-items: center;
 }
 
 .loading, .no-items {
