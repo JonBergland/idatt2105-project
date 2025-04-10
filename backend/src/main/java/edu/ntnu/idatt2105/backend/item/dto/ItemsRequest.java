@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2105.backend.item.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -10,10 +11,16 @@ import lombok.Setter;
  */
 @Setter
 @Getter
+@Schema(description = "Data transfer object for requesting filtered items")
 public class ItemsRequest {
+  @Schema(description = "category to filter by", example = "Hage")
   String category;
+  @Schema(description = "Filter items with names containing search word", example = "kjøleskap")
   String searchWord;
+  @Schema(description = "filter pris fra og til", example = "[100, 500]")
   int[] priceMinMax;
+  @Schema(description = "sort by following: price_ASC, price_DESC, published_ASC, published_DESC", example = "price_ASC")
   String sort;
+  @Schema(description = "pagination, page number then page size", example = "[0, 20]")
   int[] segmentOffset;
 }
