@@ -2,6 +2,8 @@ package edu.ntnu.idatt2105.backend.category;
 
 import edu.ntnu.idatt2105.backend.category.dto.CategoryResponse;
 import edu.ntnu.idatt2105.backend.category.model.Category;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +21,7 @@ import org.springframework.web.server.ResponseStatusException;
 @RestController
 @RequestMapping(value = "/api/store/category")
 @CrossOrigin
+@Tag(name = "Category controller", description = "Category management endpoints")
 @RequiredArgsConstructor
 public class CategoryController {
 
@@ -32,6 +35,7 @@ public class CategoryController {
    * @return the categories
    */
   @GetMapping()
+  @Operation(summary = "Get categories", description = "Gets all categories")
   public CategoryResponse getCategories() {
     try {
       logger.info("retrieves categories from database");
