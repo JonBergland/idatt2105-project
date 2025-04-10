@@ -13,8 +13,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CategoryService {
 
-  private final Logger logger = LoggerFactory.getLogger(CategoryService.class);
-
   private final CategoryRepository categoryRepository;
 
   /**
