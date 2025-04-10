@@ -5,6 +5,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.ArgumentMatchers.argThat;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import edu.ntnu.idatt2105.backend.utils.JWTUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -3,11 +3,12 @@ package edu.ntnu.idatt2105.backend.security;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import edu.ntnu.idatt2105.backend.security.dto.SigninRequest;
-import edu.ntnu.idatt2105.backend.security.dto.SigninResponse;
-import edu.ntnu.idatt2105.backend.security.dto.SignupRequest;
-import edu.ntnu.idatt2105.backend.user.UserService;
-import edu.ntnu.idatt2105.backend.user.model.User;
+import edu.ntnu.idatt2105.backend.controller.TokenController;
+import edu.ntnu.idatt2105.backend.dto.token.SigninRequest;
+import edu.ntnu.idatt2105.backend.dto.token.SignupRequest;
+import edu.ntnu.idatt2105.backend.service.UserService;
+import edu.ntnu.idatt2105.backend.model.User;
+import edu.ntnu.idatt2105.backend.utils.JWTUtils;
 import jakarta.servlet.http.HttpServletResponse;
 
 import org.junit.jupiter.api.BeforeEach;

@@ -1,7 +1,8 @@
 package edu.ntnu.idatt2105.backend.item;
 
-import edu.ntnu.idatt2105.backend.item.dto.ItemsRequest;
-import edu.ntnu.idatt2105.backend.item.model.Item;
+import edu.ntnu.idatt2105.backend.dto.item.ItemsRequest;
+import edu.ntnu.idatt2105.backend.model.Item;
+import edu.ntnu.idatt2105.backend.repository.ItemRepository;
 import java.util.Collections;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,7 +13,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;

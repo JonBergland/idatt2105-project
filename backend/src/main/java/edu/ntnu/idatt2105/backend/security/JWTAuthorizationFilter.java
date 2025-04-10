@@ -1,6 +1,7 @@
 package edu.ntnu.idatt2105.backend.security;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import edu.ntnu.idatt2105.backend.utils.JWTUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;

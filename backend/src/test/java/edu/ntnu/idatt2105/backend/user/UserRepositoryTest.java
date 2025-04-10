@@ -1,6 +1,7 @@
 package edu.ntnu.idatt2105.backend.user;
 
-import edu.ntnu.idatt2105.backend.user.model.User;
+import edu.ntnu.idatt2105.backend.repository.UserRepository;
+import edu.ntnu.idatt2105.backend.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

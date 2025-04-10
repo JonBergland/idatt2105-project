@@ -1,10 +1,12 @@
 package edu.ntnu.idatt2105.backend.item;
 
-import edu.ntnu.idatt2105.backend.item.dto.ItemRequest;
-import edu.ntnu.idatt2105.backend.item.dto.ItemResponse;
-import edu.ntnu.idatt2105.backend.item.dto.ItemsRequest;
-import edu.ntnu.idatt2105.backend.item.dto.ItemsResponse;
-import edu.ntnu.idatt2105.backend.item.model.Item;
+import edu.ntnu.idatt2105.backend.controller.ItemController;
+import edu.ntnu.idatt2105.backend.dto.item.ItemRequest;
+import edu.ntnu.idatt2105.backend.dto.item.ItemResponse;
+import edu.ntnu.idatt2105.backend.dto.item.ItemsRequest;
+import edu.ntnu.idatt2105.backend.dto.item.ItemsResponse;
+import edu.ntnu.idatt2105.backend.model.Item;
+import edu.ntnu.idatt2105.backend.service.ItemService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

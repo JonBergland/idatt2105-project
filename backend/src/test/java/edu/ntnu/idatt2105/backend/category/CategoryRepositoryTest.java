@@ -1,6 +1,7 @@
 package edu.ntnu.idatt2105.backend.category;
 
-import edu.ntnu.idatt2105.backend.category.model.Category;
+import edu.ntnu.idatt2105.backend.model.Category;
+import edu.ntnu.idatt2105.backend.repository.CategoryRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

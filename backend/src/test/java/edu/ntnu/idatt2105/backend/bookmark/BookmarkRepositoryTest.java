@@ -1,6 +1,7 @@
 package edu.ntnu.idatt2105.backend.bookmark;
 
-import edu.ntnu.idatt2105.backend.bookmark.model.Bookmark;
+import edu.ntnu.idatt2105.backend.model.Bookmark;
+import edu.ntnu.idatt2105.backend.repository.BookmarkRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

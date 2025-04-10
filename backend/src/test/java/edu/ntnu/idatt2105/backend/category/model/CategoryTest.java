@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2105.backend.category.model;
 
+import edu.ntnu.idatt2105.backend.model.Category;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 

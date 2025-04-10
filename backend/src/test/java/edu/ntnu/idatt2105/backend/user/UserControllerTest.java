@@ -1,10 +1,12 @@
 package edu.ntnu.idatt2105.backend.user;
 
-import edu.ntnu.idatt2105.backend.item.dto.ItemsResponse;
-import edu.ntnu.idatt2105.backend.user.dto.AddItemRequest;
-import edu.ntnu.idatt2105.backend.user.dto.EditItemRequest;
-import edu.ntnu.idatt2105.backend.user.dto.GetUserInfoResponse;
-import edu.ntnu.idatt2105.backend.user.dto.UpdateUserInfoRequest;
+import edu.ntnu.idatt2105.backend.controller.UserController;
+import edu.ntnu.idatt2105.backend.dto.item.ItemsResponse;
+import edu.ntnu.idatt2105.backend.service.UserService;
+import edu.ntnu.idatt2105.backend.dto.user.AddItemRequest;
+import edu.ntnu.idatt2105.backend.dto.user.EditItemRequest;
+import edu.ntnu.idatt2105.backend.dto.user.GetUserInfoResponse;
+import edu.ntnu.idatt2105.backend.dto.user.UpdateUserInfoRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

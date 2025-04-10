@@ -2,9 +2,10 @@ package edu.ntnu.idatt2105.backend.user;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import edu.ntnu.idatt2105.backend.security.dto.SigninRequest;
-import edu.ntnu.idatt2105.backend.security.dto.SignupRequest;
-import edu.ntnu.idatt2105.backend.user.model.User;
+import edu.ntnu.idatt2105.backend.mapper.UserMapper;
+import edu.ntnu.idatt2105.backend.dto.token.SigninRequest;
+import edu.ntnu.idatt2105.backend.dto.token.SignupRequest;
+import edu.ntnu.idatt2105.backend.model.User;
 import org.junit.jupiter.api.Test;
 
 class UserMapperTest {
