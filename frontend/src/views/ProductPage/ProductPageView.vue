@@ -20,6 +20,7 @@ const userStore = useUserStore();
 
 const isMyItem = ref(false);
 const isEditing = ref(false);
+const isDeleting = ref(false);
 
 const itemResponse = ref<ItemResponseDTO>({
   itemID: undefined,
@@ -109,7 +110,6 @@ async function handleFavorite(isFavorited: boolean) {
   };
 }
 
-
 /**
  * Handles the update of an item in the product page.
  *
@@ -137,6 +137,9 @@ async function handleFavorite(isFavorited: boolean) {
   }
 }
 
+function handleDeleteClick() {
+  console.log('Deleting item: ', itemID.value)
+}
 
 /**
  * Fetches the details of a specific item.
@@ -218,7 +221,17 @@ onMounted(fetchItemDetails);
     </div>
     <div v-if="isMyItem" class="my-listing-container">
       <h3>This is your listing</h3>
-      <button class="edit-button" @click="isEditing = true">Edit listing</button>
+      <div v-if="!isDeleting"class="edit-delete-wrapper">
+        <button class="edit-button" @click="isEditing = true">Edit listing</button>
+        <button class="delete-button" @click="isDeleting = true">Delete item</button>
+      </div>
+      <div v-else class="delete-container">
+        <p>Are you sure you want to delete this listing?</p>
+        <div class="delete-cancel-wrapper">
+          <button class="delete-button" @click="handleDeleteClick">Yes</button>
+          <button class="cancel-button" @click="isDeleting = false">Cancel</button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -238,10 +251,6 @@ onMounted(fetchItemDetails);
   align-items: center;
   min-height: 300px;
   font-size: 1.2rem;
-  color: var(--color-text-secondary);
-}
-
-.error-state {
   color: var(--color-error, #dc3545);
 }
 
@@ -284,7 +293,6 @@ onMounted(fetchItemDetails);
 }
 
 .cancel-button {
-  margin-top: 16px;
   padding: 8px 16px;
   background-color: var(--color-background-mute);
   border: 1px solid var(--color-border);
@@ -303,12 +311,42 @@ onMounted(fetchItemDetails);
   align-self: center;
 }
 
+.delete-button {
+  padding: 8px 16px;
+  background-color: var(--color-danger-muted);
+  border: 1px solid var(--color-border);
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  width: fit-content;
+  align-self: center;
+}
+
 .edit-button:hover {
   background-color: #eee;
 }
 
 .cancel-button:hover {
   background-color: #eee;
+}
+
+.delete-button:hover {
+  background-color: var(--color-danger-muted-hover);
+}
+
+.delete-container {
+  display: flex;
+  gap: 16px;
+  flex-direction: column;
+}
+
+
+.edit-delete-wrapper,
+.delete-cancel-wrapper {
+  display: flex;
+  gap: 16px;
+  flex-direction: row;
+  justify-content: center;
 }
 
 .my-listing-container {
@@ -319,14 +357,22 @@ onMounted(fetchItemDetails);
   gap: 16px;
 }
 
-.my-listing-container h3{
-  background-color: var(--color-secondary);
-  color: var(--color-text-secondary);
+.my-listing-container {
+  background-color: var(--color-background-mute);
+  color: #155724;
+  padding: 10px;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 600px;
+  text-align: center;
+  align-self: center;
+  align-items: center;
+}
+
+.my-listing-container h3 {
+  background-color: #d4edda;
+  width: fit-content;
   padding: 8px;
   border-radius: 8px;
-  display: inline-block;
-  white-space: nowrap;
-  width: fit-content;
-  align-self: center;
 }
 </style>
