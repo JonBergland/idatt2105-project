@@ -138,6 +138,10 @@ async function handleFavorite(isFavorited: boolean) {
   }
 }
 
+/**
+ * Handles the delete button click event.
+ * Sends a request to the userstore and show a successmessage when completed
+ */
 async function handleDeleteClick() {
   const deleteRequest = {
     itemID: itemID.value
