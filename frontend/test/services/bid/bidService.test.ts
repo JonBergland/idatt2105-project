@@ -47,19 +47,15 @@ describe("BidService", () => {
   describe("getItemsWithUserBids", () => {
     it("should retrieve items with user bids successfully", async () => {
       const mockRequest: UserBidItemsRequest = {
-        SegmentOffset: [0, 20]
+        segmentOffset: [0, 20]
       };
 
       const mockResponse: UserBidItemsResponse[] = [
         {
           itemID: 1001,
           userID: 31,
-          name: "Vintage Sofa",
-          category: "Furniture",
-          description: "Beautiful vintage sofa",
-          published: "2023-04-01",
-          price: 2500,
-          state: "AVAILABLE"
+          itemName: "Vintage Sofa",
+          seller: "John Doe"
         }
       ];
 
@@ -67,20 +63,20 @@ describe("BidService", () => {
 
       const result = await bidService.getItemsWithUserBids(mockRequest);
 
-      expect(axiosInstance.post).toHaveBeenCalledWith('/user/item/bids', mockRequest);
+      expect(axiosInstance.post).toHaveBeenCalledWith('/user/item/bids/item', mockRequest);
       expect(result).toEqual(mockResponse);
     });
 
     it("should return null if retrieving items with user bids fails", async () => {
       const mockRequest: UserBidItemsRequest = {
-        SegmentOffset: [0, 20]
+        segmentOffset: [0, 20]
       };
 
       (axiosInstance.post as vi.Mock).mockRejectedValueOnce(new Error("Failed to retrieve items"));
 
       const result = await bidService.getItemsWithUserBids(mockRequest);
 
-      expect(axiosInstance.post).toHaveBeenCalledWith('/user/item/bids', mockRequest);
+      expect(axiosInstance.post).toHaveBeenCalledWith('/user/item/bids/item', mockRequest);
       expect(result).toBeNull();
     });
   });
@@ -107,7 +103,7 @@ describe("BidService", () => {
 
       const result = await bidService.getUserBidsOnItem(mockRequest);
 
-      expect(axiosInstance.post).toHaveBeenCalledWith('/user/item', mockRequest);
+      expect(axiosInstance.post).toHaveBeenCalledWith('/user/item/bids', mockRequest);
       expect(result).toEqual(mockResponse);
     });
 
@@ -122,7 +118,7 @@ describe("BidService", () => {
 
       const result = await bidService.getUserBidsOnItem(mockRequest);
 
-      expect(axiosInstance.post).toHaveBeenCalledWith('/user/item', mockRequest);
+      expect(axiosInstance.post).toHaveBeenCalledWith('/user/item/bids', mockRequest);
       expect(result).toBeNull();
     });
   });
