@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2105.backend.user.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,6 +9,8 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@Schema(description = "Data transfer object for deleting items")
 public class DeleteItemRequest {
+  @Schema(description = "item id of item being deleted", example = "74")
   int itemID;
 }
