@@ -39,7 +39,8 @@ public class ItemController {
    * @return the filtered items
    */
   @PostMapping("/filter")
-  @Operation(summary = "Filter items", description = "Get items based on optional filters, sorting and pagination")
+  @Operation(summary = "Filter items",
+      description = "Get items based on optional filters, sorting and pagination")
   public ItemsResponse getItems(@RequestBody ItemsRequest itemsRequest) {
     ItemResponse[] itemResponses = ItemMapper.INSTANCE.itemsToItemResponses(
         itemService.getItems(itemsRequest));
