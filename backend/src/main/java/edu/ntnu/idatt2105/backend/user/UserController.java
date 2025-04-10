@@ -143,7 +143,8 @@ public class UserController {
    * @param toggleBookmarkRequest the item to toggle
    */
   @PostMapping("/item/bookmark")
-  @Operation(summary = "Toggle bookmark", description = "Toggle bookmark on item for the logged in user")
+  @Operation(
+      summary = "Toggle bookmark", description = "Toggle bookmark on item for the logged in user")
   public void bookmarkItem(@RequestBody ToggleBookmarkRequest toggleBookmarkRequest) {
     logger.info("toggling bookmark request");
     try {
@@ -161,7 +162,9 @@ public class UserController {
    * @return the items
    */
   @PostMapping("/item/bookmark/get")
-  @Operation(summary = "Get bookmarked items", description = "Get all items bookmarked by the logged in user, paginated")
+  @Operation(
+      summary = "Get bookmarked items",
+      description = "Get all items bookmarked by the logged in user, paginated")
   public GetBookmarkedItemsResponse[] getBookmarkeditems(
       @RequestBody GetBookmarkedItemsRequest getBookmarkedItemsRequest) {
     logger.info("get bookmarked items request");
@@ -179,7 +182,9 @@ public class UserController {
    * @param placeBidRequest the bid to place
    */
   @PostMapping("/item/bid/place")
-  @Operation(summary = "Place bid", description = "Place bid on available or reserved item for logged in user, makes available item reserved")
+  @Operation(summary = "Place bid",
+      description = "Place bid on available or reserved item "
+          + "for logged in user, makes available item reserved")
   public void placeBid(@RequestBody PlaceBidRequest placeBidRequest) {
     logger.info("place bid request");
     try {
@@ -359,7 +364,7 @@ public class UserController {
   public void buyBidItem(@RequestBody BuyItemFromBidRequest buyItemFromBidRequest) {
     logger.info("buy from bid request");
     try {
-    userService.buyItemFromBid(buyItemFromBidRequest);
+      userService.buyItemFromBid(buyItemFromBidRequest);
     } catch (DataAccessException | IllegalArgumentException e) {
       logger.warn("could not buy item: {}", e.getMessage());
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
