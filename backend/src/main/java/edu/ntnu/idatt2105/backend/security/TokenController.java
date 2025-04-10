@@ -2,6 +2,8 @@ package edu.ntnu.idatt2105.backend.security;
 
 import edu.ntnu.idatt2105.backend.security.dto.SigninRequest;
 import edu.ntnu.idatt2105.backend.security.dto.SignupRequest;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import edu.ntnu.idatt2105.backend.user.UserService;
 import edu.ntnu.idatt2105.backend.user.model.User;
 import jakarta.servlet.http.HttpServletResponse;
@@ -26,6 +28,7 @@ import org.springframework.web.server.ResponseStatusException;
 @RestController
 @RequestMapping(value = "/api/token")
 @CrossOrigin
+@Tag(name = "Token controller", description = "Authentication and JWT distribution")
 @RequiredArgsConstructor
 public class TokenController {
 
@@ -47,6 +50,7 @@ public class TokenController {
    */
   @PostMapping("/signin")
   @ResponseStatus(value = HttpStatus.CREATED)
+  @Operation(summary = "Sign in", description = "Sign in a user and provide a JWT cookie")
   public boolean signIn(final @Valid @RequestBody SigninRequest signinRequest, HttpServletResponse response)
       throws ResponseStatusException {
     logger.info("token request for user: {}", signinRequest.getEmail());
@@ -79,6 +83,7 @@ public class TokenController {
    */
   @PostMapping("/signup")
   @ResponseStatus(value = HttpStatus.CREATED)
+  @Operation(summary = "Signup", description = "Signup a new user and provide a JWT cookie")
   public boolean registerAccount(final @Valid @RequestBody SignupRequest signupRequest, HttpServletResponse response) {
     logger.info("signup request with email: {}", signupRequest.getEmail());
     try {
@@ -101,6 +106,7 @@ public class TokenController {
    * @return         a {@link ResponseEntity} containing a confirmation message of successful logout
    */
   @PostMapping("/logout")
+  @Operation(summary = "Logout", description = "Logout the user and set logout JWT cookie")
   public ResponseEntity<?> logout(HttpServletResponse response) {
     jwtUtils.setLogOutJWTCookie(response);
     logger.info("User logged out successfully.");
