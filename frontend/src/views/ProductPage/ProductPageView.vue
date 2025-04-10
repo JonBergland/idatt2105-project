@@ -360,10 +360,10 @@ onMounted(fetchItemDetails);
 .my-listing-container {
   background-color: var(--color-background-mute);
   color: #155724;
-  padding: 10px;
+  padding: 32px 16px;
   border-radius: 8px;
   width: 100%;
-  max-width: 600px;
+  max-width: 440px;
   text-align: center;
   align-self: center;
   align-items: center;
@@ -372,7 +372,7 @@ onMounted(fetchItemDetails);
 .my-listing-container h3 {
   background-color: #d4edda;
   width: fit-content;
-  padding: 8px;
+  padding: 16px;
   border-radius: 8px;
 }
 </style>
