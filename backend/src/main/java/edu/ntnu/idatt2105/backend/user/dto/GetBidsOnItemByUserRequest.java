@@ -4,6 +4,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * a DTO for requesting bids by a user on an item.
+ */
 @Getter
 @Setter
 @Schema(description = "Data transfer object for requesting bids by a user on an item")
