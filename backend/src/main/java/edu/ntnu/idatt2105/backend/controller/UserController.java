@@ -5,6 +5,7 @@ import edu.ntnu.idatt2105.backend.dto.user.UpdateUserInfoRequest;
 import edu.ntnu.idatt2105.backend.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +42,7 @@ public class UserController {
    */
   @PostMapping("/user/info")
   @Operation(summary = "Edit user", description = "Edit the logged in user's info")
-  public void updateUserInfo(@RequestBody UpdateUserInfoRequest updateUserInfoRequest) {
+  public void updateUserInfo(@RequestBody @Valid UpdateUserInfoRequest updateUserInfoRequest) {
     logger.info("update user info request");
     try {
       userService.editUser(updateUserInfoRequest);

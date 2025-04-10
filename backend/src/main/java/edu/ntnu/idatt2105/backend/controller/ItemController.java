@@ -14,6 +14,7 @@ import edu.ntnu.idatt2105.backend.mapper.ItemMapper;
 import edu.ntnu.idatt2105.backend.service.ItemService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,7 +52,7 @@ public class ItemController {
   @PostMapping("/store/item/filter")
   @Operation(summary = "Filter items",
       description = "Get items based on optional filters, sorting and pagination")
-  public ItemsResponse getItems(@RequestBody ItemsRequest itemsRequest) {
+  public ItemsResponse getItems(@RequestBody @Valid ItemsRequest itemsRequest) {
     ItemResponse[] itemResponses = ItemMapper.INSTANCE.itemsToItemResponses(
         itemService.getItems(itemsRequest));
     return new ItemsResponse(itemResponses);
@@ -65,7 +66,7 @@ public class ItemController {
    */
   @PostMapping("/store/item/get")
   @Operation(summary = "Get item", description = "Get an item with its general info")
-  public ItemResponse itemResponses(@RequestBody ItemRequest itemRequest) {
+  public ItemResponse itemResponses(@RequestBody @Valid ItemRequest itemRequest) {
     try {
       logger.info("getting item with id: {}", itemRequest.getItemID());
       return itemService.getItem(itemRequest);
@@ -83,7 +84,7 @@ public class ItemController {
    */
   @PostMapping("/user/item/store")
   @Operation(summary = "Get item", description = "Get item from store with user specific info")
-  public GetStoreItemResponse getUserSpecificItemInfo(@RequestBody ItemRequest itemRequest) {
+  public GetStoreItemResponse getUserSpecificItemInfo(@RequestBody @Valid ItemRequest itemRequest) {
     logger.info("get item with user specific info request");
     try {
       return itemService.getUserSpecificItemInfo(itemRequest);
@@ -100,7 +101,7 @@ public class ItemController {
    */
   @DeleteMapping("/user/item/delete")
   @Operation(summary = "Delete item", description = "Delete an item owned by the logged in user")
-  public void deleteUserItem(@RequestBody DeleteItemRequest deleteItemRequest) {
+  public void deleteUserItem(@RequestBody @Valid DeleteItemRequest deleteItemRequest) {
     logger.info("delete user's item request");
     try {
       itemService.deleteUserItem(deleteItemRequest);
@@ -139,7 +140,7 @@ public class ItemController {
    */
   @PostMapping("/user/item")
   @Operation(summary = "Add item", description = "Add item to store for the logged in user")
-  public void addUserItem(@RequestBody AddItemRequest addItemRequest) {
+  public void addUserItem(@RequestBody @Valid AddItemRequest addItemRequest) {
     logger.info("add item for user request");
     try {
       itemService.addUserItem(addItemRequest);
@@ -156,7 +157,7 @@ public class ItemController {
    */
   @PostMapping("/user/item/edit")
   @Operation(summary = "Edit item", description = "Edit an item owned by logged in user")
-  public void editUserItem(@RequestBody EditItemRequest editItemRequest) {
+  public void editUserItem(@RequestBody @Valid EditItemRequest editItemRequest) {
     logger.info("edit item for user request");
     try {
       itemService.editUserItem(editItemRequest);
@@ -177,7 +178,7 @@ public class ItemController {
       summary = "Get bookmarked items",
       description = "Get all items bookmarked by the logged in user, paginated")
   public GetBookmarkedItemsResponse[] getBookmarkeditems(
-      @RequestBody GetBookmarkedItemsRequest getBookmarkedItemsRequest) {
+      @RequestBody @Valid GetBookmarkedItemsRequest getBookmarkedItemsRequest) {
     logger.info("get bookmarked items request");
     try {
       return itemService.getBookmarkedItems(getBookmarkedItemsRequest);

@@ -3,6 +3,7 @@ package edu.ntnu.idatt2105.backend.controller;
 import edu.ntnu.idatt2105.backend.dto.bookmark.ToggleBookmarkRequest;
 import edu.ntnu.idatt2105.backend.service.BookmarkService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +34,7 @@ public class BookmarkController {
   @PostMapping("/user/item/bookmark")
   @Operation(
       summary = "Toggle bookmark", description = "Toggle bookmark on item for the logged in user")
-  public void bookmarkItem(@RequestBody ToggleBookmarkRequest toggleBookmarkRequest) {
+  public void bookmarkItem(@RequestBody @Valid ToggleBookmarkRequest toggleBookmarkRequest) {
     logger.info("toggling bookmark request");
     try {
       bookmarkService.toggleBookmark(toggleBookmarkRequest);
@@ -42,6 +43,4 @@ public class BookmarkController {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
     }
   }
-
-
 }

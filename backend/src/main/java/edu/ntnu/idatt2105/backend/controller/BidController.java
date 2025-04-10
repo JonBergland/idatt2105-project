@@ -12,6 +12,7 @@ import edu.ntnu.idatt2105.backend.dto.bid.GetYourUniqueBidsResponse;
 import edu.ntnu.idatt2105.backend.dto.bid.PlaceBidRequest;
 import edu.ntnu.idatt2105.backend.service.BidService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import java.nio.file.AccessDeniedException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -44,7 +45,7 @@ public class BidController {
   @Operation(summary = "Place bid",
       description = "Place bid on available or reserved item "
           + "for logged in user, makes available item reserved")
-  public void placeBid(@RequestBody PlaceBidRequest placeBidRequest) {
+  public void placeBid(@RequestBody @Valid PlaceBidRequest placeBidRequest) {
     logger.info("place bid request");
     try {
       bidService.placeBid(placeBidRequest);
@@ -62,7 +63,7 @@ public class BidController {
   @PostMapping("/user/item/bids/item")
   @Operation(summary = "Get bid items", description = "Get items the logged in user has bid on, paginated")
   public GetYourUniqueBidsResponse[] getUniqueBids(
-      @RequestBody GetYourUniqueBidsRequest getYourUniqueBidsRequest) {
+      @RequestBody @Valid GetYourUniqueBidsRequest getYourUniqueBidsRequest) {
     logger.info("get distinct items user has placed bids on request");
     try {
       return bidService.getYourBids(getYourUniqueBidsRequest);
@@ -81,7 +82,7 @@ public class BidController {
   @PostMapping("/user/item/bids")
   @Operation(summary = "Get bids", description = "Get bids the logged in user has placed on a specific item, paginated")
   public GetYourItemBidsResponse[] getBidsOnItem(
-      @RequestBody GetYourItemBidsRequest getYourItemBidsRequest) {
+      @RequestBody @Valid GetYourItemBidsRequest getYourItemBidsRequest) {
     logger.info("get bids user has placed on item request");
     try {
       return bidService.getYourItemBids(getYourItemBidsRequest);
@@ -98,7 +99,7 @@ public class BidController {
    */
   @PostMapping("/user/item/bid/answer")
   @Operation(summary = "Answer bid", description = "Accept or decline bid if logged in user owns bid item")
-  public void answerBid(@RequestBody AnswerBidRequest answerBidRequest) {
+  public void answerBid(@RequestBody @Valid AnswerBidRequest answerBidRequest) {
     logger.info("answer bid request");
     try {
       bidService.answerBid(answerBidRequest);
@@ -116,7 +117,7 @@ public class BidController {
   @PostMapping("/user/item/bid/users")
   @Operation(summary = "Get bidding users", description = "Get users who have bid on an item owned by the logged in user, paginated")
   public GetYourBidItemsResponse[] getBidsOnYourItems(
-      @RequestBody GetYourBidItemsRequest getYourBidItemsRequest) {
+      @RequestBody @Valid GetYourBidItemsRequest getYourBidItemsRequest) {
     logger.info("get users who bid on item request");
     try {
       return bidService.getBids(getYourBidItemsRequest);
@@ -135,7 +136,7 @@ public class BidController {
   @PostMapping("/user/item/bid/")
   @Operation(summary = "Get bid by user", description = "Get all bids made by a user on an item owned by logged in user, paginated")
   public GetBidsOnItemByUserResponse[] getBidsOnYourItem(
-      @RequestBody GetBidsOnItemByUserRequest getBidsOnItemByUserRequest) {
+      @RequestBody @Valid GetBidsOnItemByUserRequest getBidsOnItemByUserRequest) {
     logger.info("get bids on item by user request");
     try {
       return bidService.getBidsOnYourItem(getBidsOnItemByUserRequest);
