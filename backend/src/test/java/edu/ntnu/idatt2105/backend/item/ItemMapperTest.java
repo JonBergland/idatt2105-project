@@ -2,8 +2,8 @@ package edu.ntnu.idatt2105.backend.item;
 
 import edu.ntnu.idatt2105.backend.dto.item.ItemResponse;
 import edu.ntnu.idatt2105.backend.model.Item;
-import edu.ntnu.idatt2105.backend.dto.user.AddItemRequest;
-import edu.ntnu.idatt2105.backend.dto.user.EditItemRequest;
+import edu.ntnu.idatt2105.backend.dto.item.AddItemRequest;
+import edu.ntnu.idatt2105.backend.dto.item.EditItemRequest;
 import edu.ntnu.idatt2105.backend.mapper.ItemMapper;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;

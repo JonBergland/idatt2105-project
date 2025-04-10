@@ -1,7 +1,7 @@
 package edu.ntnu.idatt2105.backend.mapper;
 
 import edu.ntnu.idatt2105.backend.model.Purchase;
-import edu.ntnu.idatt2105.backend.dto.user.BuyItemRequest;
+import edu.ntnu.idatt2105.backend.dto.purchase.BuyItemRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;

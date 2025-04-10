@@ -20,7 +20,7 @@ import org.springframework.web.server.ResponseStatusException;
  * A controller for getting and modifying categories.
  */
 @RestController
-@RequestMapping(value = "/api/store/category")
+@RequestMapping(value = "/api/")
 @CrossOrigin
 @Tag(name = "Category controller", description = "Category management endpoints")
 @RequiredArgsConstructor
@@ -35,7 +35,7 @@ public class CategoryController {
    *
    * @return the categories
    */
-  @GetMapping()
+  @GetMapping("/store/category")
   @Operation(summary = "Get categories", description = "Gets all categories")
   public CategoryResponse getCategories() {
     try {

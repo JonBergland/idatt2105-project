@@ -1,13 +1,13 @@
 package edu.ntnu.idatt2105.backend.mapper;
 
 import edu.ntnu.idatt2105.backend.model.Bid;
-import edu.ntnu.idatt2105.backend.dto.user.AnswerBidRequest;
-import edu.ntnu.idatt2105.backend.dto.user.GetBidsOnItemByUserRequest;
-import edu.ntnu.idatt2105.backend.dto.user.GetBidsOnItemByUserResponse;
-import edu.ntnu.idatt2105.backend.dto.user.GetYourBidItemsResponse;
-import edu.ntnu.idatt2105.backend.dto.user.GetYourItemBidsResponse;
-import edu.ntnu.idatt2105.backend.dto.user.GetYourUniqueBidsResponse;
-import edu.ntnu.idatt2105.backend.dto.user.PlaceBidRequest;
+import edu.ntnu.idatt2105.backend.dto.bid.AnswerBidRequest;
+import edu.ntnu.idatt2105.backend.dto.bid.GetBidsOnItemByUserRequest;
+import edu.ntnu.idatt2105.backend.dto.bid.GetBidsOnItemByUserResponse;
+import edu.ntnu.idatt2105.backend.dto.bid.GetYourBidItemsResponse;
+import edu.ntnu.idatt2105.backend.dto.bid.GetYourItemBidsResponse;
+import edu.ntnu.idatt2105.backend.dto.bid.GetYourUniqueBidsResponse;
+import edu.ntnu.idatt2105.backend.dto.bid.PlaceBidRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;

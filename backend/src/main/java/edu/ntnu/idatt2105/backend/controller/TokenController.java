@@ -1,12 +1,12 @@
 package edu.ntnu.idatt2105.backend.controller;
 
-import edu.ntnu.idatt2105.backend.utils.JWTUtils;
 import edu.ntnu.idatt2105.backend.dto.token.SigninRequest;
 import edu.ntnu.idatt2105.backend.dto.token.SignupRequest;
+import edu.ntnu.idatt2105.backend.model.User;
+import edu.ntnu.idatt2105.backend.service.UserService;
+import edu.ntnu.idatt2105.backend.utils.JWTUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import edu.ntnu.idatt2105.backend.service.UserService;
-import edu.ntnu.idatt2105.backend.model.User;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ import org.springframework.web.server.ResponseStatusException;
  * A controller for password authentication and token generation.
  */
 @RestController
-@RequestMapping(value = "/api/token")
+@RequestMapping(value = "/api/")
 @CrossOrigin
 @Tag(name = "Token controller", description = "Authentication and JWT distribution")
 @RequiredArgsConstructor
@@ -49,7 +49,7 @@ public class TokenController {
    * @return              a boolean representing the success of the sing in
    * @throws ResponseStatusException if wrong credentials were passed in
    */
-  @PostMapping("/signin")
+  @PostMapping("/token/signin")
   @ResponseStatus(value = HttpStatus.CREATED)
   @Operation(summary = "Sign in", description = "Sign in a user and provide a JWT cookie")
   public boolean signIn(
@@ -83,7 +83,7 @@ public class TokenController {
    * @return              a boolean representing the success of the sing up
    * @throws ResponseStatusException if wrong credentials were passed in
    */
-  @PostMapping("/signup")
+  @PostMapping("/token/signup")
   @ResponseStatus(value = HttpStatus.CREATED)
   @Operation(summary = "Signup", description = "Signup a new user and provide a JWT cookie")
   public boolean registerAccount(
@@ -108,7 +108,7 @@ public class TokenController {
    * @param response the HTTP response object comming with the request
    * @return         a {@link ResponseEntity} containing a confirmation message of successful logout
    */
-  @PostMapping("/logout")
+  @PostMapping("/token/logout")
   @Operation(summary = "Logout", description = "Logout the user and set logout JWT cookie")
   public ResponseEntity<?> logout(HttpServletResponse response) {
     jwtUtils.setLogOutJWTCookie(response);

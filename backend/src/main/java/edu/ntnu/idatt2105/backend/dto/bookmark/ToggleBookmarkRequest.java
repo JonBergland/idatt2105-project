@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2105.backend.dto.user;
+package edu.ntnu.idatt2105.backend.dto.bookmark;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
