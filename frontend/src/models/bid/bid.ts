@@ -1,5 +1,5 @@
 import type { UserBidItemsResponse } from "@/models/bid/UserBidItems";
-import type { BidOnItemByUserResponse } from "./BidOnItemByUser
+import type { BidOnItemByUserResponse } from "./BidOnItemByUser";
 import type { UsersWithBidOnUserItemResponse } from "./UsersWithBidOnUserItem";
 import type { BidsFromUsersOnUserItemResponse } from "./BidsFromUsersOnUserItem";
 
