@@ -45,9 +45,9 @@ describe('AuthStore', () => {
       setUser: vi.fn((user) => {
         mockUserStore.user = user;
       })
-    } as any;
+    };
 
-    (useUserStore as any).mockReturnValue(mockUserStore);
+    (useUserStore).mockReturnValue(mockUserStore);
 
     authStore = useAuthStore();
     authStore.isAuth = false;
