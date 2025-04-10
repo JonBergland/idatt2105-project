@@ -15,7 +15,14 @@ function handleSignUpButton() {
   router.push({ name: 'signup' });
 };
 
-async function handleLogin(user: UserLoginDTO) {
+
+/**
+ * Handles the login process for a user.
+ *
+ * @param {UserLoginDTO} user   An object containing the user's login credentials.
+ * @returns {Promise<void>}     A promise that resolves when the login process is complete.
+ */
+async function handleLogin(user: UserLoginDTO): Promise<void> {
   try {
     console.log("Handling login");
     const resp = await authStore.login(user)

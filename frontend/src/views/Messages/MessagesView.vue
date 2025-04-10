@@ -16,6 +16,7 @@ const router = useRouter()
 const chats = ref<ChatsResponseDTO>({ chats: [] });
 const selectedChat = ref<ChatResponseDTO | null>(null);
 
+// Mock data, to be replaced with data from backend when implemented
 const mockChats: ChatsResponseDTO = {
   chats: [
     {
