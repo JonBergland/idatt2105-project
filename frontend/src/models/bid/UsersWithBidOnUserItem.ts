@@ -1,5 +1,5 @@
 export interface UsersWithBidOnUserItemRequest {
-  SegmentOffset: number[];
+  segmentOffset: number[];
 }
 
 export interface UsersWithBidOnUserItemResponse {

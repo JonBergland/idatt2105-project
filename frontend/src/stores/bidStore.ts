@@ -39,7 +39,7 @@ export const useBidStore = defineStore('bidStore', {
     async updateUserBidsOnItems() {
       try {
         const itemBidRequest: UserBidItemsRequest = {
-          SegmentOffset: [0, 20]
+          segmentOffset: [0, 20]
         };
 
         const items = await this.getItemsWithUserBids(itemBidRequest);
@@ -80,9 +80,8 @@ export const useBidStore = defineStore('bidStore', {
      */
     async updateBidsOnUserItems() {
       try {
-        // Similar structure as above, but for other users' bids
         const usersRequest: UsersWithBidOnUserItemRequest = {
-          SegmentOffset: [0, 20]
+          segmentOffset: [0, 20]
         };
 
         const users = await this.getUsersWithBidOnUserItem(usersRequest);
@@ -160,7 +159,7 @@ export const useBidStore = defineStore('bidStore', {
       const defaultResponse = [] as UserBidItemsResponse[];
 
       try {
-        if (!request || !request.SegmentOffset) {
+        if (!request || !request.segmentOffset) {
           console.error('Invalid request parameters for getItemsWithUserBids');
           return defaultResponse;
         }
@@ -188,7 +187,7 @@ export const useBidStore = defineStore('bidStore', {
       const defaultResponse = [] as UsersWithBidOnUserItemResponse[];
 
       try {
-        if (!request || !request.SegmentOffset) {
+        if (!request || !request.segmentOffset) {
           console.error('Invalid request parameters for getUsersWithBidOnUserItem');
           return defaultResponse;
         }

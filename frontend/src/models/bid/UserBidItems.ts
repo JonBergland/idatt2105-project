@@ -1,5 +1,5 @@
 export interface UserBidItemsRequest {
-  SegmentOffset: number[];
+  segmentOffset: number[];
 }
 
 export interface UserBidItemsResponse {
