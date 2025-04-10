@@ -22,6 +22,9 @@ const isMyItem = ref(false);
 const isEditing = ref(false);
 const isDeleting = ref(false);
 
+const successMessage = ref('');
+const errorMessage = ref('');
+
 const itemResponse = ref<ItemResponseDTO>({
   itemID: undefined,
   name: '',
@@ -34,7 +37,6 @@ const itemResponse = ref<ItemResponseDTO>({
   state: '',
   bookmark: false
 });
-const error = ref('');
 
 const itemID = computed(() => {
   const id = route.query.id;
@@ -141,7 +143,10 @@ async function handleDeleteClick() {
     itemID: itemID.value
   }
   await userStore.deleteItem(deleteRequest)
-  console.log('Deleting item: ', itemID.value)
+  successMessage.value = 'Item Deleted';
+  setTimeout(() => {
+        router.back();
+      }, 1500);
 }
 
 /**
@@ -152,7 +157,7 @@ async function handleDeleteClick() {
  */
  async function fetchItemDetails() {
   if (itemID.value <= 0) {
-    error.value = 'Invalid item ID';
+    errorMessage.value = 'Invalid item ID';
     return;
   }
 
@@ -163,6 +168,16 @@ async function handleDeleteClick() {
 
     if (isAuthenticated) {
       await userStore.fetchUserItemDetails(request);
+
+      if (userStore.itemError) {
+        errorMessage.value = userStore.itemError;
+        return;
+      }
+
+      if (!userStore.item) {
+        errorMessage.value = 'Item not found';
+        return;
+      }
       itemResponse.value = {
         ...userStore.item,
         bookmark: userStore.item?.bookmark || false
@@ -173,6 +188,17 @@ async function handleDeleteClick() {
       }
     } else {
       await itemStore.fetchItemDetails(request);
+
+      if (itemStore.itemError) {
+        errorMessage.value = itemStore.itemError;
+        return;
+      }
+
+      if (!itemStore.item) {
+        errorMessage.value = 'Item not found';
+        return;
+      }
+
       itemResponse.value = {
         ...itemStore.item,
         bookmark: false
@@ -180,7 +206,7 @@ async function handleDeleteClick() {
     }
   } catch (err) {
     console.error('Error fetching item details:', err);
-    error.value = 'Failed to load item details';
+    errorMessage.value = 'Failed to load item details';
   }
 }
 
@@ -189,8 +215,11 @@ onMounted(fetchItemDetails);
 
 <template>
 
-  <div v-if="error" class="error-state">
-    {{ error }}
+  <div v-if="errorMessage" class="error-state">
+    {{ errorMessage }}
+    <button class="back-button" @click="handleBackClick">
+      Go back
+    </button>
   </div>
 
   <div v-else-if="isEditing" class="edit-listing-container">
@@ -214,12 +243,12 @@ onMounted(fetchItemDetails);
           :images="[placeholderImage, placeholderImage]"
           :isFavorited="isBookmarked"
           @favorite="handleFavorite"
-        />
+      />
       </div>
       <div class="product-info-component-wrapper">
         <ProductInfoComponent
           :item="itemResponse"
-        />
+      />
       </div>
     </div>
     <div v-if="isMyItem" class="my-listing-container">
@@ -235,6 +264,9 @@ onMounted(fetchItemDetails);
           <button class="cancel-button" @click="isDeleting = false">Cancel</button>
         </div>
       </div>
+      <div v-if="successMessage" class="success-message">
+        {{ successMessage }}
+    </div>
     </div>
   </div>
 </template>
@@ -246,6 +278,7 @@ onMounted(fetchItemDetails);
   flex-direction: column;
   gap: 32px;
   padding: 16px;
+  align-items: center;
 }
 
 .error-state {
@@ -377,5 +410,15 @@ onMounted(fetchItemDetails);
   width: fit-content;
   padding: 16px;
   border-radius: 8px;
+}
+
+.success-message {
+  background-color: #d4edda;
+  color: #155724;
+  padding: 10px;
+  border-radius: 4px;
+  width: 100%;
+  max-width: 600px;
+  text-align: center;
 }
 </style>
