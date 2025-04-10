@@ -3,6 +3,9 @@ package edu.ntnu.idatt2105.backend.bid.model;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * A model representing a bid.
+ */
 @Getter
 @Setter
 public class Bid {
