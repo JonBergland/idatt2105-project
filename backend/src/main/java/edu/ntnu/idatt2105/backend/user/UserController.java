@@ -23,6 +23,8 @@ import edu.ntnu.idatt2105.backend.user.dto.GetYourUniqueBidsResponse;
 import edu.ntnu.idatt2105.backend.user.dto.PlaceBidRequest;
 import edu.ntnu.idatt2105.backend.user.dto.ToggleBookmarkRequest;
 import edu.ntnu.idatt2105.backend.user.dto.UpdateUserInfoRequest;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.nio.file.AccessDeniedException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -46,6 +48,7 @@ import org.springframework.web.server.ResponseStatusException;
 @RestController
 @RequestMapping(value = "/api/user")
 @CrossOrigin
+@Tag(name = "User controller", description = "User management endpoints")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -59,6 +62,7 @@ public class UserController {
    * @param updateUserInfoRequest new user info
    */
   @PostMapping("/info")
+  @Operation(summary = "Edit user", description = "Edit the logged in user's info")
   public void updateUserInfo(@RequestBody UpdateUserInfoRequest updateUserInfoRequest) {
     logger.info("update user info request");
     try {
@@ -75,6 +79,7 @@ public class UserController {
    * @return the user info to send
    */
   @GetMapping("/info")
+  @Operation(summary = "Get user info", description = "Get the info of the logged in user")
   public ResponseEntity<GetUserInfoResponse> getUserInfo() {
     String userID = SecurityContextHolder.getContext().getAuthentication().getName();
 
@@ -99,6 +104,7 @@ public class UserController {
    * @return the item info
    */
   @PostMapping("/item/store")
+  @Operation(summary = "Get item", description = "Get item from store with user specific info")
   public GetStoreItemResponse getUserSpecificItemInfo(@RequestBody ItemRequest itemRequest) {
     logger.info("get item with user specific info request");
     try {
@@ -115,6 +121,7 @@ public class UserController {
    * @param deleteItemRequest the item
    */
   @DeleteMapping("/item/delete")
+  @Operation(summary = "Delete item", description = "Delete an item owned by the logged in user")
   public void deleteUserItem(@RequestBody DeleteItemRequest deleteItemRequest) {
     logger.info("delete user's item request");
     try {
@@ -136,6 +143,7 @@ public class UserController {
    * @param toggleBookmarkRequest the item to toggle
    */
   @PostMapping("/item/bookmark")
+  @Operation(summary = "Toggle bookmark", description = "Toggle bookmark on item for the logged in user")
   public void bookmarkItem(@RequestBody ToggleBookmarkRequest toggleBookmarkRequest) {
     logger.info("toggling bookmark request");
     try {
@@ -153,6 +161,7 @@ public class UserController {
    * @return the items
    */
   @PostMapping("/item/bookmark/get")
+  @Operation(summary = "Get bookmarked items", description = "Get all items bookmarked by the logged in user, paginated")
   public GetBookmarkedItemsResponse[] getBookmarkeditems(
       @RequestBody GetBookmarkedItemsRequest getBookmarkedItemsRequest) {
     logger.info("get bookmarked items request");
@@ -170,6 +179,7 @@ public class UserController {
    * @param placeBidRequest the bid to place
    */
   @PostMapping("/item/bid/place")
+  @Operation(summary = "Place bid", description = "Place bid on available or reserved item for logged in user, makes available item reserved")
   public void placeBid(@RequestBody PlaceBidRequest placeBidRequest) {
     logger.info("place bid request");
     try {
@@ -186,6 +196,7 @@ public class UserController {
    * @return the items
    */
   @PostMapping("/item/bids/item")
+  @Operation(summary = "Get bid items", description = "Get items the logged in user has bid on, paginated")
   public GetYourUniqueBidsResponse[] getUniqueBids(
       @RequestBody GetYourUniqueBidsRequest getYourUniqueBidsRequest) {
     logger.info("get distinct items user has placed bids on request");
@@ -204,6 +215,7 @@ public class UserController {
    * @return the bids
    */
   @PostMapping("/item/bids")
+  @Operation(summary = "Get bids", description = "Get bids the logged in user has placed on a specific item, paginated")
   public GetYourItemBidsResponse[] getBidsOnItem(
       @RequestBody GetYourItemBidsRequest getYourItemBidsRequest) {
     logger.info("get bids user has placed on item request");
@@ -221,6 +233,7 @@ public class UserController {
    * @param answerBidRequest the item to answer
    */
   @PostMapping("/item/bid/answer")
+  @Operation(summary = "Answer bid", description = "Accept or decline bid if logged in user owns bid item")
   public void answerBid(@RequestBody AnswerBidRequest answerBidRequest) {
     logger.info("answer bid request");
     try {
@@ -237,6 +250,7 @@ public class UserController {
    * @return the users
    */
   @PostMapping("/item/bid/users")
+  @Operation(summary = "Get bidding users", description = "Get users who have bid on an item owned by the logged in user, paginated")
   public GetYourBidItemsResponse[] getBidsOnYourItems(
       @RequestBody GetYourBidItemsRequest getYourBidItemsRequest) {
     logger.info("get users who bid on item request");
@@ -255,6 +269,7 @@ public class UserController {
    * @return the bids
    */
   @PostMapping("/item/bid/")
+  @Operation(summary = "Get bid by user", description = "Get all bids made by a user on an item owned by logged in user, paginated")
   public GetBidsOnItemByUserResponse[] getBidsOnYourItem(
       @RequestBody GetBidsOnItemByUserRequest getBidsOnItemByUserRequest) {
     logger.info("get bids on item by user request");
@@ -272,6 +287,7 @@ public class UserController {
    * @return the user's items
    */
   @GetMapping("/item")
+  @Operation(summary = "Get own items", description = "Get all items owned by the logged in user")
   public ItemsResponse getUserItems() {
     logger.info("get all items by user request");
     try {
@@ -288,6 +304,7 @@ public class UserController {
    * @param addItemRequest the item to add
    */
   @PostMapping("/item")
+  @Operation(summary = "Add item", description = "Add item to store for the logged in user")
   public void addUserItem(@RequestBody AddItemRequest addItemRequest) {
     logger.info("add item for user request");
     try {
@@ -304,6 +321,7 @@ public class UserController {
    * @param editItemRequest the updated item
    */
   @PostMapping("/item/edit")
+  @Operation(summary = "Edit item", description = "Edit an item owned by logged in user")
   public void editUserItem(@RequestBody EditItemRequest editItemRequest) {
     logger.info("edit item for user request");
     try {
@@ -320,6 +338,7 @@ public class UserController {
    * @param buyItemRequest the item
    */
   @PostMapping("/item/buy")
+  @Operation(summary = "Buy item", description = "Buy an item marked as available for the logged in user")
   public void buyItem(@RequestBody BuyItemRequest buyItemRequest) {
     logger.info("direct buy request");
     try {
@@ -336,6 +355,7 @@ public class UserController {
    * @param buyItemFromBidRequest the bid
    */
   @PostMapping("/item/bids/buy")
+  @Operation(summary = "Buy from bid", description = "Buy an item with price from a bid when item is marked as available or reserved for the logged in user")
   public void buyBidItem(@RequestBody BuyItemFromBidRequest buyItemFromBidRequest) {
     logger.info("buy from bid request");
     try {

@@ -43,7 +43,12 @@ public class SecurityConfig {
         .csrf(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests(authorize -> authorize
             .requestMatchers(
-                "/api/token/signup", "/api/token/signin", "/api/store/**", "/api/user/info")
+                "/api/token/signup",
+                "/api/token/signin",
+                "/api/store/**",
+                "/api/user/info",
+                "/swagger-ui/**",
+                "/v3/api-docs/**")
             .permitAll()
             .requestMatchers("/api/user/**")
             .hasAnyRole("USER", "ADMIN")

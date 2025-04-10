@@ -38,8 +38,6 @@ public interface BidMapper {
   GetYourItemBidsResponse[] bidArrayToGetBidsResponseArray(Bid[] bid);
 
   @Mapping(source = "bidID", target = "bidID")
-  @Mapping(source = "itemID", target = "itemID")
-  @Mapping(source = "userID", target = "userID")
   @Mapping(source = "status", target = "status")
   Bid answerBidRequestToBid(AnswerBidRequest answerBidRequest);
 

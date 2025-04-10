@@ -4,6 +4,8 @@ import edu.ntnu.idatt2105.backend.item.dto.ItemRequest;
 import edu.ntnu.idatt2105.backend.item.dto.ItemResponse;
 import edu.ntnu.idatt2105.backend.item.dto.ItemsRequest;
 import edu.ntnu.idatt2105.backend.item.dto.ItemsResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +24,7 @@ import org.springframework.web.server.ResponseStatusException;
 @RestController
 @RequestMapping(value = "/api/store/item")
 @CrossOrigin
+@Tag(name = "Item controller", description = "Item management endpoints")
 @RequiredArgsConstructor
 public class ItemController {
 
@@ -36,6 +39,7 @@ public class ItemController {
    * @return the filtered items
    */
   @PostMapping("/filter")
+  @Operation(summary = "Filter items", description = "Get items based on optional filters, sorting and pagination")
   public ItemsResponse getItems(@RequestBody ItemsRequest itemsRequest) {
     ItemResponse[] itemResponses = ItemMapper.INSTANCE.itemsToItemResponses(
         itemService.getItems(itemsRequest));
@@ -49,6 +53,7 @@ public class ItemController {
    * @return the item
    */
   @PostMapping("/get")
+  @Operation(summary = "Get item", description = "Get an item with its general info")
   public ItemResponse itemResponses(@RequestBody ItemRequest itemRequest) {
     try {
       logger.info("getting item with id: {}", itemRequest.getItemID());
