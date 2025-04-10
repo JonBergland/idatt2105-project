@@ -243,6 +243,13 @@ export const useUserStore = defineStore('user', {
       }
     },
 
+    /**
+     * Loads more bookmarked items from the server and appends them to the existing list of bookmarked items.
+     * 
+     * @param request - The request object containing parameters for fetching bookmarked items.
+     * @returns A promise that resolves to the newly fetched bookmarked items.
+     * @throws Will throw an error if the request to fetch bookmarked items fails.
+     */
     async loadMoreBookmarkedItems(request: GetBookmarkedItemsRequest) {
       try {
         const response = await userService.getBookmarkedItems(request);
