@@ -67,9 +67,9 @@ export const useAuthStore = defineStore('auth', {
         } else {
           throw new Error("Login was not successful");
         }
-        return false;
       } catch (error) {
         console.log("Error when login in to Yard: ", error);
+        return false;
       }
     },
 
@@ -87,15 +87,11 @@ export const useAuthStore = defineStore('auth', {
 
         if (resp) {
           await this.checkIfAuth()
-
-          if (resp) {
-            await this.checkIfAuth()
-            if (this.userStore.user) {
-              return true
-            }
-          } else {
-            throw new Error("Signing up was not successful")
+          if (this.userStore.user) {
+            return true
           }
+        } else {
+          throw new Error("Signing up was not successful")
         }
       } catch (error) {
         console.log("Error when signing up to Yard: ", error)
