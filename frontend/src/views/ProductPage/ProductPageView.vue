@@ -253,7 +253,7 @@ onMounted(fetchItemDetails);
     </div>
     <div v-if="isMyItem" class="my-listing-container">
       <h3>This is your listing</h3>
-      <div v-if="!isDeleting"class="edit-delete-wrapper">
+      <div v-if="!isDeleting" class="edit-delete-wrapper">
         <button class="edit-button" @click="isEditing = true">Edit listing</button>
         <button class="delete-button" @click="isDeleting = true">Delete item</button>
       </div>
