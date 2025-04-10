@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * a DTO for responding with item with user specific info.
+ */
 @Setter
 @Getter
 @NoArgsConstructor
