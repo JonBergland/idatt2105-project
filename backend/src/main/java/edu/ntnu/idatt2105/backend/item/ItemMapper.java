@@ -4,7 +4,6 @@ import edu.ntnu.idatt2105.backend.item.dto.ItemResponse;
 import edu.ntnu.idatt2105.backend.item.model.Item;
 import edu.ntnu.idatt2105.backend.user.dto.AddItemRequest;
 import edu.ntnu.idatt2105.backend.user.dto.EditItemRequest;
-import edu.ntnu.idatt2105.backend.user.dto.GetBookmarkedItemsRequest;
 import edu.ntnu.idatt2105.backend.user.dto.GetBookmarkedItemsResponse;
 import edu.ntnu.idatt2105.backend.user.dto.GetStoreItemResponse;
 import org.mapstruct.Mapper;
