@@ -126,7 +126,11 @@ public class ItemRepository {
     jdbcTemplate.update(
         "INSERT INTO Item (name, description, price, category_id, user_id) "
             + "VALUES (?, ?, ?, (SELECT id FROM Categories WHERE category_name = ?), ?)",
-        item.getName(), item.getDescription(), item.getPrice(), item.getCategory(), item.getSellerID()
+        item.getName(),
+        item.getDescription(),
+        item.getPrice(),
+        item.getCategory(),
+        item.getSellerID()
     );
   }
 
