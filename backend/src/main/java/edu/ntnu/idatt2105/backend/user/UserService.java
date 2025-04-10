@@ -56,8 +56,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserService {
 
-  private final Logger logger = LoggerFactory.getLogger(UserService.class);
-
   private final UserRepository userRepository;
 
   private final ItemRepository itemRepository;
@@ -179,6 +177,11 @@ public class UserService {
     itemRepository.deleteItem(deleteItemRequest.getItemID(), Integer.parseInt(userID));
   }
 
+  /**
+   * toggle the bookmark on an item for user.
+   *
+   * @param toggleBookmarkRequest the item
+   */
   public void toggleBookmark(ToggleBookmarkRequest toggleBookmarkRequest) {
     Bookmark bookmark = BookmarkMapper.INSTANCE.bookmarkRequestToBookmark(toggleBookmarkRequest);
     String userID = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -205,6 +208,12 @@ public class UserService {
     return ItemMapper.INSTANCE.itemArrayToGetBookmarkedItemsResponseArray(items);
   }
 
+  /**
+   * get the item info with user specific info.
+   *
+   * @param itemRequest the request info
+   * @return the item info
+   */
   public GetStoreItemResponse getUserSpecificItemInfo(ItemRequest itemRequest) {
     Item item = itemRepository.getItem(itemRequest.getItemID());
 
@@ -297,6 +306,12 @@ public class UserService {
     return BidMapper.INSTANCE.bidArrayToGetYourBidItemsResponseArray(bids);
   }
 
+  /**
+   * get bids by a user on your item.
+   *
+   * @param getBidsOnItemByUserRequest the request info
+   * @return the bids
+   */
   public GetBidsOnItemByUserResponse[] getBidsOnYourItem(GetBidsOnItemByUserRequest getBidsOnItemByUserRequest) {
     String userID = SecurityContextHolder.getContext().getAuthentication().getName();
     Bid bid = BidMapper.INSTANCE.getBidsOnItemByUserRequestToBid(getBidsOnItemByUserRequest);
