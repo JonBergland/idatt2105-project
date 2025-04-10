@@ -9,9 +9,11 @@ import "@/assets/color.css"
 import "@/assets/base.css"
 import "@/assets/main.css"
 import { useUserStore } from '@/stores/userStore';
+import { useBidStore } from '@/stores/bidStore';
 
 const authStore = useAuthStore()
 const userStore = useUserStore()
+const bidStore = useBidStore()
 const router = useRouter()
 const chats = ref<ChatsResponseDTO>({ chats: [] });
 const selectedChat = ref<ChatResponseDTO | null>(null);
@@ -232,6 +234,12 @@ onMounted(async () => {
 
   // TODO: Retrieve chats from backend
   chats.value = mockChats;
+
+  await bidStore.updateUserBidsOnItems();
+  await bidStore.updateBidsOnUserItems();
+
+  console.log("User bids: ", bidStore.userBids);
+  console.log("Other bids: ", bidStore.otherBids);
 
   checkForUnseenMessages();
 
