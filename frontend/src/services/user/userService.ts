@@ -1,4 +1,3 @@
-import type { BidOnItemByUserRequest, BidOnItemByUserResponse, BidsFromUsersOnUserItemRequest, BidsFromUsersOnUserItemResponse, PlaceBid, UserBidItemsRequest, UserBidItemsResponse, UsersWithBidOnUserItemRequest, UsersWithBidOnUserItemResponse } from "@/models/bid";
 import type { ItemsResponseDTO, ItemRequestDTO, ItemResponseDTO } from "@/models/item";
 import type { User, UserLoginDTO, UserRegistrationDTO, AddItemRequest, UpdateItemRequest } from "@/models/user";
 import axiosInstance from "@/services/axiosService";

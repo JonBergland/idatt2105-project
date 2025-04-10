@@ -1,5 +1,9 @@
-import type { BidOnItemByUserRequest, BidOnItemByUserResponse, BidsFromUsersOnUserItemRequest, BidsFromUsersOnUserItemResponse, PlaceBid, UserBidItemsRequest, UserBidItemsResponse, UsersWithBidOnUserItemRequest, UsersWithBidOnUserItemResponse } from "@/models/bid";
 import axiosInstance from "@/services/axiosService";
+import type { BidOnItemByUserRequest, BidOnItemByUserResponse } from '@/models/bid/BidOnItemByUser';
+import type { UserBidItemsRequest, UserBidItemsResponse } from '@/models/bid/UserBidItems';
+import type { UsersWithBidOnUserItemRequest, UsersWithBidOnUserItemResponse } from '@/models/bid/UsersWithBidOnUserItem';
+import type { BidsFromUsersOnUserItemRequest, BidsFromUsersOnUserItemResponse } from '@/models/bid/BidsFromUsersOnUserItem';
+import type { PlaceBid } from '@/models/bid/bid';
 
 class BidService {
    /**
@@ -78,7 +82,7 @@ class BidService {
    */
   async getBidsFromUsersOnUserItem(request: BidsFromUsersOnUserItemRequest): Promise<BidsFromUsersOnUserItemResponse[] | null> {
     try {
-      const response = await axiosInstance.post<BidsFromUsersOnUserItemResponse[]>('/user/item/bid/users', request);
+      const response = await axiosInstance.post<BidsFromUsersOnUserItemResponse[]>('/user/item/bid/', request);
       return response.data;
     } catch (error) {
       console.error('Error getting bids from users on user items: ', error);

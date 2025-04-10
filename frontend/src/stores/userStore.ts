@@ -2,7 +2,6 @@ import type { ItemRequestDTO, ItemsResponseDTO, ItemResponseDTO } from "@/models
 import type { User, AddItemRequest, UpdateItemRequest} from "@/models/user";
 import { defineStore } from "pinia";
 import userService from "@/services/user/userService"
-import type { BidOnItemByUserRequest, BidOnItemByUserResponse, PlaceBid } from "@/models/bid";
 
 /**
  * Store for authenticating the user with login and signup
