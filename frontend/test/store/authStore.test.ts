@@ -195,18 +195,65 @@ describe('AuthStore', () => {
       };
 
       userService.registerUser.mockResolvedValue(true);
-      vi.spyOn(authStore, 'checkIfAuth').mockResolvedValue(false);
-
-      const originalSignup = authStore.signup;
-      authStore.signup = async (user: UserRegistrationDTO) => {
-        await originalSignup(user);
+      vi.spyOn(authStore, 'checkIfAuth').mockImplementation(async () => {
+        mockUserStore.user = null;
+        authStore.isAuth = false;
         return false;
-      };
+      });
 
       const result = await authStore.signup(mockUserData);
 
-      expect(result).toBe(false);
+      expect(userService.registerUser).toHaveBeenCalledWith(mockUserData);
       expect(authStore.checkIfAuth).toHaveBeenCalled();
+      expect(result).toBe(false);
+    });
+
+    it('should return false when registerUser returns false', async () => {
+      const mockUserData: UserRegistrationDTO = {
+        email: 'new@example.com',
+        name: 'New',
+        surname: 'User',
+        password: 'password123',
+        phoneNumber: 1234567890,
+        countryCode: 1
+      };
+
+      userService.registerUser.mockResolvedValue(false);
+
+      const consoleSpy = vi.spyOn(console, 'log');
+
+      const result = await authStore.signup(mockUserData);
+
+      expect(userService.registerUser).toHaveBeenCalledWith(mockUserData);
+      expect(consoleSpy).toHaveBeenCalledWith(
+        expect.stringContaining("Error when signing up to Yard:"),
+        expect.any(Error)
+      );
+      expect(result).toBe(false);
+    });
+
+    it('should return false when registerUser throws an error', async () => {
+      const mockUserData: UserRegistrationDTO = {
+        email: 'new@example.com',
+        name: 'New',
+        surname: 'User',
+        password: 'password123',
+        phoneNumber: 1234567890,
+        countryCode: 1
+      };
+
+      userService.registerUser.mockRejectedValue(new Error('Network error'));
+
+      const consoleSpy = vi.spyOn(console, 'log');
+
+      const result = await authStore.signup(mockUserData);
+
+      expect(userService.registerUser).toHaveBeenCalledWith(mockUserData);
+      expect(consoleSpy).toHaveBeenCalledWith(
+        expect.stringContaining("Error when signing up to Yard:"),
+        expect.any(Error)
+      );
+      expect(result).toBe(false);
     });
   });
 
