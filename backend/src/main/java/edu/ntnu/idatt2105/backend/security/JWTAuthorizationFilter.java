@@ -1,6 +1,7 @@
 package edu.ntnu.idatt2105.backend.security;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import edu.ntnu.idatt2105.backend.utils.JWTUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -45,17 +46,17 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
     if (header != null && header.startsWith("Bearer ")) {
       token = header.substring(7);
     } else {
-        // If not found in header, check for JWT in cookie
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-          for (Cookie cookie : cookies) {
-            if ("JWT".equals(cookie.getName())) {
-              token = cookie.getValue();
-              break;
-            }
+      // If not found in header, check for JWT in cookie
+      Cookie[] cookies = request.getCookies();
+      if (cookies != null) {
+        for (Cookie cookie : cookies) {
+          if ("JWT".equals(cookie.getName())) {
+            token = cookie.getValue();
+            break;
           }
         }
       }
+    }
 
     if (token == null) {
       logger.warn("No token found in request", header);
