@@ -125,6 +125,14 @@ public class BidRepository {
     return bidList.toArray(new Bid[0]);
   }
 
+  /**
+   * get bids by a user on an item.
+   *
+   * @param bid the bid
+   * @param userID the user id of item owner
+   * @param segmentOffset the segment offset
+   * @return the bids
+   */
   public Bid[] getBidsByUserOnItem(Bid bid, int userID, int[] segmentOffset) {
     List<Bid> bidList = jdbcTemplate.query(
         "SELECT Bids.id AS bidID, Bids.item_id AS itemID, Bids.asking_price, Bids.status, Bids.published FROM Bids "
@@ -142,6 +150,12 @@ public class BidRepository {
     return bidList.toArray(new Bid[0]);
   }
 
+  /**
+   * check if a bid is unanswered or accepted.
+   *
+   * @param itemID the item id
+   * @return true if the bid is unanswered or accepted, false otherwise
+   */
   public boolean checkIfUnansweredBid(int itemID) {
     return jdbcTemplate.queryForObject(
         "SELECT IF(EXISTS( "
@@ -153,6 +167,12 @@ public class BidRepository {
         Boolean.class);
   }
 
+  /**
+   * get the item id from a bid id.
+   *
+   * @param bidID the bid id
+   * @return the item id
+   */
   public int itemFromBid(int bidID) {
     return jdbcTemplate.queryForObject(
         "SELECT item_id FROM Bids "
