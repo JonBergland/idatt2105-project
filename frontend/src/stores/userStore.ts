@@ -1,5 +1,5 @@
 import type { ItemRequestDTO, ItemsResponseDTO, ItemResponseDTO } from "@/models/item";
-import type { User, AddItemRequest, UpdateItemRequest, ToggleBookmarkRequest, GetBookmarkedItemsRequest} from "@/models/user";
+import type { User, AddItemRequest, UpdateItemRequest, ToggleBookmarkRequest, GetBookmarkedItemsRequest, DeleteItemRequest} from "@/models/user";
 import { defineStore } from "pinia";
 import userService from "@/services/user/userService"
 
@@ -196,6 +196,24 @@ export const useUserStore = defineStore('user', {
     },
 
     /**
+     * Deletes an item using the provided request object.
+     *
+     * @param {DeleteItemRequest} request - The request object containing the id of the item to be deleted.
+     * @returns {Promise<boolean>} A promise that resolves to `true` if the item was successfully deleted,
+     *                             or `false` if an error occurred during the deletion process.
+     * @throws Logs an error message to the console if the deletion fails.
+     */
+    async deleteItem(request: DeleteItemRequest): Promise<boolean> {
+      try {
+        await userService.deleteItem(request);
+        return true;
+      } catch (error) {
+        console.log("Error when deleteing item: ", error)
+        return false;
+      }
+    },
+
+    /**
      * Toggles the bookmark status for a given request.
      *
      *
@@ -243,6 +261,13 @@ export const useUserStore = defineStore('user', {
       }
     },
 
+    /**
+     * Loads more bookmarked items from the server and appends them to the existing list of bookmarked items.
+     *
+     * @param request - The request object containing parameters for fetching bookmarked items.
+     * @returns A promise that resolves to the newly fetched bookmarked items.
+     * @throws Will throw an error if the request to fetch bookmarked items fails.
+     */
     async loadMoreBookmarkedItems(request: GetBookmarkedItemsRequest) {
       try {
         const response = await userService.getBookmarkedItems(request);

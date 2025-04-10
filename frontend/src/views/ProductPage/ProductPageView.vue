@@ -20,6 +20,10 @@ const userStore = useUserStore();
 
 const isMyItem = ref(false);
 const isEditing = ref(false);
+const isDeleting = ref(false);
+
+const successMessage = ref('');
+const errorMessage = ref('');
 
 const itemResponse = ref<ItemResponseDTO>({
   itemID: undefined,
@@ -33,7 +37,6 @@ const itemResponse = ref<ItemResponseDTO>({
   state: '',
   bookmark: false
 });
-const error = ref('');
 
 const itemID = computed(() => {
   const id = route.query.id;
@@ -109,7 +112,6 @@ async function handleFavorite(isFavorited: boolean) {
   };
 }
 
-
 /**
  * Handles the update of an item in the product page.
  *
@@ -131,12 +133,25 @@ async function handleFavorite(isFavorited: boolean) {
 
     isEditing.value = false;
 
-    console.log('Item updated:', updateRequest);
   } catch (error) {
     console.error('Error updating item:', error);
   }
 }
 
+/**
+ * Handles the delete button click event.
+ * Sends a request to the userstore and show a successmessage when completed
+ */
+async function handleDeleteClick() {
+  const deleteRequest = {
+    itemID: itemID.value
+  }
+  await userStore.deleteItem(deleteRequest)
+  successMessage.value = 'Item Deleted';
+  setTimeout(() => {
+        router.back();
+      }, 1500);
+}
 
 /**
  * Fetches the details of a specific item.
@@ -146,7 +161,7 @@ async function handleFavorite(isFavorited: boolean) {
  */
  async function fetchItemDetails() {
   if (itemID.value <= 0) {
-    error.value = 'Invalid item ID';
+    errorMessage.value = 'Invalid item ID';
     return;
   }
 
@@ -157,6 +172,16 @@ async function handleFavorite(isFavorited: boolean) {
 
     if (isAuthenticated) {
       await userStore.fetchUserItemDetails(request);
+
+      if (userStore.itemError) {
+        errorMessage.value = userStore.itemError;
+        return;
+      }
+
+      if (!userStore.item) {
+        errorMessage.value = 'Item not found';
+        return;
+      }
       itemResponse.value = {
         ...userStore.item,
         bookmark: userStore.item?.bookmark || false
@@ -167,6 +192,17 @@ async function handleFavorite(isFavorited: boolean) {
       }
     } else {
       await itemStore.fetchItemDetails(request);
+
+      if (itemStore.itemError) {
+        errorMessage.value = itemStore.itemError;
+        return;
+      }
+
+      if (!itemStore.item) {
+        errorMessage.value = 'Item not found';
+        return;
+      }
+
       itemResponse.value = {
         ...itemStore.item,
         bookmark: false
@@ -174,7 +210,7 @@ async function handleFavorite(isFavorited: boolean) {
     }
   } catch (err) {
     console.error('Error fetching item details:', err);
-    error.value = 'Failed to load item details';
+    errorMessage.value = 'Failed to load item details';
   }
 }
 
@@ -183,8 +219,11 @@ onMounted(fetchItemDetails);
 
 <template>
 
-  <div v-if="error" class="error-state">
-    {{ error }}
+  <div v-if="errorMessage" class="error-state">
+    {{ errorMessage }}
+    <button class="back-button" @click="handleBackClick">
+      Go back
+    </button>
   </div>
 
   <div v-else-if="isEditing" class="edit-listing-container">
@@ -208,17 +247,30 @@ onMounted(fetchItemDetails);
           :images="[placeholderImage, placeholderImage]"
           :isFavorited="isBookmarked"
           @favorite="handleFavorite"
-        />
+      />
       </div>
       <div class="product-info-component-wrapper">
         <ProductInfoComponent
           :item="itemResponse"
-        />
+      />
       </div>
     </div>
     <div v-if="isMyItem" class="my-listing-container">
       <h3>This is your listing</h3>
-      <button class="edit-button" @click="isEditing = true">Edit listing</button>
+      <div v-if="!isDeleting" class="edit-delete-wrapper">
+        <button class="edit-button" @click="isEditing = true">Edit listing</button>
+        <button class="delete-button" @click="isDeleting = true">Delete item</button>
+      </div>
+      <div v-else class="delete-container">
+        <p>Are you sure you want to delete this listing?</p>
+        <div class="delete-cancel-wrapper">
+          <button class="delete-button" @click="handleDeleteClick">Yes</button>
+          <button class="cancel-button" @click="isDeleting = false">Cancel</button>
+        </div>
+      </div>
+      <div v-if="successMessage" class="success-message">
+        {{ successMessage }}
+    </div>
     </div>
   </div>
 </template>
@@ -230,6 +282,7 @@ onMounted(fetchItemDetails);
   flex-direction: column;
   gap: 32px;
   padding: 16px;
+  align-items: center;
 }
 
 .error-state {
@@ -238,10 +291,6 @@ onMounted(fetchItemDetails);
   align-items: center;
   min-height: 300px;
   font-size: 1.2rem;
-  color: var(--color-text-secondary);
-}
-
-.error-state {
   color: var(--color-error, #dc3545);
 }
 
@@ -284,7 +333,6 @@ onMounted(fetchItemDetails);
 }
 
 .cancel-button {
-  margin-top: 16px;
   padding: 8px 16px;
   background-color: var(--color-background-mute);
   border: 1px solid var(--color-border);
@@ -303,12 +351,42 @@ onMounted(fetchItemDetails);
   align-self: center;
 }
 
+.delete-button {
+  padding: 8px 16px;
+  background-color: var(--color-danger-muted);
+  border: 1px solid var(--color-border);
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  width: fit-content;
+  align-self: center;
+}
+
 .edit-button:hover {
   background-color: #eee;
 }
 
 .cancel-button:hover {
   background-color: #eee;
+}
+
+.delete-button:hover {
+  background-color: var(--color-danger-muted-hover);
+}
+
+.delete-container {
+  display: flex;
+  gap: 16px;
+  flex-direction: column;
+}
+
+
+.edit-delete-wrapper,
+.delete-cancel-wrapper {
+  display: flex;
+  gap: 16px;
+  flex-direction: row;
+  justify-content: center;
 }
 
 .my-listing-container {
@@ -319,14 +397,32 @@ onMounted(fetchItemDetails);
   gap: 16px;
 }
 
-.my-listing-container h3{
-  background-color: var(--color-secondary);
-  color: var(--color-text-secondary);
-  padding: 8px;
+.my-listing-container {
+  background-color: var(--color-background-mute);
+  color: #155724;
+  padding: 32px 16px;
   border-radius: 8px;
-  display: inline-block;
-  white-space: nowrap;
-  width: fit-content;
+  width: 100%;
+  max-width: 440px;
+  text-align: center;
   align-self: center;
+  align-items: center;
+}
+
+.my-listing-container h3 {
+  background-color: #d4edda;
+  width: fit-content;
+  padding: 16px;
+  border-radius: 8px;
+}
+
+.success-message {
+  background-color: #d4edda;
+  color: #155724;
+  padding: 10px;
+  border-radius: 4px;
+  width: 100%;
+  max-width: 600px;
+  text-align: center;
 }
 </style>
