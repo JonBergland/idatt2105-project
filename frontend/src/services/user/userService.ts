@@ -1,5 +1,5 @@
 import type { ItemsResponseDTO, ItemRequestDTO, ItemResponseDTO } from "@/models/item";
-import type { User, UserLoginDTO, UserRegistrationDTO, AddItemRequest, UpdateItemRequest, ToggleBookmarkRequest, GetBookmarkedItemsRequest } from "@/models/user";
+import type { User, UserLoginDTO, UserRegistrationDTO, AddItemRequest, UpdateItemRequest, ToggleBookmarkRequest, GetBookmarkedItemsRequest, DeleteItemRequest } from "@/models/user";
 import axiosInstance from "@/services/axiosService";
 import axios from 'axios';
 
@@ -114,6 +114,22 @@ class UserService {
       await axiosInstance.post('/user/item/edit', request);
     } catch (error) {
       console.error('Error updating item:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Deletes an item by sending a DELETE request to the server with the provided request data.
+   *
+   * @param request - The data required to delete the item, adhering to the `UpdateItemRequest` interface.
+   * @returns A promise that resolves when the item is successfully deleted.
+   * @throws Will throw an error if the request fails, logging the error to the console.
+   */
+  async deleteItem(request: DeleteItemRequest): Promise<void> {
+    try {
+      await axiosInstance.delete('/user/item/delete', { data: request });
+    } catch (error) {
+      console.error('Error deleting item:', error);
       throw error;
     }
   }
