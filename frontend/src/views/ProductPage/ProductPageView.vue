@@ -11,7 +11,7 @@ import { useItemStore } from '@/stores/itemStore';
 import { useAuthStore } from '@/stores/authStore';
 import { useUserStore } from '@/stores/userStore';
 import ItemForm from '@/components/NewListing/ItemForm.vue';
-import type { PlaceBid } from '@/models/bid';
+import type { PlaceBid } from '@/models/bid/bid';
 
 const route = useRoute();
 const router = useRouter();
