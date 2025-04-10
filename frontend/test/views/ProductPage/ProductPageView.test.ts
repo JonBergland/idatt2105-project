@@ -168,7 +168,7 @@ describe('ProductPageView', () => {
   it('handles error display properly', async () => {
     const wrapper = mount(ProductPageView);
 
-    wrapper.vm.error = 'Test error message';
+    wrapper.vm.errorMessage = 'Test error message';
     await wrapper.vm.$nextTick();
 
     const errorElement = wrapper.find('.error-state');
