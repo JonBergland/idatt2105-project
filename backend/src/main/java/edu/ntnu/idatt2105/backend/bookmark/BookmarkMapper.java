@@ -6,6 +6,9 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
+/**
+ * a mapper for mapping between bookmark model and dto.
+ */
 @Mapper
 public interface BookmarkMapper {
 
