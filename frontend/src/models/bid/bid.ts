@@ -19,12 +19,12 @@ export interface PlaceBid {
   askingPrice: number;
 }
 
-interface ItemWithBids {
+export interface ItemWithBids {
   item: UserBidItemsResponse;
   bids: BidOnItemByUserResponse[];
 }
 
-interface UserWithBids {
+export interface UserWithBids {
   user: UsersWithBidOnUserItemResponse;
   bids: BidsFromUsersOnUserItemResponse[];
 }
