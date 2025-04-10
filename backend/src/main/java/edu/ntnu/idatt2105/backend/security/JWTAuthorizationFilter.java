@@ -45,17 +45,17 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
     if (header != null && header.startsWith("Bearer ")) {
       token = header.substring(7);
     } else {
-        // If not found in header, check for JWT in cookie
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-          for (Cookie cookie : cookies) {
-            if ("JWT".equals(cookie.getName())) {
-              token = cookie.getValue();
-              break;
-            }
+      // If not found in header, check for JWT in cookie
+      Cookie[] cookies = request.getCookies();
+      if (cookies != null) {
+        for (Cookie cookie : cookies) {
+          if ("JWT".equals(cookie.getName())) {
+            token = cookie.getValue();
+            break;
           }
         }
       }
+    }
 
     if (token == null) {
       logger.warn("No token found in request", header);
