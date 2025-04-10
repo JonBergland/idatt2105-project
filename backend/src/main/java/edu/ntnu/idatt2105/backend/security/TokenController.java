@@ -51,7 +51,8 @@ public class TokenController {
   @PostMapping("/signin")
   @ResponseStatus(value = HttpStatus.CREATED)
   @Operation(summary = "Sign in", description = "Sign in a user and provide a JWT cookie")
-  public boolean signIn(final @Valid @RequestBody SigninRequest signinRequest, HttpServletResponse response)
+  public boolean signIn(
+      final @Valid @RequestBody SigninRequest signinRequest, HttpServletResponse response)
       throws ResponseStatusException {
     logger.info("token request for user: {}", signinRequest.getEmail());
     try {
@@ -74,8 +75,8 @@ public class TokenController {
   /**
    * Endpoint for signing up.
    * This method generates a JWT-cookie, sets the token to the response and returns a boolean
-   * representing the success of the sign up
-   * 
+   * representing the success of the sign-up
+   *
    * @param signupRequest contains signup information
    * @param response      the HTTP response object coming with the request
    * @return              a boolean representing the success of the sing up
@@ -84,7 +85,8 @@ public class TokenController {
   @PostMapping("/signup")
   @ResponseStatus(value = HttpStatus.CREATED)
   @Operation(summary = "Signup", description = "Signup a new user and provide a JWT cookie")
-  public boolean registerAccount(final @Valid @RequestBody SignupRequest signupRequest, HttpServletResponse response) {
+  public boolean registerAccount(
+      final @Valid @RequestBody SignupRequest signupRequest, HttpServletResponse response) {
     logger.info("signup request with email: {}", signupRequest.getEmail());
     try {
       userService.createUser(signupRequest);
