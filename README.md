@@ -1,16 +1,21 @@
 # idatt2105-project
-The optinal project in the subject IDATT2105 Fullstack at NTNU
+The optional project in the subject IDATT2105 Fullstack at NTNU.
+The group members are:
+Vetle Bjørnøy
+Florian Leucht
+Jon Bergland
 
 # To run the project
+To connect to our NTNU database, you need to be connected to the NTNU-internet. This can be done via the Cisco Secure Client.
 
 ## Docker
 If you have docker running on your PC you can run this command to start the container:
 ```sh
 docker compose up --build
 ```
-*NB!: The build time on first compose is quite long (~5 min) 
+*NB!: The build time on first build is quite long (~5 min +)*
 
-To stop it, click CTRL + C and type this command:
+To stop the container, click CTRL + C and type this command:
 ```sh
 docker compose down
 ```

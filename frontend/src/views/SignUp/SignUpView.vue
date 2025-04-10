@@ -7,6 +7,14 @@ import { useRouter } from 'vue-router';
 const authStore = useAuthStore()
 const router = useRouter()
 
+/**
+ * Handles the user sign-up process.
+ *
+ * @param {UserRegistrationDTO} registrationForm - A {@link UserRegistrationDTO} containing
+ * the user's registration information, such as username, password, and other required details.
+ *
+ * @returns {Promise<void>} A promise that resolves when the sign-up process is complete.
+ */
 async function handleSignUp(registrationForm: UserRegistrationDTO) {
   try {
     console.log("Handing signup");

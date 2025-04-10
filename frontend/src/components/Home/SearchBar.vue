@@ -17,12 +17,17 @@ watch(() => props.modelValue, (newValue) => {
 });
 
 /**
- * Emits the search query to the parent component
+ * Emits the search query to the parent component when the user
+ * triggers search
  */
  function handleSearchTriggered() {
   emit('search-triggered', searchInput.value);
 }
 
+/**
+ * Emits the search query to the parent component when the user writes
+ * a query in the search bar
+ */
 function handleSearchInput() {
   emit('search-input', searchInput.value)
 }
