@@ -35,7 +35,7 @@ async function handleSubmit(request: AddItemRequest) {
     if (success) {
       successMessage.value = 'Item listed successfully!';
       setTimeout(() => {
-        router.push({ name: 'home' });
+        router.back();
       }, 1500);
     } else {
       errorMessage.value = 'Failed to post item. Please try again.';
