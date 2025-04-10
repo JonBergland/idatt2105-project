@@ -34,7 +34,7 @@ class BidService {
    */
   async getItemsWithUserBids(request: UserBidItemsRequest): Promise<UserBidItemsResponse[] | null> {
     try {
-      const response = await axiosInstance.post<UserBidItemsResponse[]>('/user/item/bids', request);
+      const response = await axiosInstance.post<UserBidItemsResponse[]>('/user/item/bids/item', request);
       return response.data
     } catch (error) {
       console.error('Error getting items with user bids: ', error)
@@ -50,7 +50,7 @@ class BidService {
    */
   async getUserBidsOnItem(request: BidOnItemByUserRequest): Promise<BidOnItemByUserResponse[] | null> {
     try {
-      const response = await axiosInstance.post<BidOnItemByUserResponse[]>('/user/item', request);
+      const response = await axiosInstance.post<BidOnItemByUserResponse[]>('/user/item/bids', request);
       return response.data;
     } catch (error) {
       console.error('Error getting bids on item by User: ', error);
