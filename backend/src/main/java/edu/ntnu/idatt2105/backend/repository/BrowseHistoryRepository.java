@@ -14,6 +14,11 @@ public class BrowseHistoryRepository {
 
   private final JdbcTemplate jdbcTemplate;
 
+  /**
+   * add a browse history to the database.
+   *
+   * @param browseHistory the browse history
+   */
   public void addUpdateBrowseHistory(BrowseHistory browseHistory) {
     jdbcTemplate.update("INSERT INTO Browse_history (user_id, item_id) "
         + "VALUES (?, ?) "

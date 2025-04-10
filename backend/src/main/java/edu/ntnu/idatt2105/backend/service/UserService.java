@@ -1,17 +1,17 @@
 package edu.ntnu.idatt2105.backend.service;
 
+import edu.ntnu.idatt2105.backend.dto.token.SigninRequest;
+import edu.ntnu.idatt2105.backend.dto.token.SignupRequest;
+import edu.ntnu.idatt2105.backend.dto.user.GetUserInfoResponse;
+import edu.ntnu.idatt2105.backend.dto.user.UpdateUserInfoRequest;
+import edu.ntnu.idatt2105.backend.mapper.UserMapper;
+import edu.ntnu.idatt2105.backend.model.User;
 import edu.ntnu.idatt2105.backend.repository.BidRepository;
 import edu.ntnu.idatt2105.backend.repository.BookmarkRepository;
 import edu.ntnu.idatt2105.backend.repository.BrowseHistoryRepository;
 import edu.ntnu.idatt2105.backend.repository.ItemRepository;
 import edu.ntnu.idatt2105.backend.repository.PurchaseRepository;
-import edu.ntnu.idatt2105.backend.dto.token.SigninRequest;
-import edu.ntnu.idatt2105.backend.dto.token.SignupRequest;
-import edu.ntnu.idatt2105.backend.mapper.UserMapper;
 import edu.ntnu.idatt2105.backend.repository.UserRepository;
-import edu.ntnu.idatt2105.backend.dto.user.GetUserInfoResponse;
-import edu.ntnu.idatt2105.backend.dto.user.UpdateUserInfoRequest;
-import edu.ntnu.idatt2105.backend.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;

@@ -1,7 +1,7 @@
 package edu.ntnu.idatt2105.backend.mapper;
 
-import edu.ntnu.idatt2105.backend.model.Bookmark;
 import edu.ntnu.idatt2105.backend.dto.bookmark.ToggleBookmarkRequest;
+import edu.ntnu.idatt2105.backend.model.Bookmark;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;

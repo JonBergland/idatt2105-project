@@ -1,6 +1,5 @@
 package edu.ntnu.idatt2105.backend.mapper;
 
-import edu.ntnu.idatt2105.backend.model.Bid;
 import edu.ntnu.idatt2105.backend.dto.bid.AnswerBidRequest;
 import edu.ntnu.idatt2105.backend.dto.bid.GetBidsOnItemByUserRequest;
 import edu.ntnu.idatt2105.backend.dto.bid.GetBidsOnItemByUserResponse;
@@ -8,6 +7,7 @@ import edu.ntnu.idatt2105.backend.dto.bid.GetYourBidItemsResponse;
 import edu.ntnu.idatt2105.backend.dto.bid.GetYourItemBidsResponse;
 import edu.ntnu.idatt2105.backend.dto.bid.GetYourUniqueBidsResponse;
 import edu.ntnu.idatt2105.backend.dto.bid.PlaceBidRequest;
+import edu.ntnu.idatt2105.backend.model.Bid;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;

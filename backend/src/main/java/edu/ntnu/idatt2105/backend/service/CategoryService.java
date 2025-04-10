@@ -1,7 +1,7 @@
 package edu.ntnu.idatt2105.backend.service;
 
-import edu.ntnu.idatt2105.backend.repository.CategoryRepository;
 import edu.ntnu.idatt2105.backend.model.Category;
+import edu.ntnu.idatt2105.backend.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

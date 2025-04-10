@@ -18,7 +18,8 @@ public class ItemsRequest {
   String searchWord;
   @Schema(description = "filter pris fra og til", example = "[100, 500]")
   int[] priceMinMax;
-  @Schema(description = "sort by following: price_ASC, price_DESC, published_ASC, published_DESC", example = "price_ASC")
+  @Schema(description = "sort by following: price_ASC, price_DESC, published_ASC, published_DESC",
+      example = "price_ASC")
   String sort;
   @Schema(description = "pagination, page number then page size", example = "[0, 20]")
   int[] segmentOffset;

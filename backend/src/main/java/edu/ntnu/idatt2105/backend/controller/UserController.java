@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 /**
- * a controller for user specific operations.
+ * a controller for endpoints related to user.
  */
 @RestController
 @RequestMapping(value = "/api/")

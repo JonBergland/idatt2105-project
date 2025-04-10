@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+/**
+ * a controller for endpoints related to purchases.
+ */
 @RestController
 @RequestMapping(value = "/api/")
 @CrossOrigin
@@ -33,7 +36,8 @@ public class PurchaseController {
    * @param buyItemRequest the item
    */
   @PostMapping("/user/item/buy")
-  @Operation(summary = "Buy item", description = "Buy an item marked as available for the logged in user")
+  @Operation(summary = "Buy item",
+      description = "Buy an item marked as available for the logged in user")
   public void buyItem(@RequestBody @Valid BuyItemRequest buyItemRequest) {
     logger.info("direct buy request");
     try {
@@ -50,7 +54,9 @@ public class PurchaseController {
    * @param buyItemFromBidRequest the bid
    */
   @PostMapping("/user/item/bids/buy")
-  @Operation(summary = "Buy from bid", description = "Buy an item with price from a bid when item is marked as available or reserved for the logged in user")
+  @Operation(summary = "Buy from bid",
+      description = "Buy an item with price from a bid when item is marked as "
+          + "available or reserved for the logged in user")
   public void buyBidItem(@RequestBody @Valid BuyItemFromBidRequest buyItemFromBidRequest) {
     logger.info("buy from bid request");
     try {

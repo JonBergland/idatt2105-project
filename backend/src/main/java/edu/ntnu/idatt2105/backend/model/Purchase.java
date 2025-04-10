@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * a model representing a purchase
+ * a model representing a purchase.
  */
 @Getter
 @Setter

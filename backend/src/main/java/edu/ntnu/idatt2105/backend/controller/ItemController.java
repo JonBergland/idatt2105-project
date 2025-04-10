@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 /**
- * A controller for getting items.
+ * a controller for endpoints related to items.
  */
 @RestController
 @RequestMapping(value = "/api/")
@@ -109,11 +109,6 @@ public class ItemController {
       logger.warn("could not delete item: {}", e.getMessage());
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
     }
-  }
-
-  @GetMapping("/user/item/recommended")
-  public void getRecommendedItems() {
-
   }
 
   /**

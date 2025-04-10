@@ -15,5 +15,5 @@ import lombok.Setter;
 public class GetYourBidItemsRequest {
   @Size(min = 2, max = 2)
   @Schema(description = "pagination, page number then page size", example = "[0, 20]")
-  int[] SegmentOffset;
+  int[] segmentOffset;
 }

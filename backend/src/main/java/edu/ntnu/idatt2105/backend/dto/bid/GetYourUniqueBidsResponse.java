@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * a DTO for responding with items user has bid on
+ * a DTO for responding with items user has bid on.
  */
 @Getter
 @Setter

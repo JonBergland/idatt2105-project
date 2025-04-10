@@ -19,6 +19,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+/**
+ * Service class for the Bid model.
+ */
 @Service
 @RequiredArgsConstructor
 public class BidService {
@@ -52,7 +55,8 @@ public class BidService {
    */
   public GetYourUniqueBidsResponse[] getYourBids(GetYourUniqueBidsRequest getYourUniqueBidsRequest) {
     String userID = SecurityContextHolder.getContext().getAuthentication().getName();
-    Bid[] bids = bidRepository.getYourUniqueBids(Integer.parseInt(userID), getYourUniqueBidsRequest.getSegmentOffset());
+    Bid[] bids = bidRepository.getYourUniqueBids(Integer.parseInt(userID),
+        getYourUniqueBidsRequest.getSegmentOffset());
     return BidMapper.INSTANCE.bidArrayToGetBidItemResponseArray(bids);
   }
 
@@ -98,7 +102,8 @@ public class BidService {
    */
   public GetYourBidItemsResponse[] getBids(GetYourBidItemsRequest getYourBidItemsRequest) {
     String userID = SecurityContextHolder.getContext().getAuthentication().getName();
-    Bid[] bids = bidRepository.getUniqueBids(Integer.parseInt(userID), getYourBidItemsRequest.getSegmentOffset());
+    Bid[] bids = bidRepository.getUniqueBids(Integer.parseInt(userID),
+        getYourBidItemsRequest.getSegmentOffset());
     return BidMapper.INSTANCE.bidArrayToGetYourBidItemsResponseArray(bids);
   }
 
@@ -112,7 +117,8 @@ public class BidService {
       GetBidsOnItemByUserRequest getBidsOnItemByUserRequest) {
     String userID = SecurityContextHolder.getContext().getAuthentication().getName();
     Bid bid = BidMapper.INSTANCE.getBidsOnItemByUserRequestToBid(getBidsOnItemByUserRequest);
-    Bid[] bids = bidRepository.getBidsByUserOnItem(bid, Integer.parseInt(userID), getBidsOnItemByUserRequest.getSegmentOffset());
+    Bid[] bids = bidRepository.getBidsByUserOnItem(bid, Integer.parseInt(userID),
+        getBidsOnItemByUserRequest.getSegmentOffset());
     return BidMapper.INSTANCE.bidArrayToGetBidsOnItemByUserResponseArray(bids);
   }
 }

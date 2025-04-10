@@ -26,6 +26,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+/**
+ * a controller for endpoints related to bids.
+ */
 @RestController
 @RequestMapping(value = "/api/")
 @CrossOrigin
@@ -61,7 +64,8 @@ public class BidController {
    * @return the items
    */
   @PostMapping("/user/item/bids/item")
-  @Operation(summary = "Get bid items", description = "Get items the logged in user has bid on, paginated")
+  @Operation(summary = "Get bid items",
+      description = "Get items the logged in user has bid on, paginated")
   public GetYourUniqueBidsResponse[] getUniqueBids(
       @RequestBody @Valid GetYourUniqueBidsRequest getYourUniqueBidsRequest) {
     logger.info("get distinct items user has placed bids on request");
@@ -80,7 +84,8 @@ public class BidController {
    * @return the bids
    */
   @PostMapping("/user/item/bids")
-  @Operation(summary = "Get bids", description = "Get bids the logged in user has placed on a specific item, paginated")
+  @Operation(summary = "Get bids",
+      description = "Get bids the logged in user has placed on a specific item, paginated")
   public GetYourItemBidsResponse[] getBidsOnItem(
       @RequestBody @Valid GetYourItemBidsRequest getYourItemBidsRequest) {
     logger.info("get bids user has placed on item request");
@@ -98,7 +103,8 @@ public class BidController {
    * @param answerBidRequest the item to answer
    */
   @PostMapping("/user/item/bid/answer")
-  @Operation(summary = "Answer bid", description = "Accept or decline bid if logged in user owns bid item")
+  @Operation(summary = "Answer bid",
+      description = "Accept or decline bid if logged in user owns bid item")
   public void answerBid(@RequestBody @Valid AnswerBidRequest answerBidRequest) {
     logger.info("answer bid request");
     try {
@@ -115,7 +121,8 @@ public class BidController {
    * @return the users
    */
   @PostMapping("/user/item/bid/users")
-  @Operation(summary = "Get bidding users", description = "Get users who have bid on an item owned by the logged in user, paginated")
+  @Operation(summary = "Get bidding users",
+      description = "Get users who have bid on an item owned by the logged in user, paginated")
   public GetYourBidItemsResponse[] getBidsOnYourItems(
       @RequestBody @Valid GetYourBidItemsRequest getYourBidItemsRequest) {
     logger.info("get users who bid on item request");
@@ -134,7 +141,8 @@ public class BidController {
    * @return the bids
    */
   @PostMapping("/user/item/bid/")
-  @Operation(summary = "Get bid by user", description = "Get all bids made by a user on an item owned by logged in user, paginated")
+  @Operation(summary = "Get bid by user",
+      description = "Get all bids made by a user on an item owned by logged in user, paginated")
   public GetBidsOnItemByUserResponse[] getBidsOnYourItem(
       @RequestBody @Valid GetBidsOnItemByUserRequest getBidsOnItemByUserRequest) {
     logger.info("get bids on item by user request");

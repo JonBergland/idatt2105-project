@@ -1,11 +1,11 @@
 package edu.ntnu.idatt2105.backend.mapper;
 
-import edu.ntnu.idatt2105.backend.dto.item.ItemResponse;
-import edu.ntnu.idatt2105.backend.model.Item;
 import edu.ntnu.idatt2105.backend.dto.item.AddItemRequest;
 import edu.ntnu.idatt2105.backend.dto.item.EditItemRequest;
 import edu.ntnu.idatt2105.backend.dto.item.GetBookmarkedItemsResponse;
 import edu.ntnu.idatt2105.backend.dto.item.GetStoreItemResponse;
+import edu.ntnu.idatt2105.backend.dto.item.ItemResponse;
+import edu.ntnu.idatt2105.backend.model.Item;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;

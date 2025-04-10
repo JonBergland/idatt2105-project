@@ -1,7 +1,7 @@
 package edu.ntnu.idatt2105.backend.repository;
 
-import edu.ntnu.idatt2105.backend.model.Bid;
 import edu.ntnu.idatt2105.backend.dto.bid.GetYourItemBidsRequest;
+import edu.ntnu.idatt2105.backend.model.Bid;
 import java.nio.file.AccessDeniedException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
