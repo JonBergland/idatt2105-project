@@ -1,11 +1,17 @@
-import type { BidOnItemByUserRequest, BidOnItemByUserResponse, BidsFromUsersOnUserItemRequest, BidsFromUsersOnUserItemResponse, PlaceBid, UserBidItemsRequest, UserBidItemsResponse, UsersWithBidOnUserItemRequest, UsersWithBidOnUserItemResponse } from "@/models/bid";
 import { defineStore } from 'pinia';
-import bidService from "@/services/bid/bidService"
+import bidService from "@/services/bid/bidService";
+import type { ItemWithBids, PlaceBid, UserWithBids } from "@/models/bid/bid";
+import type { UserBidItemsRequest, UserBidItemsResponse } from '@/models/bid/UserBidItems';
+import type { BidOnItemByUserRequest, BidOnItemByUserResponse } from '@/models/bid/BidOnItemByUser';
+import type { BidsFromUsersOnUserItemRequest, BidsFromUsersOnUserItemResponse } from '@/models/bid/BidsFromUsersOnUserItem';
+import type { UsersWithBidOnUserItemRequest, UsersWithBidOnUserItemResponse } from '@/models/bid/UsersWithBidOnUserItem';
 
 export const useBidStore = defineStore('bidStore', {
   state: () => ({
-    bids: [] as { id: number; amount: number; bidder: string }[],
+    userBids: [] as ItemWithBids[],
+    otherBids: [] as UserWithBids[]
   }),
+
   actions: {
     /**
      * Places a bid on an item using the provided bid details.
@@ -22,6 +28,90 @@ export const useBidStore = defineStore('bidStore', {
       } catch (error) {
         console.log("Error when giving bid on item: ", error);
         return 0;
+      }
+    },
+
+    /**
+     * Retrieves all items the user has bid on along with the specific bids
+     *
+     * @returns A promise that resolves to an array of objects containing item and bid information
+     */
+    async updateUserBidsOnItems() {
+      try {
+        const itemBidRequest: UserBidItemsRequest = {
+          SegmentOffset: [0, 20]
+        };
+
+        const items = await this.getItemsWithUserBids(itemBidRequest);
+
+        if (!items.length) {
+          return [];
+        }
+
+        this.userBids = [] as ItemWithBids[]
+
+        // For each item found, get the bids the user has made on them
+        for (const item of items) {
+          if (!item.itemID || !item.userID) continue;
+
+          const bidRequest: BidOnItemByUserRequest = {
+            itemID: item.itemID,
+            userID: item.userID,
+            segmentOffset: [0, 10]
+          };
+
+          const userBids = await this.getUsersBidOnItem(bidRequest);
+
+          this.userBids.push({
+            item: item,
+            bids: userBids
+          });
+        }
+      } catch (error) {
+        console.error('Error retrieving user items and bids:', error);
+        return [];
+      }
+    },
+
+    /**
+     * Retrieves all users who have bid on the current user's items along with their specific bids
+     *
+     * @returns A promise that resolves to an array of objects containing user and bid information
+     */
+    async updateBidsOnUserItems() {
+      try {
+        // Similar structure as above, but for other users' bids
+        const usersRequest: UsersWithBidOnUserItemRequest = {
+          SegmentOffset: [0, 20]
+        };
+
+        const users = await this.getUsersWithBidOnUserItem(usersRequest);
+
+        if (!users.length) {
+          return [];
+        }
+
+        this.otherBids = [] as UserWithBids[]
+
+        for (const user of users) {
+          if (!user.itemID || !user.userID) continue;
+
+          const bidsRequest: BidsFromUsersOnUserItemRequest = {
+            itemID: user.itemID,
+            userID: user.userID,
+            segmentOffset: [0, 10]
+          };
+
+          const userBids = await this.getBidsFromUsersOnUserItem(bidsRequest);
+
+          this.otherBids.push({
+            user: user,
+            bids: userBids
+          });
+        }
+      } catch (error) {
+        console.error('Error retrieving users and their bids:', error);
+        return [];
       }
     },
 
