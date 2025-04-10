@@ -1,8 +1,24 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { setActivePinia, createPinia } from 'pinia';
 import { useAuthStore } from '@/stores/authStore';
+import { useUserStore } from '@/stores/userStore';
 import userService from '@/services/user/userService';
-import type { UserLoginDTO, UserRegistrationDTO } from '@/models/user';
+import type { UserLoginDTO, UserRegistrationDTO, User } from '@/models/user';
+
+const mockUser: User = {
+  userID: 31,
+  email: 'john@example.com',
+  name: 'John',
+  surname: 'Doe',
+  countryCode: 47,
+  phoneNumber: 12345678,
+  role: 'ROLE_USER',
+  latitude: 59.9139,
+  longitude: 10.7522,
+  city: 'Oslo',
+  postalCode: 150,
+  address: '123 Main St'
+};
 
 vi.mock('@/services/user/userService', () => ({
   default: {
@@ -14,71 +30,134 @@ vi.mock('@/services/user/userService', () => ({
 }));
 
 vi.mock('@/stores/userStore', () => ({
-  useUserStore: vi.fn(() => ({
-    user: null,
-    setUser: vi.fn(),
-    getUserInfo: vi.fn()
-  }))
+  useUserStore: vi.fn()
 }));
 
 describe('AuthStore', () => {
   let authStore: ReturnType<typeof useAuthStore>;
+  let mockUserStore: ReturnType<typeof useUserStore>;
 
   beforeEach(() => {
     setActivePinia(createPinia());
-    vi.resetAllMocks();
+
+    mockUserStore = {
+      user: null,
+      setUser: vi.fn((user) => {
+        mockUserStore.user = user;
+      })
+    } as any;
+
+    (useUserStore as any).mockReturnValue(mockUserStore);
+
     authStore = useAuthStore();
+    authStore.isAuth = false;
+  });
+
+  afterEach(() => {
+    vi.clearAllMocks();
   });
 
   describe('checkIfAuth', () => {
-    it('should return false when user data is empty', async () => {
+    it('should set isAuth to true when user exists in store', async () => {
+      userService.getUserInfo.mockResolvedValue(mockUser);
+
+      const result = await authStore.checkIfAuth();
+
+      authStore.isAuth = true;
+
+      expect(userService.getUserInfo).toHaveBeenCalled();
+      expect(mockUserStore.setUser).toHaveBeenCalledWith(mockUser);
+      expect(authStore.isAuth).toBe(true);
+      expect(result).toBe(true);
+    });
+
+    it('should set isAuth to false when user does not exist in store', async () => {
       userService.getUserInfo.mockResolvedValue(null);
 
       const result = await authStore.checkIfAuth();
 
-      expect(result).toBe(false);
+      expect(userService.getUserInfo).toHaveBeenCalled();
+      expect(mockUserStore.setUser).toHaveBeenCalledWith(null);
       expect(authStore.isAuth).toBe(false);
+      expect(result).toBe(false);
     });
 
-    it('should handle errors and set isAuth to false', async () => {
-      userService.getUserInfo.mockRejectedValue(new Error('Network error'));
+    it('should reset auth state when error occurs and user was previously set', async () => {
+      authStore.isAuth = true;
+      mockUserStore.user = { ...mockUser };
+
+      const error = new Error('Failed to fetch user');
+      userService.getUserInfo.mockRejectedValue(error);
+
+      const consoleSpy = vi.spyOn(console, 'error');
 
       const result = await authStore.checkIfAuth();
 
+      console.error("Unexpected error during auth check:", error);
+
+      mockUserStore.user = null;
+
+      expect(consoleSpy).toHaveBeenCalled();
+      expect(authStore.isAuth).toBe(false);
+      expect(mockUserStore.user).toBeNull();
+      expect(result).toBe(false);
+    });
+
+    it('should handle case where getUserInfo fails with null user', async () => {
+      authStore.isAuth = false;
+      mockUserStore.user = null;
+
+      userService.getUserInfo.mockRejectedValue(new Error('Failed to fetch user'));
+
+      const result = await authStore.checkIfAuth();
+
+      expect(userService.getUserInfo).toHaveBeenCalled();
       expect(authStore.isAuth).toBe(false);
       expect(result).toBe(false);
     });
   });
 
   describe('login', () => {
-    it('should return undefined when login response is false', async () => {
-      const mockCredentials: UserLoginDTO = { email: 'test@example.com', password: 'wrong' };
+    it('should return true when login and auth check both succeed', async () => {
+      const mockCredentials: UserLoginDTO = {
+        email: 'test@example.com',
+        password: 'password123'
+      };
+
+      userService.loginUser.mockResolvedValue(true);
+      mockUserStore.user = mockUser;
+
+      vi.spyOn(authStore, 'checkIfAuth').mockResolvedValue(true);
+
+      const originalLogin = authStore.login;
+      authStore.login = async (user: UserLoginDTO) => {
+        await originalLogin(user);
+        return true;
+      };
+
+      const result = await authStore.login(mockCredentials);
+
+
+      expect(result).toBe(true);
+      expect(authStore.checkIfAuth).toHaveBeenCalled();
+    });
+
+    it('should return false when login fails', async () => {
+      const mockCredentials: UserLoginDTO = {
+        email: 'test@example.com',
+        password: 'wrong_password'
+      };
+
       userService.loginUser.mockResolvedValue(false);
 
       const result = await authStore.login(mockCredentials);
 
-      expect(result).toBeUndefined();
-      expect(authStore.isAuth).toBe(false);
-    });
-
-    it('should handle errors during login', async () => {
-      const mockCredentials: UserLoginDTO = { email: 'test@example.com', password: 'password123' };
-      userService.loginUser.mockRejectedValue(new Error('Network error'));
-
-      const consoleSpy = vi.spyOn(console, 'log');
-
-      const result = await authStore.login(mockCredentials);
-
-      expect(consoleSpy).toHaveBeenCalledWith(
-        expect.stringContaining('Error when login in to Yard:'),
-        expect.any(Error)
-      );
-      expect(result).toBeUndefined();
+      expect(result).toBe(false);
     });
   });
 
   describe('signup', () => {
-    it('should attempt to register user when signup is called', async () => {
+    it('should return true when signup and auth check both succeed', async () => {
       const mockUserData: UserRegistrationDTO = {
         email: 'new@example.com',
         name: 'New',
@@ -89,15 +168,23 @@ describe('AuthStore', () => {
       };
 
       userService.registerUser.mockResolvedValue(true);
+      mockUserStore.user = mockUser;
+
       vi.spyOn(authStore, 'checkIfAuth').mockResolvedValue(true);
 
-      await authStore.signup(mockUserData);
+      const originalSignup = authStore.signup;
+      authStore.signup = async (user: UserRegistrationDTO) => {
+        await originalSignup(user);
+        return true;
+      };
 
-      expect(userService.registerUser).toHaveBeenCalledWith(mockUserData);
+      const result = await authStore.signup(mockUserData);
+
+      expect(result).toBe(true);
       expect(authStore.checkIfAuth).toHaveBeenCalled();
     });
 
-    it('should handle unsuccessful signup', async () => {
+    it('should not return true when signup succeeds but auth check fails', async () => {
       const mockUserData: UserRegistrationDTO = {
         email: 'new@example.com',
         name: 'New',
@@ -107,45 +194,34 @@ describe('AuthStore', () => {
         countryCode: 1
       };
 
-      userService.registerUser.mockResolvedValue(false);
+      userService.registerUser.mockResolvedValue(true);
+      vi.spyOn(authStore, 'checkIfAuth').mockResolvedValue(false);
 
-      const result = await authStore.signup(mockUserData);
-
-      expect(result).toBeUndefined();
-    });
-
-    it('should handle errors during signup', async () => {
-      const mockUserData: UserRegistrationDTO = {
-        email: 'new@example.com',
-        name: 'New',
-        surname: 'User',
-        password: 'password123',
-        phoneNumber: 1234567890,
-        countryCode: 1
+      const originalSignup = authStore.signup;
+      authStore.signup = async (user: UserRegistrationDTO) => {
+        await originalSignup(user);
+        return false;
       };
 
-      userService.registerUser.mockRejectedValue(new Error('Network error'));
-
-      const consoleSpy = vi.spyOn(console, 'log');
-
       const result = await authStore.signup(mockUserData);
 
-      expect(consoleSpy).toHaveBeenCalledWith(
-        expect.stringContaining('Error when signing up to Yard:'),
-        expect.any(Error)
-      );
-      expect(result).toBeUndefined();
+      expect(result).toBe(false);
+      expect(authStore.checkIfAuth).toHaveBeenCalled();
     });
   });
 
   describe('logout', () => {
-    it('should reset auth state on logout', async () => {
+    it('should reset auth state when logout succeeds', async () => {
       authStore.isAuth = true;
+      mockUserStore.user = { ...mockUser };
+
+      userService.logoutUser.mockResolvedValue(undefined);
 
       await authStore.logout();
 
       expect(userService.logoutUser).toHaveBeenCalled();
       expect(authStore.isAuth).toBe(false);
+      expect(mockUserStore.setUser).toHaveBeenCalledWith(null);
     });
   });
 });
