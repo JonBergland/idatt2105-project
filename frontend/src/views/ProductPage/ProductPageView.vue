@@ -131,13 +131,16 @@ async function handleFavorite(isFavorited: boolean) {
 
     isEditing.value = false;
 
-    console.log('Item updated:', updateRequest);
   } catch (error) {
     console.error('Error updating item:', error);
   }
 }
 
-function handleDeleteClick() {
+async function handleDeleteClick() {
+  const deleteRequest = {
+    itemID: itemID.value
+  }
+  await userStore.deleteItem(deleteRequest)
   console.log('Deleting item: ', itemID.value)
 }
 
