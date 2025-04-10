@@ -40,6 +40,7 @@ function handleClick() {
   display: inline-block;
   width: auto;
   white-space: nowrap;
+  color: #2c3e50;
 }
 
 .toggle-button:hover {
