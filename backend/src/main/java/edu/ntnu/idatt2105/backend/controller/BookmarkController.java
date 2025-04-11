@@ -3,6 +3,7 @@ package edu.ntnu.idatt2105.backend.controller;
 import edu.ntnu.idatt2105.backend.dto.bookmark.ToggleBookmarkRequest;
 import edu.ntnu.idatt2105.backend.service.BookmarkService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -22,6 +23,7 @@ import org.springframework.web.server.ResponseStatusException;
 @RestController
 @RequestMapping(value = "/api/")
 @CrossOrigin
+@Tag(name = "Bookmark controller", description = "Bookmark management endpoints")
 @RequiredArgsConstructor
 public class BookmarkController {
 
