@@ -60,14 +60,8 @@ public class UserController {
   @GetMapping("/user/info")
   @Operation(summary = "Get user info", description = "Get the info of the logged in user")
   public ResponseEntity<GetUserInfoResponse> getUserInfo() {
-    String userID = SecurityContextHolder.getContext().getAuthentication().getName();
-
-    // Check if no user is logged in
-    if ("anonymousUser".equals(userID)) {
-      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-    }
-
     try {
+      String userID = SecurityContextHolder.getContext().getAuthentication().getName();
       int userId = Integer.parseInt(userID);
       return ResponseEntity.ok(userService.getUser(userId));
     } catch (DataAccessException e) {
