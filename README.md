@@ -8,7 +8,9 @@ Jon Bergland
 # To run the project
 To connect to our NTNU database, you need to be connected to the NTNU-internet. This can be done via the Cisco Secure Client.
 
-## Docker
+You also have to create a .env file with the environmental variables. An example on how it should look are in teh .env.example file
+
+## With Docker
 If you have docker running on your PC you can run this command to start the container:
 ```sh
 docker compose up --build
