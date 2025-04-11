@@ -1,9 +1,9 @@
 # IDATT2105-project
 The optional project in the subject IDATT2105 Fullstack at NTNU.
 The group members are:
-Vetle Bjørnøy
-Florian Leucht
-Jon Bergland
+- Vetle Bjørnøy
+- Florian Leucht
+- Jon Bergland
 
 # To run the project
 To connect to our NTNU database, you need to be connected to the NTNU-internet. This can be done via the Cisco Secure Client.
