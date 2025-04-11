@@ -4,6 +4,7 @@ import edu.ntnu.idatt2105.backend.dto.purchase.BuyItemFromBidRequest;
 import edu.ntnu.idatt2105.backend.dto.purchase.BuyItemRequest;
 import edu.ntnu.idatt2105.backend.service.PurchaseService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -23,6 +24,7 @@ import org.springframework.web.server.ResponseStatusException;
 @RestController
 @RequestMapping(value = "/api/")
 @CrossOrigin
+@Tag(name = "Purchase controller", description = "Purchase management endpoints")
 @RequiredArgsConstructor
 public class PurchaseController {
 

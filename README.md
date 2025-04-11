@@ -61,3 +61,9 @@ For test coverage, run this after running the tests:
 mvn jacoco:report
 ```
 The report can be found in target/site/jacoco/index.html and can be opened in a browser
+
+
+## API Docs
+The Swagger documentation for API endpoints can be found at:
+[Swagger UI Documentation](http://localhost:8080/swagger-ui/index.html#/),
+while the application is running.

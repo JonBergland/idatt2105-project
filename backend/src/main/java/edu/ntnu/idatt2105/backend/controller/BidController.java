@@ -12,6 +12,7 @@ import edu.ntnu.idatt2105.backend.dto.bid.GetYourUniqueBidsResponse;
 import edu.ntnu.idatt2105.backend.dto.bid.PlaceBidRequest;
 import edu.ntnu.idatt2105.backend.service.BidService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.nio.file.AccessDeniedException;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,7 @@ import org.springframework.web.server.ResponseStatusException;
 @RestController
 @RequestMapping(value = "/api/")
 @CrossOrigin
+@Tag(name = "Bid controller", description = "Bid management endpoints")
 @RequiredArgsConstructor
 public class BidController {
 
