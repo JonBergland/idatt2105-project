@@ -1,4 +1,4 @@
-# idatt2105-project
+# IDATT2105-project
 The optional project in the subject IDATT2105 Fullstack at NTNU.
 The group members are:
 Vetle Bjørnøy
