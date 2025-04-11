@@ -17,6 +17,8 @@ docker compose up --build
 ```
 *NB!: The build time on first build is quite long (~5 min +)*
 
+The application will then be available at http://localhost:5173/
+
 To stop the container, click CTRL + C and type this command:
 ```sh
 docker compose down
@@ -29,6 +31,8 @@ To run the frontend use these commands:
 npm install
 npm run dev
 ```
+
+The application will then be available at http://localhost:5173/
 
 ### Backend
 To run the backend use these commands:
